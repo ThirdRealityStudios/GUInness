@@ -7,3 +7,10 @@ This project was primarily developed privately but now it is continued in terms 
 
 # Known bugs
 - The predefined color doesn't show up for the hover action on a button.
+
+
+# Planed features
+- add video components
+- add sound tracks
+- add complex button: a button which has a complex shape.
+- add scalable content: components can be zoomed in/out with different levels of detail (especially for creating maps or games).
