@@ -11,6 +11,6 @@ This project was primarily developed privately but now it is continued in terms 
 
 # Planed features
 - add video components
-- add sound tracks
+- add simple sound tracks
 - add complex button: a button which has a complex shape.
 - add scalable content: components can be zoomed in/out with different levels of detail (especially for creating maps or games).
