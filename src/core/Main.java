@@ -20,14 +20,14 @@ import core.maker.Path2DMaker;
 public class Main
 {
 	private volatile FlagHolder flags;
-	
+
 	private LayeredRenderFrame rF;
 
 	private EDButton start, exit;
-	
+
 	private EDTextfield input1, input2, input3;
 
-	private EDImage img0, img1;
+	private EDImage img0;
 
 	private EDLayer layer0, layer1;
 
