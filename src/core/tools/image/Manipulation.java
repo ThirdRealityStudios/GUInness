@@ -21,8 +21,7 @@ public class Manipulation
         g.setColor(color);
         g.fillRect(0,0,w,h);
         g.dispose();
-        
-        
+
         return colorized;
     }
 }

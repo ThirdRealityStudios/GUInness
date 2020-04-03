@@ -9,6 +9,7 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
 import core.frame.LayeredRenderFrame;
+import core.frame.Summary;
 import core.gui.EDLayer;
 import core.gui.EDText;
 import core.gui.component.EDButton;
@@ -40,60 +41,57 @@ public class EventHandler
 		text.setInactive();
 		unlockTextfield();
 	}
+	
+	private void enableInput(EDTextfield edT)
+	{
+		if(edT.getBufferedColor() == null)
+		{
+			edT.setBufferedColor(edT.getBackground());
+			edT.setBackground(edT.getActiveColor());
+		}
 
+		edT.setActive();
+		edT.setBufferedValue(edT.getValue()); /* Save current value to restore it if there
+		 									   * will be
+		  									   * no changes saved.
+		  									   */
+
+		textfieldLocked = edT;
+
+		edT.onClick();
+	}
+	
 	private MouseListener mouseListener = new MouseListener()
 	{
 		@Override
 		public void mouseClicked(MouseEvent mouseEvent)
 		{
-			mouseLoc = new Point(mouseEvent.getPoint().x - 8, mouseEvent.getPoint().y - 31);
-
-			Rectangle textArea = null;
-
+			mouseLoc = Summary.getFrameLocation(mouseEvent.getPoint());
+			
 			for (EDLayer layer : registeredLayers)
 			{
 				// Tests for all available events whether a button was clicked.
 				// It will the corresponding implementation.
 				for (EDText current : layer.getTextBuffer())
 				{
-					String type = current.getClass().getGenericSuperclass().getTypeName();
-					int last = type.lastIndexOf('.') + 1;
-					String simpleType = type.substring(last, type.length()).toUpperCase();
-
-					textArea = new Rectangle(current.getRectangle().getSize());
-					textArea.setLocation(current.getRectangle().getLocation());
+					String simpleType = Summary.typeof(current); // Get the type in upper-case.
 
 					// Execute onClick() of a graphical component if it was clicked.
-					if(textArea.contains(mouseLoc))
+					if(current.getRectangle().contains(mouseLoc))
 					{
 						switch (simpleType)
 						{
 							case ("EDTEXTFIELD"):
 							{
-								if (textfieldLocked == null)
+								if(textfieldLocked == null)
 								{
-									if (current.getBufferedColor() == null)
-									{
-										current.setBufferedColor(current.getBackground());
-										current.setBackground(current.getActiveColor());
-									}
-
-									EDTextfield edTf = (EDTextfield) current;
-
-									edTf.setActive();
-									edTf.setBufferedValue(edTf.getValue()); // Save current value to restore it if there
-																			// will be
-																			// no changes saved.
-
-									textfieldLocked = (EDTextfield) current;
-	
-									current.onClick();
+									enableInput((EDTextfield) current);
 								}
 								else
 								{
 									// Discard previous focused text field.
 									{
-										if (textfieldLocked.getBufferedValue() != null)
+										if(textfieldLocked.getBufferedValue() != null)
 											textfieldLocked.setValue(textfieldLocked.getBufferedValue());
 
 										textfieldLocked.setBackground(textfieldLocked.getBufferedColor());
@@ -102,25 +100,10 @@ public class EventHandler
 										textfieldLocked.setBackground(textfieldLocked.getBackground());
 										textfieldLocked.setInactive();
 										unlockTextfield();
-										
 									}
 
 									// Focus newly clicked text field.
-									{
-										if (current.getBufferedColor() == null)
-										{
-											current.setBufferedColor(current.getBackground());
-											current.setBackground(current.getActiveColor());
-										}
-
-										EDTextfield edTf = (EDTextfield) current;
-
-										edTf.setActive();
-
-										textfieldLocked = (EDTextfield) current;
-
-										current.onClick();
-									}
+									enableInput((EDTextfield) current);
 								}
 							
 								break;
@@ -224,34 +207,27 @@ public class EventHandler
 		@Override
 		public void mouseMoved(MouseEvent mouseEvent)
 		{
-			mouseLoc = new Point(mouseEvent.getPoint().x - 8, mouseEvent.getPoint().y - 31);
-
-			Rectangle textArea = null;
-
+			mouseLoc = Summary.getFrameLocation(mouseEvent.getPoint());
+			
 			for (EDLayer layer : registeredLayers)
 			{
 				// Tests for all available events whether a button was clicked.
 				// It will the corresponding implementation.
 				for (EDText current : layer.getTextBuffer())
 				{
-					String type = current.getClass().getGenericSuperclass().getTypeName();
-					int last = type.lastIndexOf('.') + 1;
-					String simpleType = type.substring(last, type.length()).toUpperCase();
-
-					textArea = new Rectangle(current.getRectangle().getSize());
-					textArea.setLocation(current.getRectangle().getLocation());
+					String simpleType = Summary.typeof(current); // Get the type in upper-case.
 
 					// Execute onClick() of a graphical component if it was clicked.
-					if(textArea.contains(mouseLoc))
+					if(current.getRectangle().contains(mouseLoc))
 					{
 						switch (simpleType)
 						{
-							case ("EDTEXTFIELD"):
+							case("EDTEXTFIELD"):
 							{
 								break;
 							}
-							case ("EDBUTTON"):
-							{								
+							case("EDBUTTON"):
+							{
 								if(!isHovering) // Checks for the 'animation thread' (below) of a hovered button when it may stop the animation.
 								{
 									isHovering = true;
@@ -262,16 +238,16 @@ public class EventHandler
 										
 										if(current.getBufferedColor() == null) // Check whether the button is used currently, through the use of the buffer.
 										{
-											// Animation thread for hovering.
+											// Animation thread for the hover animation.
 											Thread animation = new Thread()
 											{
-												Rectangle textArea_copy = new Rectangle(current.getRectangle().getSize());
+												Rectangle rect_copy = new Rectangle(current.getRectangle());
 												
 												private void pause()
 												{
-													if(textArea_copy.contains(mouseLoc) && isHovering)
+													if(rect_copy.contains(mouseLoc) && isHovering)
 													{
-														Interrupt.pauseMillisecond(250);
+														Interrupt.pauseMillisecond(200);
 														
 														pause();
 													}
@@ -285,13 +261,13 @@ public class EventHandler
 													current.setBufferedColor(current.getBackground());
 													current.setBackground(Color.BLUE);
 
-													textArea_copy.setLocation(current.getRectangle().getLocation());
-													
+													rect_copy.setLocation(current.getRectangle().getLocation());
+
 													pause(); // Pauses as long as the user hovers over the button.
 
 													current.setBackground(current.getBufferedColor());
 													current.setBufferedColor(null);
-													
+
 													isHovering = false;
 												}
 											};
