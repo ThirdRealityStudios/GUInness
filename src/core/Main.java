@@ -6,13 +6,11 @@ import java.awt.Point;
 
 import core.frame.LayeredRenderFrame;
 import core.gui.EDLayer;
-import core.gui.EDText;
 import core.gui.component.EDButton;
 import core.gui.component.EDDescription;
 import core.gui.component.EDTextfield;
 import core.gui.decoration.EDImage;
 import core.gui.decoration.EDPath;
-import core.io.Interrupt;
 import core.io.Loader;
 import core.io.state.FlagHolder;
 import core.maker.Path2DMaker;
@@ -44,7 +42,7 @@ public class Main
 		flags = new FlagHolder();
 		
 		flags.update(true);
-		
+
 		start = new EDButton(Color.GRAY, Color.RED, Color.BLUE, new Point(100, 50), "START", Color.BLACK, 20, 5, 1, Color.BLACK, true)
 		{
 			@Override
@@ -83,7 +81,7 @@ public class Main
 				rF.applyChanges();
 			}
 		};
-		
+
 		start.actsOnHover(false);
 
 		exit = new EDButton(Color.GRAY, Color.RED, Color.BLUE, new Point(250, 50), "EXIT", Color.BLACK, 20, 5, 1, Color.BLACK, true)

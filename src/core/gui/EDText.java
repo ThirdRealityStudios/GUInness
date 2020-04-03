@@ -21,6 +21,7 @@ public abstract class EDText extends EDComponent
 	{
 		super(new Rectangle(location), visible);
 		
+		// Set all important attributes below:
 		this.length = length;
 		this.background = background;
 		this.active = inactive;
@@ -32,6 +33,7 @@ public abstract class EDText extends EDComponent
 		this.borderThickness = borderThickness;
 		this.border = border;
 		
+		// After knowing all necessary attributes:
 		setSize(); // Calculates the correct size of the rectangle for the text component.
 	}
 

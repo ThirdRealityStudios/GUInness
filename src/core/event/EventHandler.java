@@ -1,11 +1,8 @@
 package core.event;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -30,12 +27,6 @@ public class EventHandler
 	private volatile boolean isHovering = false;
 	
 	private volatile Point mouseLoc = null;
-
-	private boolean inside(Point loc, Dimension dim, Point comparedLoc)
-	{
-		return ((comparedLoc.x >= loc.x && comparedLoc.x <= (loc.x + dim.width))
-				&& (comparedLoc.y >= loc.y && comparedLoc.y <= (loc.y + dim.height)));
-	}
 	
 	public void reset(EDTextfield text)
 	{
@@ -73,7 +64,7 @@ public class EventHandler
 					textArea.setLocation(current.getRectangle().getLocation());
 
 					// Execute onClick() of a graphical component if it was clicked.
-					if(inside(textArea.getLocation(), textArea.getSize(), mouseLoc))
+					if(textArea.contains(mouseLoc))
 					{
 						switch (simpleType)
 						{
@@ -251,7 +242,7 @@ public class EventHandler
 					textArea.setLocation(current.getRectangle().getLocation());
 
 					// Execute onClick() of a graphical component if it was clicked.
-					if(inside(textArea.getLocation(), textArea.getSize(), mouseLoc))
+					if(textArea.contains(mouseLoc))
 					{
 						switch (simpleType)
 						{
@@ -278,7 +269,7 @@ public class EventHandler
 												
 												private void pause()
 												{
-													if(inside(textArea_copy.getLocation(), textArea_copy.getSize(), mouseLoc) && isHovering)
+													if(textArea_copy.contains(mouseLoc) && isHovering)
 													{
 														Interrupt.pauseMillisecond(250);
 														

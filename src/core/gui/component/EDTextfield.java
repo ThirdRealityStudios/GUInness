@@ -3,7 +3,6 @@ package core.gui.component;
 import java.awt.Color;
 import java.awt.Point;
 
-import core.gui.EDComponent;
 import core.gui.EDText;
 
 public abstract class EDTextfield extends EDText
