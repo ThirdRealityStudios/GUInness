@@ -2,6 +2,7 @@ package core.gui.decoration;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.Path2D;
 import core.gui.EDComponent;
 
@@ -15,7 +16,7 @@ public class EDPath extends EDComponent
 
 	public EDPath(Path2D.Double path, Color drawColor, boolean fill, Point location, boolean visible)
 	{
-		super(location, visible);
+		super(new Rectangle(location), visible);
 		
 		this.path = path;
 

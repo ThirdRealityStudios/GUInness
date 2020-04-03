@@ -1,27 +1,18 @@
 package core.gui;
 
-import java.awt.Point;
+import java.awt.Rectangle;
 
 public abstract class EDComponent
 {
-	private Point location = null;
-	
+	// Contains the location and dimension of the component.
+	private Rectangle rect;
+
 	private boolean visible = true;
-	
-	public EDComponent(Point location, boolean visible)
+
+	public EDComponent(Rectangle rect, boolean visible)
 	{
-		this.location = location;
+		this.rect = rect;
 		this.visible = visible;
-	}
-
-	public Point getLocation()
-	{
-		return location;
-	}
-
-	public void setLocation(Point location)
-	{
-		this.location = location;
 	}
 
 	public boolean isVisible()
@@ -32,5 +23,10 @@ public abstract class EDComponent
 	public void setVisible(boolean visible)
 	{
 		this.visible = visible;
+	}
+
+	public Rectangle getRectangle()
+	{
+		return rect;
 	}
 }

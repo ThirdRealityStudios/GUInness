@@ -69,8 +69,8 @@ public class EventHandler
 					int last = type.lastIndexOf('.') + 1;
 					String simpleType = type.substring(last, type.length()).toUpperCase();
 
-					textArea = new Rectangle(current.getSize());
-					textArea.setLocation(current.getLocation());
+					textArea = new Rectangle(current.getRectangle().getSize());
+					textArea.setLocation(current.getRectangle().getLocation());
 
 					// Execute onClick() of a graphical component if it was clicked.
 					if(inside(textArea.getLocation(), textArea.getSize(), mouseLoc))
@@ -247,8 +247,8 @@ public class EventHandler
 					int last = type.lastIndexOf('.') + 1;
 					String simpleType = type.substring(last, type.length()).toUpperCase();
 
-					textArea = new Rectangle(current.getSize());
-					textArea.setLocation(current.getLocation());
+					textArea = new Rectangle(current.getRectangle().getSize());
+					textArea.setLocation(current.getRectangle().getLocation());
 
 					// Execute onClick() of a graphical component if it was clicked.
 					if(inside(textArea.getLocation(), textArea.getSize(), mouseLoc))
@@ -274,7 +274,7 @@ public class EventHandler
 											// Animation thread for hovering.
 											Thread animation = new Thread()
 											{
-												Rectangle textArea_copy = new Rectangle(current.getSize());
+												Rectangle textArea_copy = new Rectangle(current.getRectangle().getSize());
 												
 												private void pause()
 												{
@@ -294,7 +294,7 @@ public class EventHandler
 													current.setBufferedColor(current.getBackground());
 													current.setBackground(Color.BLUE);
 
-													textArea_copy.setLocation(current.getLocation());
+													textArea_copy.setLocation(current.getRectangle().getLocation());
 													
 													pause(); // Pauses as long as the user hovers over the button.
 

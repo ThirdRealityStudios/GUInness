@@ -3,6 +3,7 @@ package core.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 
 public abstract class EDText extends EDComponent
 {
@@ -16,11 +17,9 @@ public abstract class EDText extends EDComponent
 
 	private Color border, background, active, hover, bufferedColor, fontColor;
 
-	private Dimension size;
-
 	public EDText(int length, Color background, Color inactive, Color hover, Point location, String value, Color fontColor, int fontSize, int innerThickness, int borderThickness, Color border, boolean visible)
 	{
-		super(location, visible);
+		super(new Rectangle(location), visible);
 		
 		this.length = length;
 		this.background = background;
@@ -32,12 +31,8 @@ public abstract class EDText extends EDComponent
 		this.innerThickness = innerThickness;
 		this.borderThickness = borderThickness;
 		this.border = border;
-		setSize();
-	}
-
-	public Dimension getSize()
-	{
-		return size;
+		
+		setSize(); // Calculates the correct size of the rectangle for the text component.
 	}
 
 	public String getValue()
@@ -125,10 +120,12 @@ public abstract class EDText extends EDComponent
 		setSize();
 	}
 
+	// Calculates the correct size of the rectangle for the text component.
 	private void setSize()
 	{
-		this.size = new Dimension(length * fontSize + 2 * innerThickness + 2 * borderThickness,
-				fontSize + 2 * innerThickness + 2 * borderThickness);
+		Dimension backgroundSize = new Dimension(length * fontSize + 2 * innerThickness + 2 * borderThickness, fontSize + 2 * innerThickness + 2 * borderThickness);
+
+		getRectangle().setSize(backgroundSize);
 	}
 
 	public void setBufferedValue(String value)

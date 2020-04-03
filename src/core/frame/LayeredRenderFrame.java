@@ -103,7 +103,7 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListen
 				for (EDImage img : imgOutput)
 				{
 					if(img.isVisible())
-						g.drawImage(img.getContent(), img.getLocation().x, img.getLocation().y, img.getSize().width, img.getSize().height, null);
+						g.drawImage(img.getContent(), img.getRectangle().getLocation().x, img.getRectangle().getLocation().y, img.getRectangle().getSize().width, img.getRectangle().getSize().height, null);
 					else
 						continue;
 				}

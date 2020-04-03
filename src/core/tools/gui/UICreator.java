@@ -11,15 +11,15 @@ public class UICreator
 	public void createText(Graphics g, EDText text)
 	{
 		g.setColor(text.getBorder());
-		g.fillRect(text.getLocation().x, text.getLocation().y, text.getSize().width, text.getSize().height);
+		g.fillRect(text.getRectangle().getLocation().x, text.getRectangle().getLocation().y, text.getRectangle().getSize().width, text.getRectangle().getSize().height);
 
 		int titleWidth = text.getFontSize() * text.getValue().length();
 
 		g.setColor(text.getBackground());
-		g.fillRect(text.getLocation().x + text.getBorderThickness(), text.getLocation().y + text.getBorderThickness(), titleWidth + 2 * text.getInnerThickness(), text.getFontSize() + 2 * text.getInnerThickness());
+		g.fillRect(text.getRectangle().getLocation().x + text.getBorderThickness(), text.getRectangle().getLocation().y + text.getBorderThickness(), titleWidth + 2 * text.getInnerThickness(), text.getFontSize() + 2 * text.getInnerThickness());
 
 		//g.setColor(text.getFontColor());
-		fL.display(g, text.getValue(), text.getLocation().x + text.getInnerThickness() + text.getBorderThickness(), text.getLocation().y + text.getInnerThickness() + text.getBorderThickness(), text.getFontSize(), text.getFontColor());
+		fL.display(g, text.getValue(), text.getRectangle().getLocation().x + text.getInnerThickness() + text.getBorderThickness(), text.getRectangle().getLocation().y + text.getInnerThickness() + text.getBorderThickness(), text.getFontSize(), text.getFontColor());
 	}
 
 	public FontLoader getFontLoader()
