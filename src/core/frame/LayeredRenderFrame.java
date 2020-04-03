@@ -213,11 +213,9 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListen
 		{
 			for (EDText current : currentLayer.getTextBuffer())
 			{
-				String type = current.getClass().getGenericSuperclass().getTypeName();
-				int last = type.lastIndexOf('.') + 1;
-				String simpleType = type.substring(last, type.length()).toUpperCase();
+				String simpleType = Summary.typeof(current); // Get the type in upper-case.
 
-				if (simpleType.equals("EDTEXTFIELD"))
+				if(simpleType.equals("EDTEXTFIELD"))
 				{
 					EDTextfield text = (EDTextfield) current;
 
@@ -227,8 +225,7 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListen
 						{
 							char textfieldInput = e.getKeyChar();
 
-							if (uiCreator.getFontLoader().isValid(textfieldInput)
-									&& (text.getValue().length() + 1) <= text.getLength())
+							if(uiCreator.getFontLoader().isValid(textfieldInput) && (text.getValue().length() + 1) <= text.getLength()) 
 								text.setValue(text.getValue() + textfieldInput);
 						}
 
@@ -271,7 +268,7 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListen
 	{
 
 	}
-	
+
 	private void apply(EDLayer current)
 	{
 		if (current.isVisible())
@@ -297,15 +294,15 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListen
 			eH.registerLayer(current);
 		}
 	}
-	
+
 	// If a layer was changed, you can call this method to apply all changes.
 	// Is very inefficient if it's called frequently.
 	public synchronized void applyChanges()
 	{
 		erase(); // If buggy, re-instantiate 
-		
+
 		eH.unregisterAllLayers();
-		
+
 		Collections.sort(layers);
 
 		if(layers != null && layers.size() > 0)
@@ -324,47 +321,6 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListen
 		}
 		
 		copy();
-		
-		/*
-		for(EDLayer layer : layers)
-		{
-			Dimension size = null;
-			
-			Integer minX = null, maxX = null, minY = null, maxY = null;
-			
-			for(EDText text : layer.getTextBuffer())
-			{
-				Point loc = text.getLocation();
-				
-				if(minX == null)
-				{
-					minX = loc.x;
-					maxX = loc.x;
-					
-					minY = loc.y;
-					maxY = loc.y;
-				}
-				else
-				{
-					if(loc.x < minX)
-						minX = loc.x;
-					else if(loc.x > maxX)
-						maxX = loc.x;
-					
-					if(loc.y < minY)
-						minY = loc.y;
-					else if(loc.y > maxY)
-						maxY = loc.y;
-				}
-				
-				
-			}			
-			
-			int width = Math.abs(minX) + maxX;
-			
-			int height = Math.abs(minY) + maxY;
-		}
-		*/
 	}
 
 	public void addLayer(EDLayer layer)
@@ -382,7 +338,7 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListen
 
 		for (EDLayer current : layers)
 		{
-			if (current.getUUID().toString().equals(uuid))
+			if(current.getUUID().toString().equals(uuid))
 				break;
 
 			index++;

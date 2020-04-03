@@ -18,7 +18,6 @@ public class UICreator
 		g.setColor(text.getBackground());
 		g.fillRect(text.getRectangle().getLocation().x + text.getBorderThickness(), text.getRectangle().getLocation().y + text.getBorderThickness(), titleWidth + 2 * text.getInnerThickness(), text.getFontSize() + 2 * text.getInnerThickness());
 
-		//g.setColor(text.getFontColor());
 		fL.display(g, text.getValue(), text.getRectangle().getLocation().x + text.getInnerThickness() + text.getBorderThickness(), text.getRectangle().getLocation().y + text.getInnerThickness() + text.getBorderThickness(), text.getFontSize(), text.getFontColor());
 	}
 
