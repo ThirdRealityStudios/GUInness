@@ -97,17 +97,19 @@ public class EventHandler
 						{
 							case ("EDTEXTFIELD"):
 							{
+								EDTextfield target = (EDTextfield) current;
+								
 								if(textfieldLocked == null)
 								{
-									enableInput((EDTextfield) current);
+									enableInput(target);
 								}
 								else
 								{
 									// Discard previous focused text field.
-									discardChanges((EDTextfield) current);
+									discardChanges(target);
 
 									// Focus newly clicked text field.
-									enableInput((EDTextfield) current);
+									enableInput(target);
 								}
 							
 								break;
