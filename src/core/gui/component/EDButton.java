@@ -7,8 +7,8 @@ import core.gui.EDText;
 
 public abstract class EDButton extends EDText
 {
-	private volatile boolean interaction = true, isHovered = false, actionOnClick = true, actionOnHover = true;
-	
+	private volatile boolean interaction = true, isHovered = false, actionOnClick = true, actionOnHover = true, isClicking = false;
+
 	public EDButton(Color background, Color active, Color hover, Point location, String title, Color fontColor, int fontSize, int innerThickness, int borderThickness, Color border, boolean visible)
 	{
 		super(title.length(), background, hover, active, location, title, fontColor, fontSize, innerThickness, borderThickness, border, visible);
@@ -66,5 +66,15 @@ public abstract class EDButton extends EDText
 	public void actsOnHover(boolean actsOnHover)
 	{
 		this.actionOnHover = actsOnHover;
+	}
+
+	public boolean isClicking()
+	{
+		return isClicking;
+	}
+	
+	public void setClicking(boolean isClicking)
+	{
+		this.isClicking = isClicking;
 	}
 }

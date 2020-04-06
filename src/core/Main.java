@@ -48,7 +48,7 @@ public class Main
 			@Override
 			public void onHover()
 			{
-				System.out.println("Hovered START!: " + this.getBackground());
+				
 			}
 
 			private boolean clicked = false;
@@ -89,7 +89,7 @@ public class Main
 			@Override
 			public void onHover()
 			{
-				System.out.println("Hovered EXIT!: " + this.getBackground());
+				
 			}
 
 			@Override

@@ -25,7 +25,7 @@ public class EventHandler
 	// Used to prevent other text fields from being selected at once.
 	private EDTextfield textfieldLocked = null;
 	
-	private volatile boolean isHovering = false;
+	private volatile boolean isHovering = false, isClicking = false;
 	
 	private volatile Point mouseLoc = null;
 	
@@ -61,6 +61,20 @@ public class EventHandler
 		edT.onClick();
 	}
 	
+	// Discard previous focused text field.
+	public void discardChanges(EDTextfield edT)
+	{
+		if(edT.getBufferedValue() != null)
+			edT.setValue(edT.getBufferedValue());
+
+		edT.setBackground(edT.getBufferedColor());
+		edT.setBufferedColor(null);
+
+		edT.setBackground(edT.getBackground());
+		edT.setInactive();
+		unlockTextfield();
+	}
+	
 	private MouseListener mouseListener = new MouseListener()
 	{
 		@Override
@@ -90,17 +104,7 @@ public class EventHandler
 								else
 								{
 									// Discard previous focused text field.
-									{
-										if(textfieldLocked.getBufferedValue() != null)
-											textfieldLocked.setValue(textfieldLocked.getBufferedValue());
-
-										textfieldLocked.setBackground(textfieldLocked.getBufferedColor());
-										textfieldLocked.setBufferedColor(null);
-
-										textfieldLocked.setBackground(textfieldLocked.getBackground());
-										textfieldLocked.setInactive();
-										unlockTextfield();
-									}
+									discardChanges((EDTextfield) current);
 
 									// Focus newly clicked text field.
 									enableInput((EDTextfield) current);
@@ -112,9 +116,9 @@ public class EventHandler
 							case ("EDBUTTON"):
 							{
 								EDButton button = (EDButton) current;
-								
+								System.out.println("Click");
 								if(button.isInteractionEnabled())
-								{
+								{									
 									if (button.getBufferedColor() == null)
 									{
 										Thread animation = new Thread()
@@ -122,17 +126,28 @@ public class EventHandler
 											@Override
 											public void run()
 											{
-												isHovering = false;
+												isClicking = true; // Indicate the click animation wants to start.
 												
-												if(!isHovering)
-													button.setBufferedColor(current.getBackground());
+												System.out.println(">" + isClicking);
 												
+												while(isHovering)// Wait until the hover animation was cancelled.
+												{
+													System.out.println("Still hover animating...");
+												}
+												
+												System.out.println(">" + isClicking);
+												
+												// if(!isHovering)
+												button.setBufferedColor(current.getBackground());
+
 												button.setBackground(Color.RED);
 
 												Interrupt.pauseMillisecond(300);
 
 												button.setBackground(current.getBufferedColor());
 												button.setBufferedColor(null);
+												
+												isClicking = false;
 											}
 										};
 
@@ -228,36 +243,39 @@ public class EventHandler
 							}
 							case("EDBUTTON"):
 							{
-								if(!isHovering) // Checks for the 'animation thread' (below) of a hovered button when it may stop the animation.
+								if(((EDButton) current).isInteractionEnabled())
 								{
-									isHovering = true;
+									EDButton button = (EDButton) current;
 									
-									if(((EDButton) current).isInteractionEnabled())
+									if(current.getBufferedColor() == null) // Check whether the button is used currently, through the use of the buffer.
 									{
-										EDButton button = (EDButton) current;
-										
-										if(current.getBufferedColor() == null) // Check whether the button is used currently, through the use of the buffer.
+										// Animation thread for the hover animation.
+										Thread animation = new Thread()
 										{
-											// Animation thread for the hover animation.
-											Thread animation = new Thread()
+											Rectangle rect_copy = new Rectangle(current.getRectangle());
+											
+											private void pause()
 											{
-												Rectangle rect_copy = new Rectangle(current.getRectangle());
-												
-												private void pause()
+												if(rect_copy.contains(mouseLoc) && !isClicking)
 												{
-													if(rect_copy.contains(mouseLoc) && isHovering)
-													{
-														Interrupt.pauseMillisecond(200);
-														
-														pause();
-													}
-													else
-														return;
+													Interrupt.pauseMillisecond(200);
+													
+													pause();
 												}
-												
-												@Override
-												public void run()
+												else if(isClicking)
 												{
+													System.out.println("Clicking...");
+													return;
+												}
+											}
+											
+											@Override
+											public void run()
+											{
+												if(!isClicking)
+												{
+													isHovering = true;
+													
 													current.setBufferedColor(current.getBackground());
 													current.setBackground(Color.BLUE);
 
@@ -270,14 +288,14 @@ public class EventHandler
 
 													isHovering = false;
 												}
-											};
+											}
+										};
 
-											animation.start();
-										}
-										
-										if(button.actsOnHover())
-											button.onHover();
+										animation.start();
 									}
+									
+									if(button.actsOnHover())
+										button.onHover();
 								}
 							
 								break;
