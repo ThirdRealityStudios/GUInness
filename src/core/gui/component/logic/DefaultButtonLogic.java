@@ -1,7 +1,5 @@
 package core.gui.component.logic;
 
-import java.awt.Color;
-
 import core.driver.MouseDriver;
 import core.gui.component.EDButton;
 import core.gui.component.Logic;
@@ -11,12 +9,8 @@ public class DefaultButtonLogic implements ButtonLogic
 {
 	private Logic logic = null;
 	
-	private MouseDriver mouseDriver = null;
-	
 	public DefaultButtonLogic(MouseDriver mouseDriver)
 	{
-		this.mouseDriver = mouseDriver;
-		
 		logic = new Logic()
 		{
 			@Override
