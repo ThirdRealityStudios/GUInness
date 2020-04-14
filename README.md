@@ -6,10 +6,13 @@ This project was primarily developed privately but now it is continued in terms 
 
 
 # Known bugs
-- The predefined color doesn't show up for the hover action on a button.
+- none so far but:
+  -> text-fields have been functionally removed because the whole "interaction system" was buggy and unclear.
+  -> text-fields will be implemented again within the next commits.
 
 
 # Planed features
+- add text-fields (then added again because before the complete "interaction system" was kind of buggy)
 - add video components
 - add simple background sound tracks.
 - add complex buttons: a button which has a complex shape.
