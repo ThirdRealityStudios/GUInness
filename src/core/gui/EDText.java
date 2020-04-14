@@ -145,7 +145,7 @@ public abstract class EDText extends EDComponent
 		return active;
 	}
 
-	public void setAtiveColor(Color inactive)
+	public void setActiveColor(Color inactive)
 	{
 		this.active = inactive;
 	}
