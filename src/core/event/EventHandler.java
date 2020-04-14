@@ -1,19 +1,16 @@
 package core.event;
 
-import java.awt.Color;
+import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
-
+import core.Essentials;
+import core.driver.MouseDriver;
 import core.frame.LayeredRenderFrame;
-import core.frame.Summary;
 import core.gui.EDLayer;
 import core.gui.EDText;
 import core.gui.component.EDButton;
 import core.gui.component.EDTextfield;
+import core.gui.component.logic.DefaultButtonLogic;
 import core.io.Interrupt;
 
 public class EventHandler
@@ -22,12 +19,29 @@ public class EventHandler
 
 	private ArrayList<EDLayer> registeredLayers;
 
-	// Used to prevent other text fields from being selected at once.
-	private EDTextfield textfieldLocked = null;
+	private ComponentHandler buttonHandler = null;
 	
-	private volatile boolean isHovering = false;
-	
-	private volatile Point mouseLoc = null;
+	// Used to receive detailed information about the mouse movement.
+	private MouseDriver mouseDriver = null;
+
+	public EventHandler(LayeredRenderFrame rF)
+	{
+		if (rF != null)
+			this.rF = rF;
+		else
+			throw new NullPointerException("Passed RenderFrame is null!");
+		
+		// Initialize the mouse driver with the RenderFrame context.
+		// The RenderFrame context is needed for calculating front-end-window-related mouse data.
+		mouseDriver = new MouseDriver(rF);
+		
+		// After starting the driver you can receive movement information in real-time.
+		mouseDriver.getThread().start();
+
+		registeredLayers = new ArrayList<EDLayer>();
+		
+		buttonHandler = new ComponentHandler(this);
+	}
 	
 	public void reset(EDTextfield text)
 	{
@@ -39,7 +53,6 @@ public class EventHandler
 
 		text.setBackground(text.getBackground());
 		text.setInactive();
-		unlockTextfield();
 	}
 	
 	private void enableInput(EDTextfield edT)
@@ -51,267 +64,13 @@ public class EventHandler
 		}
 
 		edT.setActive();
-		edT.setBufferedValue(edT.getValue()); /* Save current value to restore it if there
+		edT.setBufferedValue(edT.getValue()); /* 
+											   * Save current value to restore it if there
 		 									   * will be
 		  									   * no changes saved.
 		  									   */
 
-		textfieldLocked = edT;
-
 		edT.onClick();
-	}
-	
-	private MouseListener mouseListener = new MouseListener()
-	{
-		@Override
-		public void mouseClicked(MouseEvent mouseEvent)
-		{
-			mouseLoc = Summary.getFrameLocation(mouseEvent.getPoint());
-			
-			for (EDLayer layer : registeredLayers)
-			{
-				// Tests for all available events whether a button was clicked.
-				// It will the corresponding implementation.
-				for (EDText current : layer.getTextBuffer())
-				{
-					String simpleType = Summary.typeof(current); // Get the type in upper-case.
-
-					// Execute onClick() of a graphical component if it was clicked.
-					if(current.getRectangle().contains(mouseLoc))
-					{
-						switch (simpleType)
-						{
-							case ("EDTEXTFIELD"):
-							{
-								if(textfieldLocked == null)
-								{
-									enableInput((EDTextfield) current);
-								}
-								else
-								{
-									// Discard previous focused text field.
-									{
-										if(textfieldLocked.getBufferedValue() != null)
-											textfieldLocked.setValue(textfieldLocked.getBufferedValue());
-
-										textfieldLocked.setBackground(textfieldLocked.getBufferedColor());
-										textfieldLocked.setBufferedColor(null);
-
-										textfieldLocked.setBackground(textfieldLocked.getBackground());
-										textfieldLocked.setInactive();
-										unlockTextfield();
-									}
-
-									// Focus newly clicked text field.
-									enableInput((EDTextfield) current);
-								}
-							
-								break;
-							}
-
-							case ("EDBUTTON"):
-							{
-								EDButton button = (EDButton) current;
-								
-								if(button.isInteractionEnabled())
-								{
-									if (button.getBufferedColor() == null)
-									{
-										Thread animation = new Thread()
-										{
-											@Override
-											public void run()
-											{
-												isHovering = false;
-												
-												if(!isHovering)
-													button.setBufferedColor(current.getBackground());
-												
-												button.setBackground(Color.RED);
-
-												Interrupt.pauseMillisecond(300);
-
-												button.setBackground(current.getBufferedColor());
-												button.setBufferedColor(null);
-											}
-										};
-
-										animation.start();
-									}
-
-									if(button.actsOnClick())
-										button.onClick();
-								}
-							
-								break;
-							}
-
-							default:
-							{
-								
-							}
-						}
-					}
-					else // If the focus is outside the current checked object (handles 'click-on-background-event')
-					{
-						switch (simpleType)
-						{
-							case ("EDTEXTFIELD"):
-							{
-								EDTextfield edT = (EDTextfield) current;
-								
-								if(edT.isActive())
-								{
-									reset(edT);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e)
-		{
-
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e)
-		{
-
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e)
-		{
-
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e)
-		{
-
-		}
-	};
-	
-	private MouseMotionListener mML = new MouseMotionListener()
-	{
-		@Override
-		public void mouseDragged(MouseEvent mouseEvent)
-		{
-			
-		}
-
-		@Override
-		public void mouseMoved(MouseEvent mouseEvent)
-		{
-			mouseLoc = Summary.getFrameLocation(mouseEvent.getPoint());
-			
-			for (EDLayer layer : registeredLayers)
-			{
-				// Tests for all available events whether a button was clicked.
-				// It will the corresponding implementation.
-				for (EDText current : layer.getTextBuffer())
-				{
-					String simpleType = Summary.typeof(current); // Get the type in upper-case.
-
-					// Execute onClick() of a graphical component if it was clicked.
-					if(current.getRectangle().contains(mouseLoc))
-					{
-						switch (simpleType)
-						{
-							case("EDTEXTFIELD"):
-							{
-								break;
-							}
-							case("EDBUTTON"):
-							{
-								if(!isHovering) // Checks for the 'animation thread' (below) of a hovered button when it may stop the animation.
-								{
-									isHovering = true;
-									
-									if(((EDButton) current).isInteractionEnabled())
-									{
-										EDButton button = (EDButton) current;
-										
-										if(current.getBufferedColor() == null) // Check whether the button is used currently, through the use of the buffer.
-										{
-											// Animation thread for the hover animation.
-											Thread animation = new Thread()
-											{
-												Rectangle rect_copy = new Rectangle(current.getRectangle());
-												
-												private void pause()
-												{
-													if(rect_copy.contains(mouseLoc) && isHovering)
-													{
-														Interrupt.pauseMillisecond(200);
-														
-														pause();
-													}
-													else
-														return;
-												}
-												
-												@Override
-												public void run()
-												{
-													current.setBufferedColor(current.getBackground());
-													current.setBackground(Color.BLUE);
-
-													rect_copy.setLocation(current.getRectangle().getLocation());
-
-													pause(); // Pauses as long as the user hovers over the button.
-
-													current.setBackground(current.getBufferedColor());
-													current.setBufferedColor(null);
-
-													isHovering = false;
-												}
-											};
-
-											animation.start();
-										}
-										
-										if(button.actsOnHover())
-											button.onHover();
-									}
-								}
-							
-								break;
-							}
-
-							default:
-							{
-								
-							}
-						}
-					}
-					else // If the focus is outside the current checked object (handles 'click-on-background-event')
-					{
-						switch (simpleType)
-						{
-							case ("EDTEXTFIELD"):
-							{
-								// Currently does nothing.. Will stay here anyway despite of performance losses..
-							}
-						}
-					}
-				}
-			}
-		}
-	};
-
-	public EventHandler(LayeredRenderFrame rF)
-	{
-		if (rF != null)
-			this.rF = rF;
-		else
-			throw new NullPointerException("Passed RenderFrame is null!");
-
-		registeredLayers = new ArrayList<EDLayer>();
 	}
 
 	public synchronized void registerLayer(EDLayer edL)
@@ -341,23 +100,38 @@ public class EventHandler
 
 	public void start()
 	{
-		rF.addMouseListener(mouseListener);
-		rF.addMouseMotionListener(mML);
+		buttonHandler.getHandlingThread().getThread().start();
 	}
 
 	public void stop()
 	{
-		rF.removeMouseListener(mouseListener);
-		rF.removeMouseMotionListener(mML);
+		System.out.println("[EventHandler]: Stopping ButtonHandler");
+		
+		// Tell the button handler to stop (does not stop it directly).
+		buttonHandler.getHandlingThread().breakLoop();
+		
+		// Wait until the button handler has finished and stopped.
+		while(buttonHandler.getHandlingThread().getThread().isAlive())
+		{
+			System.out.println("[EventHandler]: ButtonHandler not responding..");
+			Interrupt.pauseSecond(1);
+		};
+		
+		System.out.println("[EventHandler]: ButtonHandler successfully closed!");
 	}
 
 	public ArrayList<EDLayer> getRegisteredLayers()
 	{
 		return registeredLayers;
 	}
-
-	public void unlockTextfield()
+	
+	public MouseDriver getMouseDriver()
 	{
-		textfieldLocked = null;
+		return mouseDriver;
+	}
+	
+	public LayeredRenderFrame getLayeredRenderFrame()
+	{
+		return rF;
 	}
 }
