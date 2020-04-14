@@ -7,6 +7,7 @@ This project was primarily developed privately but now it is continued in terms 
 
 # Known bugs
 - none so far but:
+
   -> text-fields have been functionally removed because the whole "interaction system" was buggy and unclear.
   -> text-fields will be implemented again within the next commits.
 
