@@ -12,10 +12,13 @@ import core.gui.component.EDTextfield;
 import core.gui.decoration.EDImage;
 import core.gui.decoration.EDPath;
 import core.io.Loader;
+import core.io.state.FlagHolder;
 import core.maker.Path2DMaker;
 
 public class Main
 {
+	private volatile FlagHolder flags;
+
 	private LayeredRenderFrame rF;
 
 	private EDButton start, exit;
@@ -36,7 +39,11 @@ public class Main
 
 	public void init()
 	{
-		start = new EDButton(Color.GRAY, Color.LIGHT_GRAY, new Color(0.7f, 0.7f, 0.7f), new Point(100, 50), "START", Color.BLACK, 20, 5, 1, Color.BLACK, true)
+		flags = new FlagHolder();
+		
+		flags.update(true);
+
+		start = new EDButton(Color.GRAY, Color.RED, Color.BLUE, new Point(100, 50), "START", Color.BLACK, 20, 5, 1, Color.BLACK, true)
 		{
 			@Override
 			public void onHover()
@@ -77,7 +84,7 @@ public class Main
 
 		start.actsOnHover(false);
 
-		exit = new EDButton(Color.GRAY, Color.YELLOW, Color.BLUE, new Point(250, 50), "EXIT", Color.BLACK, 20, 5, 1, Color.BLACK, true)
+		exit = new EDButton(Color.GRAY, Color.RED, Color.BLUE, new Point(250, 50), "EXIT", Color.BLACK, 20, 5, 1, Color.BLACK, true)
 		{
 			@Override
 			public void onHover()
@@ -93,7 +100,7 @@ public class Main
 			}
 		};
 
-		input1 = new EDTextfield(Color.GRAY, Color.RED, new Point(350, 100), "EMPTY STR", 10, Color.BLACK, 20, 5, 1, Color.DARK_GRAY, true)
+		input1 = new EDTextfield(Color.GRAY, Color.RED, new Point(350, 100), "EMPTY", 10, Color.BLACK, 20, 5, 1, Color.DARK_GRAY, true)
 		{
 			@Override
 			public void onHover()
@@ -124,37 +131,34 @@ public class Main
 
 		img0 = new EDImage(new Point(0, 0), 300, true, i, true);
 	}
-	
-	public void setupLayer0()
-	{		
-		EDDescription edD = new EDDescription(new Point(100, 100), "Hello World!", 25, Color.RED, true);
-		
-		layer0.addPath(new EDPath(Path2DMaker.makeRectangle(0, 0, 200, 100), Color.RED, true, new Point(0, 100), true));
-		layer0.addPath(new EDPath(Path2DMaker.makeRectangle(200, 200, 400, 20), Color.RED, true, new Point(100, 300), true));
-		
-		layer0.addText(start);
-		layer0.addText(exit);
-		layer0.addText(input1);
-		layer0.addText(input2);
-		layer0.addText(input3);
-		layer0.addText(edD);
 
-		layer0.addImage(img0);
-	}
 
 	public void run()
 	{		
-		rF = new LayeredRenderFrame();
+		rF = new LayeredRenderFrame(flags);
 		rF.setAlwaysOnTop(true);
 
 		rF.setSize(800, 600);
-		rF.center();
 		rF.setVisible(true);
+		
+		EDDescription edD = new EDDescription(new Point(100, 100), "Hello World!", 25, Color.RED, true);
 		
 		layer0 = new EDLayer(0, true);
 		layer1 = new EDLayer(0, true);
 		
-		setupLayer0();
+		{
+			layer0.addPath(new EDPath(Path2DMaker.makeRectangle(0, 0, 200, 100), Color.RED, true, new Point(0, 100), true));
+			layer0.addPath(new EDPath(Path2DMaker.makeRectangle(200, 200, 400, 20), Color.RED, true, new Point(100, 300), true));
+			
+			layer0.addText(start);
+			layer0.addText(exit);
+			layer0.addText(input1);
+			layer0.addText(input2);
+			layer0.addText(input3);
+			layer0.addText(edD);
+
+			layer1.addImage(img0);
+		}
 
 		rF.addLayer(layer0);
 		rF.addLayer(layer1);

@@ -1,10 +1,8 @@
 package core.frame;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -35,8 +33,12 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListen
 
 	private UICreator uiCreator = new UICreator();
 
-	public LayeredRenderFrame()
+	private volatile FlagHolder flags;
+
+	public LayeredRenderFrame(FlagHolder flags)
 	{
+		this.flags = flags;
+
 		layers = new ArrayList<EDLayer>();
 
 		uiCreator = new UICreator();
@@ -196,19 +198,12 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListen
 		textOutput = copyText();
 		imgOutput = copyImage();
 	}
-	
-	// Write the entered alphabetic chars into the text field.
-	public void loadNext(char input, EDTextfield target)
-	{
-		if(uiCreator.getFontLoader().isValid(input) && (target.getValue().length() + 1) <= target.getLength()) 
-			target.setValue(target.getValue() + input);
-	}
 
 	// Handles all interaction with the interface components.
 	@Override
 	public void keyTyped(KeyEvent e)
 	{
-		
+
 	}
 
 	@Override
@@ -226,7 +221,13 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListen
 
 					if(text.isActive())
 					{
-						loadNext(e.getKeyChar(), text);
+						// Write the entered alphabetic char into the text field.
+						{
+							char textfieldInput = e.getKeyChar();
+
+							if(uiCreator.getFontLoader().isValid(textfieldInput) && (text.getValue().length() + 1) <= text.getLength()) 
+								text.setValue(text.getValue() + textfieldInput);
+						}
 
 						// See if Enter was hit to save the changes.
 						if(e.getKeyCode() == KeyEvent.VK_ENTER)
@@ -237,6 +238,7 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListen
 							text.setBufferedColor(null);
 
 							text.setInactive();
+							eH.unlockTextfield();
 						}
 						else if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
 						{
@@ -264,7 +266,7 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListen
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
-		
+
 	}
 
 	private void apply(EDLayer current)
@@ -357,22 +359,5 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListen
 	public EDLayer getLayer(int index)
 	{
 		return layers.get(index);
-	}
-	
-	public void center()
-	{
-		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-		
-		int xScreenMiddle = (screen.width / 2), yScreenMiddle = (screen.height / 2);
-		int xWindowMiddle = (getWidth() / 2), yWindowMiddle = (getHeight() / 2);
-		
-		int xMiddle = xScreenMiddle - xWindowMiddle, yMiddle = yScreenMiddle - yWindowMiddle;
-		
-		setLocation(xMiddle, yMiddle);
-	}
-	
-	public EventHandler getEventHandler()
-	{
-		return eH;
 	}
 }
