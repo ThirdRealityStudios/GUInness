@@ -231,7 +231,7 @@ public class ComponentHandler
 		 * Before a click action can actually be processed you will need to know if it is (technically or internally) a valid click.
 		 * A 'valid click' is for example the case,
 		 * when a user does not (!) hold the mouse button pressed and enter a button afterwards.
-		 * It this would not be recognized,
+		 * If this would not be recognized,
 		 * you could trigger button before you actually hover over it first.
 		 * That is something,
 		 * which can be very annoying if it is not prevented.
