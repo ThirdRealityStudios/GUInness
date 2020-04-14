@@ -1,16 +1,10 @@
 package core.event;
 
-import java.awt.MouseInfo;
-import java.awt.Point;
 import java.util.ArrayList;
-import core.Essentials;
 import core.driver.MouseDriver;
 import core.frame.LayeredRenderFrame;
 import core.gui.EDLayer;
-import core.gui.EDText;
-import core.gui.component.EDButton;
 import core.gui.component.EDTextfield;
-import core.gui.component.logic.DefaultButtonLogic;
 import core.io.Interrupt;
 
 public class EventHandler
@@ -19,8 +13,8 @@ public class EventHandler
 
 	private ArrayList<EDLayer> registeredLayers;
 
-	private ComponentHandler buttonHandler = null;
-	
+	private ComponentHandler componentHandler = null;
+
 	// Used to receive detailed information about the mouse movement.
 	private MouseDriver mouseDriver = null;
 
@@ -40,7 +34,7 @@ public class EventHandler
 
 		registeredLayers = new ArrayList<EDLayer>();
 		
-		buttonHandler = new ComponentHandler(this);
+		componentHandler = new ComponentHandler(this);
 	}
 	
 	public void reset(EDTextfield text)
@@ -100,7 +94,7 @@ public class EventHandler
 
 	public void start()
 	{
-		buttonHandler.getHandlingThread().getThread().start();
+		componentHandler.getHandlingThread().getThread().start();
 	}
 
 	public void stop()
@@ -108,10 +102,10 @@ public class EventHandler
 		System.out.println("[EventHandler]: Stopping ButtonHandler");
 		
 		// Tell the button handler to stop (does not stop it directly).
-		buttonHandler.getHandlingThread().breakLoop();
+		componentHandler.getHandlingThread().breakLoop();
 		
 		// Wait until the button handler has finished and stopped.
-		while(buttonHandler.getHandlingThread().getThread().isAlive())
+		while(componentHandler.getHandlingThread().getThread().isAlive())
 		{
 			System.out.println("[EventHandler]: ButtonHandler not responding..");
 			Interrupt.pauseSecond(1);
