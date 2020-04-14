@@ -11,6 +11,7 @@ import core.gui.component.EDDescription;
 import core.gui.component.EDTextfield;
 import core.gui.decoration.EDImage;
 import core.gui.decoration.EDPath;
+import core.io.Interrupt;
 import core.io.Loader;
 import core.maker.Path2DMaker;
 
@@ -62,6 +63,8 @@ public class Main
 					clicked = false;
 				}
 				
+				/*
+				// You can print onto the console when the image was hidden or displayed.
 				if(!clicked)
 				{
 					System.out.println("Enabled!");
@@ -70,12 +73,13 @@ public class Main
 				{
 					System.out.println("Disabled!");
 				}
+				*/
 				
 				rF.applyChanges();
 			}
 		};
 
-		start.actsOnHover(false);
+		start.actsOnHover(true);
 
 		exit = new EDButton(Color.GRAY, Color.YELLOW, Color.BLUE, new Point(250, 50), "EXIT", Color.BLACK, 20, 5, 1, Color.BLACK, true)
 		{
@@ -92,6 +96,8 @@ public class Main
 				System.exit(0);
 			}
 		};
+		
+		exit.actsOnHover(true);
 
 		input1 = new EDTextfield(Color.GRAY, Color.RED, new Point(350, 100), "EMPTY STR", 10, Color.BLACK, 20, 5, 1, Color.DARK_GRAY, true)
 		{
