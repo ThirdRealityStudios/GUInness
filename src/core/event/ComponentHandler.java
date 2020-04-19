@@ -24,7 +24,7 @@ public class ComponentHandler
 	private DefaultTextfieldLogic defaultTextfieldLogic = null;
 
 	// If a text-field was selected, it will be saved as long as the user does not exit it.
-	EDTextfield selectedTextfield = null;
+	private volatile EDTextfield selectedTextfield = null;
 
 	// The 'eventHandler' variable is the reference to the superior service (EventHandler) which provides all necessary references to have access to all services on the upper layer.
 	private EventHandler eventHandler = null;
@@ -41,6 +41,8 @@ public class ComponentHandler
 	// So, when the user leaves the area of a button,
 	// it will reset the color etc.
 	private ArrayList<String> resetableTypes = new ArrayList<String>();
+
+	private String bufferedValue;
 
 	public ComponentHandler(EventHandler eventHandler)
 	{
@@ -181,22 +183,32 @@ public class ComponentHandler
 		{
 			String type = Essentials.typeof(focusedComponent);
 
+			int keyStroked = eventHandler.getKeyboardDriver().getActiveKey();
+
 			boolean isTextfieldSelected = selectedTextfield != null,
-					focusedNothing = isTextfieldSelected && focusedComponent == null,
-					focusedDifferentType = isTextfieldSelected && focusedComponent != null && !focusedComponent.equals(selectedTextfield),
-					escapePressed = eventHandler.getKeyboardDriver().getActiveKey() == KeyEvent.VK_ESCAPE,
-					textfieldExited = focusedNothing && eventHandler.getMouseDriver().isClicking() || focusedDifferentType && eventHandler.getMouseDriver().isClicking() || escapePressed;
+					focusedNothing = focusedComponent == null,
+					focusedDifferentType = focusedComponent != null && !focusedComponent.equals(selectedTextfield),
+					saveAndExit = focusedNothing && eventHandler.getMouseDriver().isClicking() || focusedDifferentType && eventHandler.getMouseDriver().isClicking(),
+					revertAndExit = keyStroked == KeyEvent.VK_ESCAPE;
 
-			if(isTextfieldSelected && textfieldExited)
+			if(isTextfieldSelected)
 			{
-				saveTextfield();
-				defocusTextfield();
-			}
-			else if(eventHandler.getKeyboardDriver().isKeyActive() && isTextfieldSelected)
-			{
-				char key = eventHandler.getKeyboardDriver().getActiveKeyChar();
+				if(saveAndExit)
+				{
+					selectedTextfield.save();
+					defocusTextfield();
+				}
+				else if(revertAndExit)
+				{
+					selectedTextfield.revert();
+					defocusTextfield();
+				}
+				else
+				{
+					selectedTextfield.write((char) keyStroked);
+				}
 
-				writeTextfieldSafely(key);
+				return;
 			}
 
 			// With the control switch, it determines what type of component was focused,
@@ -241,45 +253,6 @@ public class ComponentHandler
 		}
 
 		saveHistoricValues();
-	}
-
-	private void writeTextfieldSafely(char key)
-	{
-		boolean originalValueStored = selectedTextfield.getBufferedValue() != null;
-
-		boolean noOverflow = (selectedTextfield.getValue().length() + 1) <= selectedTextfield.getLength();
-
-		if(key != KeyEvent.VK_UNDEFINED)
-		{
-			if(noOverflow)
-			{
-				if(originalValueStored)
-					writeTextfieldDirectly(key);
-				else
-				{
-					selectedTextfield.setBufferedValue(selectedTextfield.getValue());
-					writeTextfieldDirectly(key);
-				}
-			}
-		}
-	}
-
-	private void writeTextfieldDirectly(char key)
-	{
-		selectedTextfield.setValue(selectedTextfield.getValue() + key);
-	}
-
-	private void saveTextfield()
-	{
-		// If something was entered into the text-field, then the buffer is always initialized with the original value (for reverting the changes if wanted).
-		boolean somethingWasEntered = selectedTextfield.getBufferedValue() != null;
-
-		if(somethingWasEntered)
-		{
-			selectedTextfield.setValue(selectedTextfield.getBufferedValue());
-
-			selectedTextfield.setBufferedValue(null);
-		}
 	}
 
 	private void defocusTextfield()

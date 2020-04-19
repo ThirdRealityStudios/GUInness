@@ -78,7 +78,7 @@ public class Main
 			}
 		};
 
-		start.actsOnHover(true);
+		start.actsOnHover(false);
 
 		exit = new EDButton(Color.GRAY, Color.YELLOW, Color.BLUE, new Point(250, 50), "EXIT", Color.BLACK, 20, 5, 1, Color.BLACK, true)
 		{
@@ -96,7 +96,7 @@ public class Main
 			}
 		};
 		
-		exit.actsOnHover(true);
+		exit.actsOnHover(false);
 
 		input1 = new EDTextfield(Color.GRAY, Color.RED, new Point(350, 100), "EMPTY STR", 10, Color.BLACK, 20, 5, 1, Color.DARK_GRAY, true)
 		{
