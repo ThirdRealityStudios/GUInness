@@ -1,22 +1,32 @@
 package core.event;
 
-import java.awt.MouseInfo;
-import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import core.Essentials;
-import core.frame.LayeredRenderFrame;
-import core.gui.EDLayer;
+import core.driver.MouseDriver;
 import core.gui.EDText;
 import core.gui.component.EDButton;
+import core.gui.component.EDTextfield;
 import core.gui.component.logic.DefaultButtonLogic;
+import core.gui.component.logic.DefaultTextfieldLogic;
 
 public class ComponentHandler
 {
+	// The 'handler'-thread is used to make all components working by checking the state, make evaluations and then decide what to do next, e.g. when a user clicked a button.
+	// Because of that, the 'handler'-thread has a high priority.
+	// It actually needs to run as fast as possible in order not to miss user interactions etc.
 	private LoopedThread handler = null;
 	
+	// These logic classes define how each EasyDraw type reacts on user interaction.
+	// It is very simplified in order to make modifications easy, e.g. adding new components.
 	private DefaultButtonLogic defaultButtonLogic = null;
+	private DefaultTextfieldLogic defaultTextfieldLogic = null;
 	
+	// If a text-field was selected, it will be saved as long as the user does not exit it.
+	EDTextfield selectedTextfield = null;
+	
+	// The 'eventHandler' variable is the reference to the superior service (EventHandler) which provides all necessary references to have access to all services on the upper layer.
 	private EventHandler eventHandler = null;
 	
 	private EDText focusedComponent, store;
@@ -36,96 +46,33 @@ public class ComponentHandler
 	{
 		initResetTypes(); // Adds all resetable EasyDraw component types.
 		
-		// Used to tell the ComponentHandler how to evaluate all buttons.
-		// The mouse driver is used to provide the DefaultButtonLogic with all necessary information.
-		this.defaultButtonLogic = new DefaultButtonLogic(eventHandler.getMouseDriver());
+		// Used as a temporary reference to pass trough the MouseDriver of the EventHandler.
+		MouseDriver mouseDriver = eventHandler.getMouseDriver();
 		
+		// The implemented ComponentLogic classes are used to tell the ComponentHandler how to treat each type of component.
+		// The MouseDriver is used here to serve the logic classes below with all necessary information about the mouse, e.g. cursor position, if it is clicking etc.
+		// If a EventHandler is passed, then the logic will use more than just a mouse driver, e.g. keyboard driver etc.
+		this.defaultButtonLogic = new DefaultButtonLogic(mouseDriver);
+		this.defaultTextfieldLogic = new DefaultTextfieldLogic(eventHandler);
+		
+		// The EventHandler is, let's say, the superior class which serves the ComponentHandler as a main source of information for events and management of everything.
 		this.eventHandler = eventHandler;
 		
+		// Here a thread is created which just serves this class to refresh all retrievable information on components.
 		handler = new LoopedThread()
 		{
 			@Override
 			public void loop()
-			{
+			{				
 				triggerComponent();
 			}
 		};
 	}
 	
+	// Returns the handling thread, so the thread which frequently handles all components to make them work.
 	public LoopedThread getHandlingThread()
 	{
 		return handler;
-	}
-	
-	// Tests whether the mouse cursor (relative to the RenderFrame) is inside the given component.
-	// Returns 'false' if target is 'null'.
-	public boolean isCursorInsideComponent(EDText target)
-	{
-		// If there is no component given,
-		// this method assumes no component was found,
-		// so the cursor is not over a component.
-		if(target == null)
-			return false;
-		
-		LayeredRenderFrame rF = eventHandler.getLayeredRenderFrame();
-
-		// The current absolute mouse position on screen.
-		Point desktopCursor = MouseInfo.getPointerInfo().getLocation();
-		
-		// Frame offset for the relative cursor position.
-		Point frameOffset = new Point(-8, -31);
-		
-		// The current mouse position relative to the JFrame.
-		Point frameCursor = new Point(desktopCursor.x - rF.getLocation().x + frameOffset.x, desktopCursor.y - rF.getLocation().y + frameOffset.y);
-		
-		return target.getRectangle().contains(frameCursor);
-	}
-	
-	// Checks whether the cursor is over any EasyDraw component.
-	public boolean isCursorInsideAnyComponent()
-	{
-		for(EDLayer layer : eventHandler.getRegisteredLayers())
-		{
-			for(EDText selected : layer.getTextBuffer())
-			{
-				boolean insideComponent = isCursorInsideComponent(selected);
-				
-				// If there was on match at least, you will know that there is a component which is focused by the cursor.
-				if(insideComponent)
-				{
-					return true;
-				}
-			}
-		}
-		
-		return false;
-	}
-	
-	// Returns the first component which is focused by the cursor.
-	// Makes the UI more efficient by breaking at the first component already.
-	// Returns null if there is no such component.
-	public EDText getFocusedComponent()
-	{
-		EDText firstMatch = null;
-		
-		for(EDLayer layer : eventHandler.getRegisteredLayers())
-		{
-			for(EDText selected : layer.getTextBuffer())
-			{
-				boolean insideComponent = isCursorInsideComponent(selected);
-				
-				// Returns the first component which is focused by the mouse cursor.
-				if(insideComponent)
-				{
-					firstMatch = selected;
-					
-					break;
-				}
-			}
-		}
-		
-		// Returns the first component which is focused by the mouse cursor.
-		return firstMatch;
 	}
 	
 	// This method will reset the given types by reverting the background colors.
@@ -133,6 +80,20 @@ public class ComponentHandler
 	private void initResetTypes()
 	{
 		resetableTypes.add("EDButton");
+	}
+	
+	// Saves necessary data about the mouse, e.g. position, if it was clicked and which was the last known component what was clicked.
+	private void saveHistoricValues()
+	{
+		clickedBefore = eventHandler.getMouseDriver().isClicking();
+		
+		boolean uninitialized = focusedComponentBefore == null && focusedComponent != null;
+		
+		boolean changedMeta = focusedComponentBefore != null && focusedComponent != null && !focusedComponent.equals(focusedComponentBefore);
+		
+		// Look if it is possible to assign the current component, if there is one actually and if it is a different one from the stored one.
+		if(uninitialized || changedMeta)
+			focusedComponentBefore = focusedComponent;
 	}
 	
 	// Before another component can be focused, there is some pre-processing neccessary.
@@ -152,7 +113,7 @@ public class ComponentHandler
 		boolean isFocusedTypeResetable = store != null && resetableTypes.contains(type);
 		
 		// Explained directly below in the block-comment.
-		boolean isResetNecessary = !isCursorInsideComponent(focusedComponent) && isFocusedTypeResetable;
+		boolean isResetNecessary = !eventHandler.getMouseDriver().isFocusing(focusedComponent) && isFocusedTypeResetable;
 		
 		/*
 		 * Looks whether the user left the area of a component.
@@ -172,20 +133,6 @@ public class ComponentHandler
 		}
 	}
 	
-	// Saves necessary data about the mouse, e.g. position, if it was clicked and which was the last known component what was clicked.
-	private void saveHistoricValues()
-	{
-		clickedBefore = eventHandler.getMouseDriver().isClicking();
-		
-		boolean uninitialized = focusedComponentBefore == null && focusedComponent != null;
-		
-		boolean changedMeta = focusedComponentBefore != null && focusedComponent != null && !focusedComponent.equals(focusedComponentBefore);
-		
-		// Look if it is possible to assign the current component, if there is one actually and if it is a different one from the stored one.
-		if(uninitialized || changedMeta)
-			focusedComponentBefore = focusedComponent;
-	}
-	
 	// Mainly triggers or resets components if the conditions are given. The given 'logic' is applied to the components.
 	private void triggerComponent()
 	{
@@ -194,7 +141,7 @@ public class ComponentHandler
 		
 		// After that it will just focus the component at the position of the cursor, if there is one actually.
 		// Otherwise this can also be 'null', meaning no component is focused.
-		focusedComponent = getFocusedComponent();
+		focusedComponent = eventHandler.getMouseDriver().getFocusedComponent();
 		
 		// Looks whether the remembered component is still the same.
 		// Without this validation the 'reset event' would not work correctly.
@@ -215,19 +162,12 @@ public class ComponentHandler
 		// Looks whether a user clicked outside the component before and is still clicking.
 		// In this case, the click is invalid.
 		boolean invalidClick = clickedBefore;
-
-		// If there is no focused component by the cursor, return directly.
-		// It would make no sense to make further evaluations which could cost the performance of the application.
-		if(focusedComponent == null)
-		{
-			saveHistoricValues();
-			
-			return;
-		}
+		
 		// For the case, there is a component, it will just continue below with evaluations, component logic etc...
 		
-		
 		/*
+		 * Notice: an 'invalid click'-check is only applicable for a number of supported types (a.k.a 'resetable types').
+		 * 
 		 * Before a click action can actually be processed you will need to know if it is (technically or internally) a valid click.
 		 * A 'valid click' is for example the case,
 		 * when a user does not (!) hold the mouse button pressed and enter a button afterwards.
@@ -237,27 +177,114 @@ public class ComponentHandler
 		 * which can be very annoying if it is not prevented.
 		 * Also it is unusual or not commonly done this way.
 		 */
-		if(!invalidClick)
+		if(!invalidClick) // Notice: this will represent the last known click!
 		{
+			String type = Essentials.typeof(focusedComponent);
+			
+			boolean isTextfieldSelected = selectedTextfield != null,
+					focusedNothing = isTextfieldSelected && focusedComponent == null,
+					focusedDifferentType = isTextfieldSelected && focusedComponent != null && !focusedComponent.equals(selectedTextfield),
+					escapePressed = eventHandler.getKeyboardDriver().getActiveKey() == KeyEvent.VK_ESCAPE,
+					textfieldExited = focusedNothing && eventHandler.getMouseDriver().isClicking() || focusedDifferentType && eventHandler.getMouseDriver().isClicking() || escapePressed;
+			
+			if(isTextfieldSelected && textfieldExited)
+			{
+				saveTextfield();
+				defocusTextfield();
+			}
+			else if(eventHandler.getKeyboardDriver().isKeyActive() && isTextfieldSelected)
+			{
+				char key = eventHandler.getKeyboardDriver().getActiveKeyChar();
+				
+				writeTextfieldSafely(key);
+			}
+			
 			// With the control switch, it determines what type of component was focused, 
 			// e.g. a button or text-field.
 			// The actions in between decide what to do for each type.
-			switch(Essentials.typeof(focusedComponent))
+			switch(type)
 			{
 			case "EDButton":
 				{
 					EDButton button = (EDButton) focusedComponent;
-					
+				
 					defaultButtonLogic.exec(button);
 				}
 			break;
 			
+			case "EDTextfield":
+				{
+					EDTextfield textfield = (EDTextfield) focusedComponent;
+					
+					// Select the focused text-field if it is being clicked.
+					if(eventHandler.getMouseDriver().isClicking())
+						selectedTextfield = textfield;
+				
+					defaultTextfieldLogic.exec(textfield);
+				}
+			break;
+			
+			case "EDText":
+			{
+				if(eventHandler.getMouseDriver().isClicking())
+					System.out.println("Clicked a EDText component");
+			}
+			break;
+			
+			// Cursor is outside any component.
 			default:
-				// nothing.
+				{					
+					if(eventHandler.getMouseDriver().isClicking())
+						System.out.println("Clicked at nothing");
+				}
 			}
 		}
 		
 		saveHistoricValues();
+	}
+	
+	private void writeTextfieldSafely(char key)
+	{
+		boolean originalValueStored = selectedTextfield.getBufferedValue() != null;
+		
+		boolean noOverflow = (selectedTextfield.getValue().length() + 1) <= selectedTextfield.getLength();
+		
+		if(key != KeyEvent.VK_UNDEFINED)
+		{
+			if(noOverflow)
+			{
+				if(originalValueStored)
+					writeTextfieldDirectly(key);
+				else
+				{
+					selectedTextfield.setBufferedValue(selectedTextfield.getValue());
+					writeTextfieldDirectly(key);
+				}
+			}
+		}
+	}
+	
+	private void writeTextfieldDirectly(char key)
+	{
+		selectedTextfield.setValue(selectedTextfield.getValue() + key);
+	}
+	
+	private void saveTextfield()
+	{
+		// If something was entered into the text-field, then the buffer is always initialized with the original value (for reverting the changes if wanted).
+		boolean somethingWasEntered = selectedTextfield.getBufferedValue() != null;
+		
+		if(somethingWasEntered)
+		{
+			selectedTextfield.setValue(selectedTextfield.getBufferedValue());
+			
+			selectedTextfield.setBufferedValue(null);
+		}
+	}
+	
+	private void defocusTextfield()
+	{
+		selectedTextfield = null;
 	}
 	
 	// Resets the values of the background color.

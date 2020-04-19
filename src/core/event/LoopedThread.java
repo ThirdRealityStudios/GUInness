@@ -1,10 +1,13 @@
 package core.event;
 
+import core.io.Interrupt;
+
 public abstract class LoopedThread
 {
 	private Thread loop = null;
 
-	private boolean breakLoop = false;
+	// Needs to be 'volatile'. Otherwise other processes would not get the current value.
+	private volatile boolean breakLoop = false;
 
 	public LoopedThread()
 	{
@@ -36,5 +39,6 @@ public abstract class LoopedThread
 		return loop;
 	}
 
+	// A loop must not be empty. If it is 
 	public abstract void loop();
 }

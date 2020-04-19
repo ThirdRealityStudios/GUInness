@@ -18,7 +18,6 @@ import core.gui.EDText;
 import core.gui.component.EDTextfield;
 import core.gui.decoration.EDImage;
 import core.gui.decoration.EDPath;
-import core.io.state.FlagHolder;
 import core.tools.gui.UICreator;
 
 public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListener
@@ -31,7 +30,7 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListen
 
 	private ArrayList<EDImage> imgBuffer, imgOutput;
 
-	private EventHandler eH = new EventHandler(this);
+	private volatile EventHandler eH = new EventHandler(this);
 
 	private UICreator uiCreator = new UICreator();
 

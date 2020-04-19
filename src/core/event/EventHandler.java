@@ -1,6 +1,8 @@
 package core.event;
 
 import java.util.ArrayList;
+
+import core.driver.KeyboardDriver;
 import core.driver.MouseDriver;
 import core.frame.LayeredRenderFrame;
 import core.gui.EDLayer;
@@ -18,6 +20,9 @@ public class EventHandler
 	// Used to receive detailed information about the mouse movement.
 	private MouseDriver mouseDriver = null;
 
+	// Used to receive detailed information about the keyboard activity.
+	private KeyboardDriver keyboardDriver = null;
+
 	public EventHandler(LayeredRenderFrame rF)
 	{
 		if (rF != null)
@@ -29,8 +34,13 @@ public class EventHandler
 		// The RenderFrame context is needed for calculating front-end-window-related mouse data.
 		mouseDriver = new MouseDriver(rF);
 		
-		// After starting the driver you can receive movement information in real-time.
+		// After starting the driver (thread) you can receive movement data in real-time.
 		mouseDriver.getThread().start();
+		
+		// Initialize the keyboard driver with the RenderFrame context.
+		// The RenderFrame context is needed for getting front-end-window-related keyboard data.
+		keyboardDriver = new KeyboardDriver(rF);
+		keyboardDriver.getThread().start();
 
 		registeredLayers = new ArrayList<EDLayer>();
 		
@@ -96,22 +106,50 @@ public class EventHandler
 	{
 		componentHandler.getHandlingThread().getThread().start();
 	}
-
-	public void stop()
+	
+	private void stopComponentHandler()
 	{
-		System.out.println("[EventHandler]: Stopping ButtonHandler");
+		System.out.println("[EventHandler]: Stopping ComponentHandler");
 		
-		// Tell the button handler to stop (does not stop it directly).
+		// Tell the component handler to stop (does not stop it directly).
 		componentHandler.getHandlingThread().breakLoop();
 		
-		// Wait until the button handler has finished and stopped.
+		// Wait until the component handler has finished and stopped.
 		while(componentHandler.getHandlingThread().getThread().isAlive())
 		{
-			System.out.println("[EventHandler]: ButtonHandler not responding..");
+			System.out.println("[EventHandler]: ComponentHandler not responding.. [Breaking? " + componentHandler.getHandlingThread().tryingBreak() + "]");
 			Interrupt.pauseSecond(1);
 		};
 		
-		System.out.println("[EventHandler]: ButtonHandler successfully closed!");
+		System.out.println("[EventHandler]: ComponentHandler successfully closed!");
+	}
+	
+	private void stopMouseDriver()
+	{
+		System.out.println("[EventHandler]: Stopping MouseDriver");
+		
+		// Tell the mouse driver to stop (does not stop it directly).
+		mouseDriver.breakLoop();
+		
+		// Wait until the mouse driver has finished and stopped.
+		while(mouseDriver.getThread().isAlive())
+		{
+			System.out.println("[EventHandler]: MouseDriver not responding..");
+			Interrupt.pauseSecond(1);
+		};
+		
+		System.out.println("[EventHandler]: MouseDriver successfully closed!");
+	}
+
+	// Stops the whole mechanism behind this which handles events of all kind of things, e.g. component events or periphery devices.
+	public void stop()
+	{
+		// First need to stop the component handler before the dependent services can be stopped.
+		stopComponentHandler();
+		
+		// After that the underlying services can be stopped first (because the dependence of these services is not given anymore).
+		// Reason: The ComponentHandler steadily retrieves data from the drivers, so it has to be stopped first to avoid conflicts.
+		stopMouseDriver();
 	}
 
 	public ArrayList<EDLayer> getRegisteredLayers()
@@ -122,6 +160,16 @@ public class EventHandler
 	public MouseDriver getMouseDriver()
 	{
 		return mouseDriver;
+	}
+	
+	public KeyboardDriver getKeyboardDriver()
+	{
+		return keyboardDriver;
+	}
+	
+	public ComponentHandler getComponentHandler()
+	{
+		return componentHandler;
 	}
 	
 	public LayeredRenderFrame getLayeredRenderFrame()
