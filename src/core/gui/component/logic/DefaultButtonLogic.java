@@ -3,11 +3,12 @@ package core.gui.component.logic;
 import java.util.Stack;
 
 import core.driver.MouseDriver;
+import core.gui.EDText;
 import core.gui.component.EDButton;
 import core.gui.component.Logic;
 import core.io.Interrupt;
 
-public class DefaultButtonLogic implements ButtonLogic
+public class DefaultButtonLogic implements ComponentLogic
 {
 	private Logic logic = null;
 	
@@ -127,7 +128,7 @@ public class DefaultButtonLogic implements ButtonLogic
 	}
 	
 	@Override
-	public void exec(EDButton target)
+	public void exec(EDText target)
 	{
 		logic.exec(target);
 	}

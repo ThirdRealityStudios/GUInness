@@ -11,7 +11,6 @@ import core.gui.component.EDDescription;
 import core.gui.component.EDTextfield;
 import core.gui.decoration.EDImage;
 import core.gui.decoration.EDPath;
-import core.io.Interrupt;
 import core.io.Loader;
 import core.maker.Path2DMaker;
 

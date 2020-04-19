@@ -8,10 +8,21 @@ import java.awt.event.MouseMotionListener;
 
 import core.event.LoopedThread;
 import core.frame.LayeredRenderFrame;
+import core.gui.EDLayer;
+import core.gui.EDText;
 import core.io.Interrupt;
 
 public class MouseDriver extends LoopedThread implements MouseMotionListener, MouseListener
 {
+	/*
+	 *  'context' is the variable to use
+	 *  for calculating mouse movement and additional data.
+	 *  The data related to the given RenderFrame can then be used in real-time.
+	 *  To do so,
+	 *  you can use the given methods below.
+	 */
+	private LayeredRenderFrame context;
+	
 	// The variable is used to calculate the mouse speed below.
 	private Point cursorLast = null;
 	
@@ -31,6 +42,8 @@ public class MouseDriver extends LoopedThread implements MouseMotionListener, Mo
 
 	public MouseDriver(LayeredRenderFrame context)
 	{
+		this.context = context;
+		
 		/*
 		 *  'context' is the variable to use
 		 *  for calculating mouse movement and additional data.
@@ -46,6 +59,7 @@ public class MouseDriver extends LoopedThread implements MouseMotionListener, Mo
 		context.addMouseMotionListener(this);
 	}
 	
+	// Calculates the mouse speed with a delay of 10ms to have a difference.
 	private double calcMouseSpeed()
 	{
 		cursorLast = getCursorLocation();
@@ -86,8 +100,6 @@ public class MouseDriver extends LoopedThread implements MouseMotionListener, Mo
 		{
 			action = null;
 		}
-		
-		// Interrupt.pauseMillisecond(5);
 	}
 	
 	@Override
@@ -152,8 +164,72 @@ public class MouseDriver extends LoopedThread implements MouseMotionListener, Mo
 		return getAction() != null && getAction() == true;
 	}
 	
+	// Returns the absolute current cursor location.
 	public Point getCursorLocation()
 	{
 		return MouseInfo.getPointerInfo().getLocation();
+	}
+	
+	// Tests if the cursor is on the position of a component.
+	// Meaning: Tests whether the mouse cursor (relative to the RenderFrame) is inside the given component.
+	// Returns 'false' if target is 'null'.
+	public boolean isFocusing(EDText target)
+	{
+		// If there is no component given,
+		// this method assumes no component was found,
+		// so the cursor is not over a component.
+		if(target == null)
+			return false;
+
+		// The current absolute mouse position on screen.
+		Point desktopCursor = getCursorLocation();
+		
+		// Frame offset for the relative cursor position.
+		Point frameOffset = new Point(-8, -31);
+		
+		// The current mouse position relative to the JFrame.
+		Point frameCursor = new Point(desktopCursor.x - context.getLocation().x + frameOffset.x, desktopCursor.y - context.getLocation().y + frameOffset.y);
+		
+		return target.getRectangle().contains(frameCursor);
+	}
+	
+	// Tests if the user is clicking a component.
+	public boolean isClicking(EDText edT)
+	{
+		return isFocusing(edT) && isClicking();
+	}
+	
+	// Returns the first component which is focused by the cursor.
+	// Makes the UI more efficient by breaking at the first component already.
+	// Returns null if there is no such component.
+	public EDText getFocusedComponent()
+	{
+		EDText firstMatch = null;
+		
+		for(EDLayer layer : context.getEventHandler().getRegisteredLayers())
+		{
+			for(EDText selected : layer.getTextBuffer())
+			{
+				boolean insideComponent = isFocusing(selected);
+				
+				// Returns the first component which is focused by the mouse cursor.
+				if(insideComponent)
+				{
+					firstMatch = selected;
+					
+					break;
+				}
+			}
+		}
+		
+		// Returns the first component which is focused by the mouse cursor.
+		return firstMatch;
+	}
+	
+	// Checks whether the cursor is over any EasyDraw component.
+	// Should be avoided if used too often because of performance reasons.
+	public boolean isFocusingAny()
+	{
+		return getFocusedComponent() != null;
 	}
 }
