@@ -6,7 +6,6 @@ import core.driver.KeyboardDriver;
 import core.driver.MouseDriver;
 import core.frame.LayeredRenderFrame;
 import core.gui.EDLayer;
-import core.gui.component.EDTextfield;
 import core.io.Interrupt;
 
 public class EventHandler
@@ -45,36 +44,6 @@ public class EventHandler
 		registeredLayers = new ArrayList<EDLayer>();
 
 		componentHandler = new ComponentHandler(this);
-	}
-
-	public void reset(EDTextfield text)
-	{
-		if(text.getBufferedValue() != null)
-			text.setValue(text.getBufferedValue());
-
-		text.setBackground(text.getBufferedColor());
-		text.setBufferedColor(null);
-
-		text.setBackground(text.getBackground());
-		text.setInactive();
-	}
-
-	private void enableInput(EDTextfield edT)
-	{
-		if(edT.getBufferedColor() == null)
-		{
-			edT.setBufferedColor(edT.getBackground());
-			edT.setBackground(edT.getActiveColor());
-		}
-
-		edT.setActive();
-		edT.setBufferedValue(edT.getValue()); /*
-											   * Save current value to restore it if there
-		 									   * will be
-		  									   * no changes saved.
-		  									   */
-
-		edT.onClick();
 	}
 
 	public synchronized void registerLayer(EDLayer edL)

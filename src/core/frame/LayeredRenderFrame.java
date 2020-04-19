@@ -20,7 +20,7 @@ import core.gui.decoration.EDImage;
 import core.gui.decoration.EDPath;
 import core.tools.gui.UICreator;
 
-public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListener
+public class LayeredRenderFrame extends JFrame implements RenderFrame
 {
 	private ArrayList<EDLayer> layers;
 
@@ -88,8 +88,6 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListen
 				{
 					if(edT.isVisible())
 						uiCreator.createText(g, edT);
-					else
-						continue;
 				}
 			}
 
@@ -99,8 +97,6 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListen
 				{
 					if(img.isVisible())
 						g.drawImage(img.getContent(), img.getRectangle().getLocation().x, img.getRectangle().getLocation().y, img.getRectangle().getSize().width, img.getRectangle().getSize().height, null);
-					else
-						continue;
 				}
 			}
 
@@ -128,8 +124,6 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListen
 		}
 
 		eH.start();
-
-		addKeyListener(this);
 	}
 
 	private ArrayList<EDPath> copyPath()
@@ -201,69 +195,6 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame, KeyListen
 	{
 		if(uiCreator.getFontLoader().isValid(input) && (target.getValue().length() + 1) <= target.getLength()) 
 			target.setValue(target.getValue() + input);
-	}
-
-	// Handles all interaction with the interface components.
-	@Override
-	public void keyTyped(KeyEvent e)
-	{
-		
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e)
-	{
-		for (EDLayer currentLayer : eH.getRegisteredLayers())
-		{
-			for (EDText current : currentLayer.getTextBuffer())
-			{
-				String simpleType = Summary.typeof(current); // Get the type in upper-case.
-
-				if(simpleType.equals("EDTEXTFIELD"))
-				{
-					EDTextfield text = (EDTextfield) current;
-
-					if(text.isActive())
-					{
-						loadNext(e.getKeyChar(), text);
-
-						// See if Enter was hit to save the changes.
-						if(e.getKeyCode() == KeyEvent.VK_ENTER)
-						{
-							text.setBufferedValue(text.getValue());
-
-							text.setBackground(text.getBufferedColor());
-							text.setBufferedColor(null);
-
-							text.setInactive();
-						}
-						else if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
-						{
-							if(text.getValue().length() > 0)
-							{
-								String clippedEnd = text.getValue().substring(0, text.getValue().length() - 1);
-
-								text.setValue(clippedEnd);
-							}
-						}
-						else if(e.getKeyChar() == KeyEvent.VK_ESCAPE) // Leave without saving changes.
-						{
-							eH.reset(text);
-						}
-					}
-					else
-					{
-						text.setBufferedValue(text.getValue());
-					}
-				}
-			}
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e)
-	{
-		
 	}
 
 	private void apply(EDLayer current)

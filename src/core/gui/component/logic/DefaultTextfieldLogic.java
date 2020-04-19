@@ -1,5 +1,7 @@
 package core.gui.component.logic;
 
+import java.awt.event.KeyEvent;
+
 import core.driver.KeyboardDriver;
 import core.driver.MouseDriver;
 import core.event.ComponentHandler;
@@ -41,13 +43,6 @@ public class DefaultTextfieldLogic implements ComponentLogic
 				boolean notClickedAnyTextfieldYet = mouseDriver.isClicking() && focused == null,
 						clickedTheSameFieldAgain = mouseDriver.isClicking() && (focused == targetED),
 						clickedAnotherField = mouseDriver.isClicking() && focused != null;
-				
-				// Make sure, the original color is saved to restore when the user exits the area of the text-field.
-				if(targetED.getBufferedColor() == null)
-				{
-					targetED.setBufferedColor(targetED.getBackground());
-				}
-				
 
 				if(notClickedAnyTextfieldYet)
 				{
@@ -68,16 +63,6 @@ public class DefaultTextfieldLogic implements ComponentLogic
 				}
 			}
 		};
-	}
-	
-	public void reset(EDTextfield target)
-	{
-		// When there was a change in color, restore it.
-		if(target.getBufferedColor() != null)
-		{
-			target.setBackground(target.getBufferedColor());
-			target.setBufferedColor(null);
-		}
 	}
 	
 	@Override

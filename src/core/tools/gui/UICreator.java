@@ -12,7 +12,7 @@ public class UICreator
 	{
 		g.setColor(text.getBorder());
 		g.fillRect(text.getRectangle().getLocation().x, text.getRectangle().getLocation().y, text.getRectangle().getSize().width, text.getRectangle().getSize().height);
-
+		
 		int titleWidth = text.getFontSize() * text.getValue().length();
 
 		g.setColor(text.getBackground());
