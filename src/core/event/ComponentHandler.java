@@ -189,11 +189,11 @@ public class ComponentHandler
 					saveAndExit = focusedNothing && eventHandler.getMouseDriver().isClicking() || focusedDifferentType && eventHandler.getMouseDriver().isClicking(),
 					revertAndExit = keyStroked == KeyEvent.VK_ESCAPE;
 			
-			// The "active color" is the color which is applied to the written part of the text when a user has clicked on the text-field.
-			boolean switchToActiveColor = !selectedTextfield.isActive();
-			
 			if(isTextfieldSelected)
 			{
+				// The "active color" is the color which is applied to the written part of the text when a user has clicked on the text-field.
+				boolean switchToActiveColor = !selectedTextfield.isActive();
+				
 				if(switchToActiveColor)
 				{
 					selectedTextfield.setActive();
