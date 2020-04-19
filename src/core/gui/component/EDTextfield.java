@@ -65,9 +65,32 @@ public abstract class EDTextfield extends EDText
 	{
 		setValue(bufferedValue);
 	}
-
+	
+	public void setActive()
+	{
+		if(backgroundColor == null)
+		{
+			return;
+		}
+		
+		bufferedColor = backgroundColor;
+		
+		backgroundColor = activeColor;
+		
+		active = true;
+	}
+	
 	public void setInactive()
 	{
+		if(bufferedColor == null)
+		{
+			return;
+		}
+		
+		backgroundColor = bufferedColor;
+		
+		bufferedColor = null;
+		
 		active = false;
 	}
 
@@ -77,9 +100,4 @@ public abstract class EDTextfield extends EDText
 	}
 
 	public abstract void onHover();
-
-	public void setActive()
-	{
-		active = true;
-	}
 }

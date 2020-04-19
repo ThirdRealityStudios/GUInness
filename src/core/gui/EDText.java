@@ -15,7 +15,7 @@ public abstract class EDText extends EDComponent
 
 	private int fontSize, innerThickness, borderThickness;
 
-	private Color border, background, active, hover, bufferedColor, fontColor;
+	protected volatile Color borderColor, backgroundColor, activeColor, hoverColor, bufferedColor, fontColor;
 
 	public EDText(int length, Color background, Color inactive, Color hover, Point location, String value, Color fontColor, int fontSize, int innerThickness, int borderThickness, Color border, boolean visible)
 	{
@@ -23,15 +23,15 @@ public abstract class EDText extends EDComponent
 		
 		// Set all important attributes below:
 		this.length = length;
-		this.background = background;
-		this.active = inactive;
-		this.hover = hover;
+		this.backgroundColor = background;
+		this.activeColor = inactive;
+		this.hoverColor = hover;
 		this.value = value;
 		this.fontColor = fontColor;
 		this.fontSize = fontSize;
 		this.innerThickness = innerThickness;
 		this.borderThickness = borderThickness;
-		this.border = border;
+		this.borderColor = border;
 		
 		// After knowing all necessary attributes:
 		setSize(); // Calculates the correct size of the rectangle for the text component.
@@ -44,6 +44,11 @@ public abstract class EDText extends EDComponent
 
 	public synchronized void setValue(String title)
 	{
+		if(title == null)
+		{
+			return;
+		}
+		
 		this.value = title;
 		setSize();
 	}
@@ -83,22 +88,22 @@ public abstract class EDText extends EDComponent
 
 	public Color getBorder()
 	{
-		return border;
+		return borderColor;
 	}
 
 	public void setBorder(Color border)
 	{
-		this.border = border;
+		this.borderColor = border;
 	}
 
 	public Color getBackground()
 	{
-		return background;
+		return backgroundColor;
 	}
 
 	public void setBackground(Color background)
 	{
-		this.background = background;
+		this.backgroundColor = background;
 	}
 
 	public Color getFontColor()
@@ -142,22 +147,22 @@ public abstract class EDText extends EDComponent
 
 	public Color getActiveColor()
 	{
-		return active;
+		return activeColor;
 	}
 
 	public void setActiveColor(Color inactive)
 	{
-		this.active = inactive;
+		this.activeColor = inactive;
 	}
 	
 	public Color getHoverColor()
 	{
-		return hover;
+		return hoverColor;
 	}
 
 	public void setHoverColor(Color hover)
 	{
-		this.hover = hover;
+		this.hoverColor = hover;
 	}
 
 	public abstract void onClick();

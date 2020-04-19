@@ -42,8 +42,6 @@ public class ComponentHandler
 	// it will reset the color etc.
 	private ArrayList<String> resetableTypes = new ArrayList<String>();
 
-	private String bufferedValue;
-	
 	public ComponentHandler(EventHandler eventHandler)
 	{
 		initResetTypes(); // Adds all resetable EasyDraw component types.
@@ -191,8 +189,16 @@ public class ComponentHandler
 					saveAndExit = focusedNothing && eventHandler.getMouseDriver().isClicking() || focusedDifferentType && eventHandler.getMouseDriver().isClicking(),
 					revertAndExit = keyStroked == KeyEvent.VK_ESCAPE;
 			
+			// The "active color" is the color which is applied to the written part of the text when a user has clicked on the text-field.
+			boolean switchToActiveColor = !selectedTextfield.isActive();
+			
 			if(isTextfieldSelected)
 			{
+				if(switchToActiveColor)
+				{
+					selectedTextfield.setActive();
+				}
+				
 				if(saveAndExit)
 				{
 					selectedTextfield.save();
@@ -205,7 +211,10 @@ public class ComponentHandler
 				}
 				else
 				{
-					selectedTextfield.write((char) keyStroked);
+					char keyChar = (char) keyStroked;
+					
+					if(Essentials.isAlphanumeric(keyChar))
+						selectedTextfield.write(keyChar);
 				}
 				
 				return;
@@ -227,11 +236,11 @@ public class ComponentHandler
 			case "EDTextfield":
 				{
 					EDTextfield textfield = (EDTextfield) focusedComponent;
-
+					
 					// Select the focused text-field if it is being clicked.
 					if(eventHandler.getMouseDriver().isClicking())
 						selectedTextfield = textfield;
-
+				
 					defaultTextfieldLogic.exec(textfield);
 				}
 			break;
@@ -257,6 +266,10 @@ public class ComponentHandler
 	
 	private void defocusTextfield()
 	{
+		// Make sure, the background color is reseted to the original one.
+		// Thats the color which is applied when a user has exited or unfocused a text-field.
+		selectedTextfield.setInactive();
+		
 		selectedTextfield = null;
 	}
 	
