@@ -45,8 +45,6 @@ public class KeyboardDriver extends LoopedThread implements KeyListener
 		}
 		else
 		{
-			System.out.println("Different: " + (char) keyActive);
-			
 			duplicate = false;
 			
 			keyActive = (char) e.getKeyChar();
@@ -56,7 +54,7 @@ public class KeyboardDriver extends LoopedThread implements KeyListener
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
-		
+		// Not used currently..
 	}
 	
 	// Returns whether any key is pressed currently.
@@ -69,7 +67,11 @@ public class KeyboardDriver extends LoopedThread implements KeyListener
 	// Otherwise returns KeyEvent.VK_UNDEFINED if no key is pressed.
 	public int getActiveKey()
 	{
-		return keyActive;
+		int returnKey = keyActive;
+		
+		keyActive = KeyEvent.VK_UNDEFINED;
+		
+		return returnKey;
 	}
 	
 	// Returns the key which was (!) typed before.

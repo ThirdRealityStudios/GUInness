@@ -7,9 +7,9 @@ import java.awt.Rectangle;
 
 public abstract class EDText extends EDComponent
 {
-	private String value;
+	private volatile String value = "";
 
-	private String bufferedValue;
+	private volatile String bufferedValue = null;
 
 	private int length;
 
@@ -37,12 +37,12 @@ public abstract class EDText extends EDComponent
 		setSize(); // Calculates the correct size of the rectangle for the text component.
 	}
 
-	public String getValue()
+	public synchronized String getValue()
 	{
 		return value;
 	}
 
-	public void setValue(String title)
+	public synchronized void setValue(String title)
 	{
 		this.value = title;
 		setSize();
@@ -130,12 +130,12 @@ public abstract class EDText extends EDComponent
 		getRectangle().setSize(backgroundSize);
 	}
 
-	public void setBufferedValue(String value)
+	public synchronized void setBufferedValue(String value)
 	{
 		this.bufferedValue = value;
 	}
 
-	public String getBufferedValue()
+	public synchronized String getBufferedValue()
 	{
 		return bufferedValue;
 	}
@@ -157,8 +157,6 @@ public abstract class EDText extends EDComponent
 
 	public void setHoverColor(Color hover)
 	{
-		System.out.println("Changed hover color to: " + hover);
-		
 		this.hover = hover;
 	}
 
