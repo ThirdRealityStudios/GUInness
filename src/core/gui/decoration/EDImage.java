@@ -1,19 +1,26 @@
 package core.gui.decoration;
 
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 
 import core.gui.EDComponent;
+import core.tools.gui.FontLoader;
 
 public class EDImage extends EDComponent
 {
 	private Image content;
+	
+	private FontLoader fL;
 
 	public EDImage(Point location, Image content, boolean visible)
 	{
 		super(new Rectangle(location), visible);
+		
+		fL = new FontLoader();
+		
 		getRectangle().setSize(new Dimension(content.getWidth(null), content.getHeight(null)));
 		
 		this.content = content;
@@ -64,4 +71,10 @@ public class EDImage extends EDComponent
 		this.content = content;
 	}
 
+	@Override
+	public void draw(Graphics g)
+	{
+		if(isVisible())
+			g.drawImage(getContent(), getRectangle().getLocation().x, getRectangle().getLocation().y, getRectangle().getSize().width, getRectangle().getSize().height, null);
+	}
 }

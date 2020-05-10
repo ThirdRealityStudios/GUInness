@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import core.Essentials;
 import core.driver.MouseDriver;
+import core.gui.EDComponent;
 import core.gui.EDText;
 import core.gui.component.EDButton;
 import core.gui.component.EDTextfield;
@@ -29,11 +30,11 @@ public class ComponentHandler
 	// The 'eventHandler' variable is the reference to the superior service (EventHandler) which provides all necessary references to have access to all services on the upper layer.
 	private EventHandler eventHandler = null;
 
-	private EDText focusedComponent, store;
+	private EDComponent focusedComponent, store;
 
 	private boolean clickedBefore = false;
 
-	private EDText focusedComponentBefore = null;
+	private EDComponent focusedComponentBefore = null;
 
 	// This will determine what EasyDraw component types can be reseted.
 	// Normally,
@@ -193,7 +194,7 @@ public class ComponentHandler
 			{
 				// The "active color" is the color which is applied to the written part of the text when a user has clicked on the text-field.
 				boolean switchToActiveColor = !selectedTextfield.isActive();
-				
+
 				if(switchToActiveColor)
 				{
 					selectedTextfield.setActive();
@@ -275,12 +276,14 @@ public class ComponentHandler
 
 	// Resets the values of the background color.
 	// Can be the case if the component or button is exited per cursor or such.
-	public void reset(EDText target)
+	public void reset(EDComponent target)
 	{
-		if(target.getBufferedColor() != null)
+		EDText targetConverted = (EDText) target;
+
+		if(targetConverted.getBufferedColor() != null)
 		{
-			target.setBackground(target.getBufferedColor());
-			target.setBufferedColor(null);
+			targetConverted.setBackground(targetConverted.getBufferedColor());
+			targetConverted.setBufferedColor(null);
 		}
 	}
 }

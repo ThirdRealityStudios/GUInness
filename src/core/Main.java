@@ -78,7 +78,7 @@ public class Main
 			}
 		};
 
-		start.actsOnHover(true);
+		start.actsOnHover(false);
 
 		exit = new EDButton(Color.GRAY, Color.YELLOW, Color.BLUE, new Point(50, 150), "EXIT", Color.BLACK, 20, 5, 1, Color.BLACK, true)
 		{
@@ -134,17 +134,17 @@ public class Main
 	{		
 		EDDescription edD = new EDDescription(new Point(220, 50), "Money here for nothing!", 25, Color.WHITE, true);
 		
-		layer0.addPath(new EDPath(Path2DMaker.makeRectangle(0, 0, 200, 300), Color.RED, true, new Point(0, 300), true));
-		layer0.addPath(new EDPath(Path2DMaker.makeRectangle(0, 570-31, 800, 30), Color.PINK, true, new Point(100, 300), true));
+		layer0.add(new EDPath(Path2DMaker.makeRectangle(0, 0, 200, 300), Color.RED, true, new Point(0, 300), true));
+		layer0.add(new EDPath(Path2DMaker.makeRectangle(0, 570-31, 800, 30), Color.PINK, true, new Point(100, 300), true));
 		
-		layer0.addImage(img0);
+		layer0.add(img0);
 		
-		layer0.addText(start);
-		layer0.addText(exit);
-		layer0.addText(input1);
-		layer0.addText(input2);
-		layer0.addText(input3);
-		layer0.addText(edD);
+		layer0.add(start);
+		layer0.add(exit);
+		layer0.add(input1);
+		layer0.add(input2);
+		layer0.add(input3);
+		layer0.add(edD);
 	}
 
 	public void run()

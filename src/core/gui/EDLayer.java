@@ -13,11 +13,7 @@ public class EDLayer implements Comparable
 {
 	private UUID id;
 
-	private ArrayList<EDPath> pathBuffer;
-
-	private ArrayList<EDText> textBuffer;
-
-	private ArrayList<EDImage> imgBuffer;
+	private ArrayList<EDComponent> compBuffer;
 
 	private int priority;
 
@@ -33,11 +29,7 @@ public class EDLayer implements Comparable
 	{
 		id = UUID.randomUUID();
 
-		pathBuffer = new ArrayList<EDPath>();
-
-		textBuffer = new ArrayList<EDText>();
-
-		imgBuffer = new ArrayList<EDImage>();
+		compBuffer = new ArrayList<EDComponent>();
 
 		this.priority = priority;
 		this.visible = visible;
@@ -51,49 +43,19 @@ public class EDLayer implements Comparable
 		this.backgroundEnabled = backgroundEnabled;
 	}
 
-	public ArrayList<EDPath> getPathBuffer()
+	public ArrayList<EDComponent> getComponentBuffer()
 	{
-		return pathBuffer;
+		return compBuffer;
 	}
 
-	public void setPathBuffer(ArrayList<EDPath> pathBuffer)
+	public void setComponentBuffer(ArrayList<EDComponent> compBuffer)
 	{
-		this.pathBuffer = pathBuffer;
+		this.compBuffer = compBuffer;
 	}
 
-	public ArrayList<EDText> getTextBuffer()
+	public void add(EDComponent comp)
 	{
-		return textBuffer;
-	}
-
-	public void setTextBuffer(ArrayList<EDText> textBuffer)
-	{
-		this.textBuffer = textBuffer;
-	}
-
-	public ArrayList<EDImage> getImgBuffer()
-	{
-		return imgBuffer;
-	}
-
-	public void setImgBuffer(ArrayList<EDImage> imgBuffer)
-	{
-		this.imgBuffer = imgBuffer;
-	}
-
-	public void addPath(EDPath path)
-	{
-		pathBuffer.add(path);
-	}
-
-	public void addText(EDText text)
-	{
-		textBuffer.add(text);
-	}
-
-	public void addImage(EDImage img)
-	{
-		imgBuffer.add(img);
+		compBuffer.add(comp);
 	}
 
 	public int getPriority()

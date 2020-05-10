@@ -1,6 +1,8 @@
 package core.gui.decoration;
 
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Path2D;
@@ -52,6 +54,23 @@ public class EDPath extends EDComponent
 	public void setFill(boolean fill)
 	{
 		this.fill = fill;
+	}
+
+	@Override
+	public void draw(Graphics g)
+	{
+		Graphics2D g2d = (Graphics2D) g;
+
+		// Render all paths.
+		if(isVisible())
+		{
+			g2d.setColor(getDrawColor());
+
+			if (isFill())
+				g2d.fill(getPath());
+			else
+				g2d.draw(getPath());
+		}
 	}
 
 }

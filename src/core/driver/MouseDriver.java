@@ -8,6 +8,7 @@ import java.awt.event.MouseMotionListener;
 
 import core.event.LoopedThread;
 import core.frame.LayeredRenderFrame;
+import core.gui.EDComponent;
 import core.gui.EDLayer;
 import core.gui.EDText;
 import core.io.Interrupt;
@@ -173,7 +174,7 @@ public class MouseDriver extends LoopedThread implements MouseMotionListener, Mo
 	// Tests if the cursor is on the position of a component.
 	// Meaning: Tests whether the mouse cursor (relative to the RenderFrame) is inside the given component.
 	// Returns 'false' if target is 'null'.
-	public boolean isFocusing(EDText target)
+	public boolean isFocusing(EDComponent target)
 	{
 		// If there is no component given,
 		// this method assumes no component was found,
@@ -202,13 +203,13 @@ public class MouseDriver extends LoopedThread implements MouseMotionListener, Mo
 	// Returns the first component which is focused by the cursor.
 	// Makes the UI more efficient by breaking at the first component already.
 	// Returns null if there is no such component.
-	public EDText getFocusedComponent()
+	public EDComponent getFocusedComponent()
 	{
-		EDText firstMatch = null;
+		EDComponent firstMatch = null;
 		
 		for(EDLayer layer : context.getEventHandler().getRegisteredLayers())
 		{
-			for(EDText selected : layer.getTextBuffer())
+			for(EDComponent selected : layer.getComponentBuffer())
 			{
 				boolean insideComponent = isFocusing(selected);
 				

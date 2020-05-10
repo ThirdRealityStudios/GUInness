@@ -13,26 +13,52 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import core.event.EventHandler;
+import core.gui.EDComponent;
 import core.gui.EDLayer;
 import core.gui.EDText;
 import core.gui.component.EDTextfield;
 import core.gui.decoration.EDImage;
 import core.gui.decoration.EDPath;
+import core.tools.gui.FontLoader;
 import core.tools.gui.UICreator;
 
 public class LayeredRenderFrame extends JFrame implements RenderFrame
 {
 	private ArrayList<EDLayer> layers;
 
-	private ArrayList<EDPath> pathBuffer, pathOutput;
-
-	private ArrayList<EDText> textBuffer, textOutput;
-
-	private ArrayList<EDImage> imgBuffer, imgOutput;
+	private ArrayList<EDComponent> compBuffer, compOutput;
 
 	private volatile EventHandler eH = new EventHandler(this);
 
 	private UICreator uiCreator = new UICreator();
+	
+	private JPanel renderPanel = new JPanel()
+	{
+		private void drawBackground(Graphics g)
+		{
+			g.setColor(Color.BLUE);
+			g.fillRect(0, 0, this.getWidth(), this.getHeight());
+		}
+		
+		private void drawComponents(Graphics g)
+		{
+			// Render all EasyDraw components.
+			for (EDComponent edC : compOutput)
+			{
+				edC.draw(g);
+			}
+		}
+
+		@Override
+		public void paint(Graphics g)
+		{
+			drawBackground(g);
+
+			drawComponents(g);
+
+			repaint();
+		}
+	};
 
 	public LayeredRenderFrame()
 	{
@@ -40,85 +66,18 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 
 		uiCreator = new UICreator();
 
-		pathBuffer = new ArrayList<EDPath>();
-		pathOutput = new ArrayList<EDPath>();
-		textBuffer = new ArrayList<EDText>();
-		textOutput = new ArrayList<EDText>();
-		imgBuffer = new ArrayList<EDImage>();
-		imgOutput = new ArrayList<EDImage>();
+		compBuffer = new ArrayList<EDComponent>();
+		compOutput = new ArrayList<EDComponent>();
 
 		setTitle("Standard RenderFrame");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		setSize(1280, 720);
 
-		JPanel content = new JPanel()
-		{
-			private void drawBackground(Graphics g)
-			{
-				g.setColor(Color.BLUE);
-				g.fillRect(0, 0, this.getWidth(), this.getHeight());
-			}
+		renderPanel.setVisible(true);
+		add(renderPanel);
 
-			private void drawPath(Graphics g)
-			{
-				Graphics2D g2d = (Graphics2D) g;
-
-				// Render all paths.
-				for (EDPath edP : pathOutput)
-				{
-					if(edP.isVisible())
-					{
-						g.setColor(edP.getDrawColor());
-
-						if (edP.isFill())
-							g2d.fill(edP.getPath());
-						else
-							g2d.draw(edP.getPath());
-					}
-					else
-						continue;
-				}
-			}
-
-			private void drawComponents(Graphics g)
-			{
-				// Render all text components.
-				for (EDText edT : textOutput)
-				{
-					if(edT.isVisible())
-						uiCreator.createText(g, edT);
-				}
-			}
-
-			private void drawImages(Graphics g)
-			{
-				for (EDImage img : imgOutput)
-				{
-					if(img.isVisible())
-						g.drawImage(img.getContent(), img.getRectangle().getLocation().x, img.getRectangle().getLocation().y, img.getRectangle().getSize().width, img.getRectangle().getSize().height, null);
-				}
-			}
-
-			@Override
-			public void paint(Graphics g)
-			{
-				drawBackground(g);
-
-				drawImages(g);
-
-				drawPath(g);
-
-				drawComponents(g);
-
-				repaint();
-			}
-		};
-
-		content.setVisible(true);
-		add(content);
-
-		for (EDLayer edL : layers)
+		for(EDLayer edL : layers)
 		{
 			eH.registerLayer(edL);
 		}
@@ -126,24 +85,11 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 		eH.start();
 	}
 
-	private ArrayList<EDPath> copyPath()
+	private ArrayList<EDComponent> copyComponents()
 	{
-		ArrayList<EDPath> mirror = new ArrayList<EDPath>();
+		ArrayList<EDComponent> mirror = new ArrayList<EDComponent>();
 
-		for (EDPath p : pathBuffer)
-		{
-			p.getPath().closePath();
-			mirror.add(p);
-		}
-
-		return mirror;
-	}
-
-	private ArrayList<EDText> copyText()
-	{
-		ArrayList<EDText> mirror = new ArrayList<EDText>();
-
-		for (EDText p : textBuffer)
+		for (EDComponent p : compBuffer)
 		{
 			mirror.add(p);
 		}
@@ -151,43 +97,27 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 		return mirror;
 	}
 
-	private ArrayList<EDImage> copyImage()
-	{
-		ArrayList<EDImage> mirror = new ArrayList<EDImage>();
-
-		for (EDImage p : imgBuffer)
-		{
-			mirror.add(p);
-		}
-
-		return mirror;
-	}
-
-	public void addText(EDLayer edL)
+	public void addComponent(EDLayer edL)
 	{
 		layers.add(edL);
 	}
 
-	public void removeImage(EDImage edI)
+	public void removeComponent(EDComponent edC)
 	{
-		imgBuffer.remove(imgBuffer.indexOf(edI));
+		compBuffer.remove(compBuffer.indexOf(edC));
 	}
 
 	// Erases the internal buffer.
 	public synchronized void erase()
 	{
-		pathBuffer.clear();
-		textBuffer.clear();
-		imgBuffer.clear();
+		compBuffer.clear();
 	}
 
 	// Copies the buffer immediately to the output, 
 	// so all changes will be visible then first.
 	public synchronized void copy()
 	{
-		pathOutput = copyPath();
-		textOutput = copyText();
-		imgOutput = copyImage();
+		compOutput = copyComponents();
 	}
 	
 	// Write the entered alphabetic chars into the text field.
@@ -197,29 +127,17 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 			target.setValue(target.getValue() + input);
 	}
 
-	private void apply(EDLayer current)
+	private void apply(EDLayer target)
 	{
-		if (current.isVisible())
+		if(target.isVisible())
 		{
-			// Add every path of the current layer.
-			for (EDPath path : current.getPathBuffer())
+			// Add every component of the current layer.
+			for(EDComponent comp : target.getComponentBuffer())
 			{
-				pathBuffer.add(path);
+				compBuffer.add(comp);
 			}
 
-			// Add every text component, e.g. a button, of the current layer.
-			for (EDText text : current.getTextBuffer())
-			{
-				textBuffer.add(text);
-			}
-
-			// Add every image of the current layer.
-			for (EDImage img : current.getImgBuffer())
-			{
-				imgBuffer.add(img);
-			}
-
-			eH.registerLayer(current);
+			eH.registerLayer(target);
 		}
 	}
 

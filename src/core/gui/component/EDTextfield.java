@@ -1,10 +1,12 @@
 package core.gui.component;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
 import core.gui.EDText;
+import core.tools.gui.FontLoader;
 
 public abstract class EDTextfield extends EDText
 {
@@ -14,10 +16,14 @@ public abstract class EDTextfield extends EDText
 
 	public String bufferedValue = null;
 	
+	private FontLoader fL;
+	
 	public EDTextfield(Color background, Color active, Point location, String title, int maxInput, Color fontColor, int fontSize, int innerThickness, int borderThickness, Color border, boolean visible)
 	{
 		super(-1, background, active, background, location, title, fontColor, fontSize, innerThickness, borderThickness, border, visible);
 
+		fL = new FontLoader();
+		
 		if (maxInput > 0)
 			setLength(maxInput);
 		else
@@ -29,10 +35,7 @@ public abstract class EDTextfield extends EDText
 			throw new IllegalArgumentException("Title length is bigger than the specified maximum length!");
 	}
 
-	public void onClick()
-	{
-		
-	}
+	public void onClick(){}
 	
 	public synchronized void write(char key)
 	{		
@@ -100,4 +103,20 @@ public abstract class EDTextfield extends EDText
 	}
 
 	public abstract void onHover();
+	
+	public void draw(Graphics g)
+	{
+		if(isVisible())
+		{
+			g.setColor(getBorder());
+			g.fillRect(getRectangle().getLocation().x, getRectangle().getLocation().y, getRectangle().getSize().width, getRectangle().getSize().height);
+			
+			int titleWidth = getFontSize() * getValue().length();
+
+			g.setColor(getBackground());
+			g.fillRect(getRectangle().getLocation().x + getBorderThickness(), getRectangle().getLocation().y + getBorderThickness(), titleWidth + 2 * getInnerThickness(), getFontSize() + 2 * getInnerThickness());
+
+			fL.display(g, getValue(), getRectangle().getLocation().x + getInnerThickness() + getBorderThickness(), getRectangle().getLocation().y + getInnerThickness() + getBorderThickness(), getFontSize(), getFontColor());
+		}
+	}
 }
