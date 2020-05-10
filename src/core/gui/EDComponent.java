@@ -1,5 +1,6 @@
 package core.gui;
 
+import java.awt.Graphics;
 import java.awt.Rectangle;
 
 public abstract class EDComponent
@@ -29,4 +30,6 @@ public abstract class EDComponent
 	{
 		return rect;
 	}
+	
+	public abstract void draw(Graphics g);
 }
