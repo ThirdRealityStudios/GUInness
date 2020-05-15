@@ -187,7 +187,7 @@ public class ComponentHandler
 			boolean isTextfieldSelected = selectedTextfield != null,
 					focusedNothing = focusedComponent == null,
 					focusedDifferentType = focusedComponent != null && !focusedComponent.equals(selectedTextfield),
-					saveAndExit = focusedNothing && eventHandler.getMouseDriver().isClicking() || focusedDifferentType && eventHandler.getMouseDriver().isClicking(),
+					saveAndExit = focusedNothing && eventHandler.getMouseDriver().isClicking() || focusedDifferentType && eventHandler.getMouseDriver().isClicking() || keyStroked == KeyEvent.VK_ENTER,
 					revertAndExit = keyStroked == KeyEvent.VK_ESCAPE;
 
 			if(isTextfieldSelected)
@@ -209,6 +209,16 @@ public class ComponentHandler
 				{
 					selectedTextfield.revert();
 					defocusTextfield();
+				}
+				else if(keyStroked == KeyEvent.VK_BACK_SPACE && selectedTextfield.getValue().length() > 0)
+				{
+					char keyChar = (char) keyStroked;
+
+					selectedTextfield.setBufferedValue(selectedTextfield.getBufferedValue());
+					
+					char[] charValues = selectedTextfield.getValue().toCharArray();
+					
+					selectedTextfield.setValue(selectedTextfield.getValue().valueOf(charValues, 0, charValues.length-1));
 				}
 				else
 				{
