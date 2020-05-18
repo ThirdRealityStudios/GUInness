@@ -188,10 +188,13 @@ public class ComponentHandler
 					focusedNothing = focusedComponent == null,
 					focusedDifferentType = focusedComponent != null && !focusedComponent.equals(selectedTextfield),
 					saveAndExit = focusedNothing && eventHandler.getMouseDriver().isClicking() || focusedDifferentType && eventHandler.getMouseDriver().isClicking() || keyStroked == KeyEvent.VK_ENTER,
-					revertAndExit = keyStroked == KeyEvent.VK_ESCAPE;
+					revertAndExit = keyStroked == KeyEvent.VK_ESCAPE,
+					shrinkTextfield = keyStroked == KeyEvent.VK_BACK_SPACE;
+			
+			boolean isControlAction = saveAndExit || revertAndExit;
 			
 			if(isTextfieldSelected)
-			{
+			{				
 				// The "active color" is the color which is applied to the written part of the text when a user has clicked on the text-field.
 				boolean switchToActiveColor = !selectedTextfield.isActive();
 				
@@ -200,34 +203,34 @@ public class ComponentHandler
 					selectedTextfield.setActive();
 				}
 				
-				if(saveAndExit)
+				if(isControlAction)
 				{
-					selectedTextfield.save();
-					defocusTextfield();
+					if(saveAndExit)
+					{
+						selectedTextfield.save();
+						defocusTextfield();
+					}
+					else if(revertAndExit)
+					{
+						selectedTextfield.revert();
+						defocusTextfield();
+					}
 				}
-				else if(revertAndExit)
+				else // If No control action..
 				{
-					selectedTextfield.revert();
-					defocusTextfield();
+					if(shrinkTextfield)
+					{
+						selectedTextfield.eraseLastChar();
+					}
+					else
+					{
+						char keyChar = (char) keyStroked;
+						
+						if(Essentials.isAlphanumeric(keyChar))
+							selectedTextfield.write(keyChar);
+					}
 				}
-				else if(keyStroked == KeyEvent.VK_BACK_SPACE && selectedTextfield.getValue().length() > 0)
-				{
-					char keyChar = (char) keyStroked;
-
-					selectedTextfield.setBufferedValue(selectedTextfield.getBufferedValue());
-					
-					char[] charValues = selectedTextfield.getValue().toCharArray();
-					
-					selectedTextfield.setValue(selectedTextfield.getValue().valueOf(charValues, 0, charValues.length-1));
-				}
-				else
-				{
-					char keyChar = (char) keyStroked;
-					
-					if(Essentials.isAlphanumeric(keyChar))
-						selectedTextfield.write(keyChar);
-				}
-				
+			
 				return;
 			}
 			

@@ -37,6 +37,8 @@ public abstract class EDTextfield extends EDText
 
 	public void onClick(){}
 	
+	// Will write add a new char in the variable 'value' of type String.
+	// It will save the value before in the buffer.
 	public synchronized void write(char key)
 	{		
 		boolean noSafeCopy = bufferedValue == null;
@@ -50,6 +52,22 @@ public abstract class EDTextfield extends EDText
 		else if(noOverflow)
 		{
 				writeDirectly(key);
+		}
+	}
+	
+	// Will do the exact opposite of the write(char key) function.
+	// It will delete the last char in the variable 'value' of type String.
+	// It will save the value before in the buffer.
+	public void eraseLastChar()
+	{
+		// Checking whether deleting one more char is still possible due to the length of 'value'.
+		if(getValue().length() > 0)
+		{
+			setBufferedValue(getBufferedValue());
+			
+			char[] charValues = getValue().toCharArray();
+			
+			setValue(getValue().valueOf(charValues, 0, charValues.length-1));
 		}
 	}
 	
