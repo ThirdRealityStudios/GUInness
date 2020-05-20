@@ -3,7 +3,7 @@ package core.frame;
 import java.awt.geom.Path2D;
 
 import core.gui.EDText;
-import core.gui.component.EDButton;
+import core.gui.component.classic.EDButton;
 import core.gui.decoration.EDImage;
 import core.gui.decoration.EDPath;
 

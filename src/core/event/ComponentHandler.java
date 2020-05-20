@@ -7,8 +7,8 @@ import core.Essentials;
 import core.driver.MouseDriver;
 import core.gui.EDComponent;
 import core.gui.EDText;
-import core.gui.component.EDButton;
-import core.gui.component.EDTextfield;
+import core.gui.component.classic.EDButton;
+import core.gui.component.classic.EDTextfield;
 import core.gui.component.logic.DefaultButtonLogic;
 import core.gui.component.logic.DefaultTextfieldLogic;
 
@@ -188,7 +188,10 @@ public class ComponentHandler
 					focusedNothing = focusedComponent == null,
 					focusedDifferentType = focusedComponent != null && !focusedComponent.equals(selectedTextfield),
 					saveAndExit = focusedNothing && eventHandler.getMouseDriver().isClicking() || focusedDifferentType && eventHandler.getMouseDriver().isClicking() || keyStroked == KeyEvent.VK_ENTER,
-					revertAndExit = keyStroked == KeyEvent.VK_ESCAPE;
+					revertAndExit = keyStroked == KeyEvent.VK_ESCAPE,
+					shrinkTextfield = keyStroked == KeyEvent.VK_BACK_SPACE;
+
+			boolean isControlAction = saveAndExit || revertAndExit;
 
 			if(isTextfieldSelected)
 			{
@@ -200,34 +203,34 @@ public class ComponentHandler
 					selectedTextfield.setActive();
 				}
 
-				if(saveAndExit)
+				if(isControlAction)
 				{
-					selectedTextfield.save();
-					defocusTextfield();
+					if(saveAndExit)
+					{
+						selectedTextfield.save();
+						defocusTextfield();
+					}
+					else if(revertAndExit)
+					{
+						selectedTextfield.revert();
+						defocusTextfield();
+					}
 				}
-				else if(revertAndExit)
+				else // If No control action..
 				{
-					selectedTextfield.revert();
-					defocusTextfield();
-				}
-				else if(keyStroked == KeyEvent.VK_BACK_SPACE && selectedTextfield.getValue().length() > 0)
-				{
-					char keyChar = (char) keyStroked;
+					if(shrinkTextfield)
+					{
+						selectedTextfield.eraseLastChar();
+					}
+					else
+					{
+						char keyChar = (char) keyStroked;
 
-					selectedTextfield.setBufferedValue(selectedTextfield.getBufferedValue());
-					
-					char[] charValues = selectedTextfield.getValue().toCharArray();
-					
-					selectedTextfield.setValue(selectedTextfield.getValue().valueOf(charValues, 0, charValues.length-1));
+						if(Essentials.isAlphanumeric(keyChar))
+							selectedTextfield.write(keyChar);
+					}
 				}
-				else
-				{
-					char keyChar = (char) keyStroked;
-
-					if(Essentials.isAlphanumeric(keyChar))
-						selectedTextfield.write(keyChar);
-				}
-
+			
 				return;
 			}
 

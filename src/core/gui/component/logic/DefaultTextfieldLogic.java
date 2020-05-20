@@ -7,8 +7,8 @@ import core.driver.MouseDriver;
 import core.event.ComponentHandler;
 import core.event.EventHandler;
 import core.gui.EDText;
-import core.gui.component.EDTextfield;
 import core.gui.component.Logic;
+import core.gui.component.classic.EDTextfield;
 
 public class DefaultTextfieldLogic implements ComponentLogic
 {
@@ -47,17 +47,17 @@ public class DefaultTextfieldLogic implements ComponentLogic
 				if(notClickedAnyTextfieldYet)
 				{
 					// Save or remember the text-field which was clicked.
-					System.out.println("Clicked a text-field now");
+					//System.out.println("Clicked a text-field now");
 					
 					focused = targetED;
 				}
 				else if(clickedTheSameFieldAgain)
 				{
-					System.out.println("Clicked the same text-field again");
+					//System.out.println("Clicked the same text-field again");
 				}
 				else if(clickedAnotherField)
 				{
-					System.out.println("Clicked another text-field");
+					//System.out.println("Clicked another text-field");
 					
 					focused = targetED;
 				}
