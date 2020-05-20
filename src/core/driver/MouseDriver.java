@@ -191,7 +191,7 @@ public class MouseDriver extends LoopedThread implements MouseMotionListener, Mo
 		// The current mouse position relative to the JFrame.
 		Point frameCursor = new Point(desktopCursor.x - context.getLocation().x + frameOffset.x, desktopCursor.y - context.getLocation().y + frameOffset.y);
 		
-		return target.getRectangle().contains(frameCursor);
+		return target.getShape().contains(frameCursor);
 	}
 	
 	// Tests if the user is clicking a component.

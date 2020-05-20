@@ -2,17 +2,18 @@ package core.gui;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.Shape;
 
 public abstract class EDComponent
 {
-	// Contains the location and dimension of the component.
-	private Rectangle rect;
+	// Contains the location and shape of the component.
+	private Shape shape;
 
 	private boolean visible = true;
 
-	public EDComponent(Rectangle rect, boolean visible)
+	public EDComponent(Shape shape, boolean visible)
 	{
-		this.rect = rect;
+		this.shape = shape;
 		this.visible = visible;
 	}
 
@@ -26,9 +27,14 @@ public abstract class EDComponent
 		this.visible = visible;
 	}
 
-	public Rectangle getRectangle()
+	public Shape getShape()
 	{
-		return rect;
+		return shape;
+	}
+	
+	public void setShape(Shape shape)
+	{
+		this.shape = shape;
 	}
 	
 	public abstract void draw(Graphics g);

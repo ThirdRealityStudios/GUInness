@@ -21,7 +21,7 @@ public class EDImage extends EDComponent
 		
 		fL = new FontLoader();
 		
-		getRectangle().setSize(new Dimension(content.getWidth(null), content.getHeight(null)));
+		getShape().getBounds().setSize(new Dimension(content.getWidth(null), content.getHeight(null)));
 		
 		this.content = content;
 	}
@@ -30,7 +30,7 @@ public class EDImage extends EDComponent
 	{
 		super(new Rectangle(location), visible);
 
-		getRectangle().setSize(new Dimension((int) (content.getWidth(null) * scale), (int) (content.getHeight(null) * scale)));
+		getShape().getBounds().setSize(new Dimension((int) (content.getWidth(null) * scale), (int) (content.getHeight(null) * scale)));
 		this.content = content;
 	}
 
@@ -38,7 +38,7 @@ public class EDImage extends EDComponent
 	{
 		super(new Rectangle(location), visible);
 
-		getRectangle().setSize(size);
+		getShape().getBounds().setSize(size);
 		this.content = content;
 	}
 
@@ -57,7 +57,7 @@ public class EDImage extends EDComponent
 
 		Dimension heightDependent = new Dimension((int) (((float) length / height) * width), length);
 
-		getRectangle().setSize(useAsWidth ? widthDependent : heightDependent);
+		getShape().getBounds().setSize(useAsWidth ? widthDependent : heightDependent);
 		this.content = content;
 	}
 
@@ -75,6 +75,10 @@ public class EDImage extends EDComponent
 	public void draw(Graphics g)
 	{
 		if(isVisible())
-			g.drawImage(getContent(), getRectangle().getLocation().x, getRectangle().getLocation().y, getRectangle().getSize().width, getRectangle().getSize().height, null);
+		{
+			Rectangle bounds = getShape().getBounds();
+			
+			g.drawImage(getContent(), bounds.getLocation().x, bounds.getLocation().y, bounds.getSize().width, bounds.getSize().height, null);
+		}
 	}
 }

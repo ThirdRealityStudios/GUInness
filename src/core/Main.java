@@ -6,9 +6,9 @@ import java.awt.Point;
 
 import core.frame.LayeredRenderFrame;
 import core.gui.EDLayer;
-import core.gui.component.EDButton;
-import core.gui.component.EDDescription;
-import core.gui.component.EDTextfield;
+import core.gui.component.classic.EDButton;
+import core.gui.component.classic.EDTextfield;
+import core.gui.component.standard.EDDescription;
 import core.gui.decoration.EDImage;
 import core.gui.decoration.EDPath;
 import core.io.Loader;
@@ -95,7 +95,7 @@ public class Main
 				System.exit(0);
 			}
 		};
-		
+
 		exit.actsOnHover(false);
 
 		input1 = new EDTextfield(Color.GRAY, Color.RED, new Point(220, 300), "EMPTY STR", 10, Color.BLACK, 20, 5, 1, Color.DARK_GRAY, true)
@@ -129,7 +129,7 @@ public class Main
 
 		img0 = new EDImage(new Point(220, 100), 300, true, i, true);
 	}
-	
+
 	public void setupLayer0()
 	{		
 		EDDescription edD = new EDDescription(new Point(220, 50), "Money here for nothing!", 25, Color.WHITE, true);

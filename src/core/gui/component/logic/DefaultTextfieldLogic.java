@@ -7,8 +7,8 @@ import core.driver.MouseDriver;
 import core.event.ComponentHandler;
 import core.event.EventHandler;
 import core.gui.EDText;
-import core.gui.component.EDTextfield;
 import core.gui.component.Logic;
+import core.gui.component.classic.EDTextfield;
 
 public class DefaultTextfieldLogic implements ComponentLogic
 {

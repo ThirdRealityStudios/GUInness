@@ -132,7 +132,9 @@ public abstract class EDText extends EDComponent
 	{
 		Dimension backgroundSize = new Dimension(length * fontSize + 2 * innerThickness + 2 * borderThickness, fontSize + 2 * innerThickness + 2 * borderThickness);
 
-		getRectangle().setSize(backgroundSize);
+		Rectangle rect = new Rectangle(backgroundSize);
+		rect.setLocation(getShape().getBounds().getLocation());
+		setShape(rect);
 	}
 
 	public synchronized void setBufferedValue(String value)

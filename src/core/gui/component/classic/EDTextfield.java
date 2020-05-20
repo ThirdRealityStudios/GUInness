@@ -1,8 +1,9 @@
-package core.gui.component;
+package core.gui.component.classic;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
 import core.gui.EDText;
@@ -121,20 +122,22 @@ public abstract class EDTextfield extends EDText
 	}
 
 	public abstract void onHover();
-	
+
 	public void draw(Graphics g)
 	{
 		if(isVisible())
 		{
+			Rectangle bounds = getShape().getBounds();
+			
 			g.setColor(getBorder());
-			g.fillRect(getRectangle().getLocation().x, getRectangle().getLocation().y, getRectangle().getSize().width, getRectangle().getSize().height);
+			g.fillRect(bounds.getLocation().x, bounds.getLocation().y, bounds.getSize().width, bounds.getSize().height);
 			
 			int titleWidth = getFontSize() * getValue().length();
 
 			g.setColor(getBackground());
-			g.fillRect(getRectangle().getLocation().x + getBorderThickness(), getRectangle().getLocation().y + getBorderThickness(), titleWidth + 2 * getInnerThickness(), getFontSize() + 2 * getInnerThickness());
+			g.fillRect(bounds.getLocation().x + getBorderThickness(), bounds.getLocation().y + getBorderThickness(), titleWidth + 2 * getInnerThickness(), getFontSize() + 2 * getInnerThickness());
 
-			fL.display(g, getValue(), getRectangle().getLocation().x + getInnerThickness() + getBorderThickness(), getRectangle().getLocation().y + getInnerThickness() + getBorderThickness(), getFontSize(), getFontColor());
+			fL.display(g, getValue(), bounds.getLocation().x + getInnerThickness() + getBorderThickness(), bounds.getLocation().y + getInnerThickness() + getBorderThickness(), getFontSize(), getFontColor());
 		}
 	}
 }
