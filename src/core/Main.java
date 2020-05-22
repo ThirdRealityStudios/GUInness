@@ -1,6 +1,7 @@
 package core;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
 
@@ -61,19 +62,7 @@ public class Main
 					
 					clicked = false;
 				}
-				
-				/*
-				// You can print onto the console when the image was hidden or displayed.
-				if(!clicked)
-				{
-					System.out.println("Enabled!");
-				}
-				else
-				{
-					System.out.println("Disabled!");
-				}
-				*/
-				
+
 				rF.applyChanges();
 			}
 		};
@@ -125,9 +114,9 @@ public class Main
 			}
 		};
 
-		Image i = Loader.loadImage("C:\\Users\\Hobby\\test.png");
+		Image i = Loader.loadImage("C:\\Users\\Hameg\\Desktop\\4.jpg");
 
-		img0 = new EDImage(new Point(220, 100), 300, true, i, true);
+		img0 = new EDImage(new Point(220, 100), 300, false, i, true);
 	}
 
 	public void setupLayer0()

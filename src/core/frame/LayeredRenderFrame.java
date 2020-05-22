@@ -119,7 +119,7 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 	{
 		compOutput = copyComponents();
 	}
-	
+
 	// Write the entered alphabetic chars into the text field.
 	public void loadNext(char input, EDTextfield target)
 	{

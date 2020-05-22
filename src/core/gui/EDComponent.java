@@ -1,7 +1,6 @@
 package core.gui;
 
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.Shape;
 
 public abstract class EDComponent
