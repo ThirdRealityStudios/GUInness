@@ -1,14 +1,13 @@
 package core;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
 
 import core.frame.LayeredRenderFrame;
 import core.gui.EDLayer;
-import core.gui.component.classic.EDButton;
-import core.gui.component.classic.EDTextfield;
+import core.gui.component.standard.EDButton;
+import core.gui.component.standard.EDTextfield;
 import core.gui.component.standard.EDDescription;
 import core.gui.decoration.EDImage;
 import core.gui.decoration.EDPath;
@@ -59,7 +58,7 @@ public class Main
 				else
 				{
 					img0.setVisible(true);
-					
+
 					clicked = false;
 				}
 

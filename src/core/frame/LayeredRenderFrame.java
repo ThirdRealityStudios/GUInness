@@ -16,7 +16,7 @@ import core.event.EventHandler;
 import core.gui.EDComponent;
 import core.gui.EDLayer;
 import core.gui.EDText;
-import core.gui.component.classic.EDTextfield;
+import core.gui.component.standard.EDTextfield;
 import core.gui.decoration.EDImage;
 import core.gui.decoration.EDPath;
 import core.tools.gui.FontLoader;

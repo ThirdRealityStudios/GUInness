@@ -8,7 +8,7 @@ import core.event.ComponentHandler;
 import core.event.EventHandler;
 import core.gui.EDText;
 import core.gui.component.Logic;
-import core.gui.component.classic.EDTextfield;
+import core.gui.component.standard.EDTextfield;
 
 public class DefaultTextfieldLogic implements ComponentLogic
 {

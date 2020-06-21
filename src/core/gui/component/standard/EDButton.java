@@ -1,4 +1,4 @@
-package core.gui.component.classic;
+package core.gui.component.standard;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -11,13 +11,13 @@ import core.tools.gui.FontLoader;
 public abstract class EDButton extends EDText
 {
 	private volatile boolean interaction = true, isHovered = false, actionOnClick = true, actionOnHover = true;
-
+	
 	private FontLoader fL;
-
+	
 	public EDButton(Color background, Color active, Color hover, Point location, String title, Color fontColor, int fontSize, int innerThickness, int borderThickness, Color border, boolean visible)
 	{
 		super(title.length(), background, hover, active, location, title, fontColor, fontSize, innerThickness, borderThickness, border, visible);
-
+		
 		fL = new FontLoader();
 	}
 
@@ -74,7 +74,7 @@ public abstract class EDButton extends EDText
 	{
 		this.actionOnHover = actsOnHover;
 	}
-
+	
 	public void draw(Graphics g)
 	{
 		if(isVisible())

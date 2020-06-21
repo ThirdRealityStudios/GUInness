@@ -7,8 +7,8 @@ import core.Essentials;
 import core.driver.MouseDriver;
 import core.gui.EDComponent;
 import core.gui.EDText;
-import core.gui.component.classic.EDButton;
-import core.gui.component.classic.EDTextfield;
+import core.gui.component.standard.EDButton;
+import core.gui.component.standard.EDTextfield;
 import core.gui.component.logic.DefaultButtonLogic;
 import core.gui.component.logic.DefaultTextfieldLogic;
 

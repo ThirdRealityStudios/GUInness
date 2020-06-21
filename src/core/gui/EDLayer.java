@@ -5,9 +5,6 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import core.gui.decoration.EDImage;
-import core.gui.decoration.EDPath;
-
 // Contains an amount of drawable components.
 public class EDLayer implements Comparable
 {

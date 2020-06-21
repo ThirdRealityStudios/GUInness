@@ -5,7 +5,7 @@ import java.util.Stack;
 import core.driver.MouseDriver;
 import core.gui.EDText;
 import core.gui.component.Logic;
-import core.gui.component.classic.EDButton;
+import core.gui.component.standard.EDButton;
 import core.io.Interrupt;
 
 public class DefaultButtonLogic implements ComponentLogic

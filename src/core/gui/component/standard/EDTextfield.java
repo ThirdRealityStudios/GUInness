@@ -1,4 +1,4 @@
-package core.gui.component.classic;
+package core.gui.component.standard;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -16,15 +16,15 @@ public abstract class EDTextfield extends EDText
 	public String value = null;
 
 	public String bufferedValue = null;
-	
+
 	private FontLoader fL;
-	
+
 	public EDTextfield(Color background, Color active, Point location, String title, int maxInput, Color fontColor, int fontSize, int innerThickness, int borderThickness, Color border, boolean visible)
 	{
 		super(-1, background, active, background, location, title, fontColor, fontSize, innerThickness, borderThickness, border, visible);
 
 		fL = new FontLoader();
-		
+
 		if (maxInput > 0)
 			setLength(maxInput);
 		else
@@ -37,15 +37,15 @@ public abstract class EDTextfield extends EDText
 	}
 
 	public void onClick(){}
-	
+
 	// Will write add a new char in the variable 'value' of type String.
 	// It will save the value before in the buffer.
 	public synchronized void write(char key)
 	{		
 		boolean noSafeCopy = bufferedValue == null;
-		
+
 		boolean noOverflow = (getValue().length() + 1) <= getLength();
-		
+
 		if(noSafeCopy)
 		{
 			bufferedValue = getValue();
