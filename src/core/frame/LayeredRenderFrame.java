@@ -3,10 +3,7 @@ package core.frame;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.JFrame;
@@ -15,22 +12,21 @@ import javax.swing.JPanel;
 import core.event.EventHandler;
 import core.gui.EDComponent;
 import core.gui.EDLayer;
-import core.gui.EDText;
-import core.gui.component.standard.EDTextfield;
-import core.gui.decoration.EDImage;
-import core.gui.decoration.EDPath;
-import core.tools.gui.FontLoader;
+import core.gui.design.Design;
+import core.gui.special.EDTextfield;
 import core.tools.gui.UICreator;
 
 public class LayeredRenderFrame extends JFrame implements RenderFrame
 {
+	private Design design;
+	
 	private ArrayList<EDLayer> layers;
 
 	private ArrayList<EDComponent> compBuffer, compOutput;
 
-	private volatile EventHandler eH = new EventHandler(this);
+	private volatile EventHandler eH;
 
-	private UICreator uiCreator = new UICreator();
+	private UICreator uiCreator;
 	
 	private JPanel renderPanel = new JPanel()
 	{
@@ -45,7 +41,10 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 			// Render all EasyDraw components.
 			for (EDComponent edC : compOutput)
 			{
-				edC.draw(g);
+				if(isVisible())
+				{
+					design.drawContext(g, edC);
+				}
 			}
 		}
 
@@ -60,11 +59,13 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 		}
 	};
 
-	public LayeredRenderFrame()
+	public LayeredRenderFrame(Design design)
 	{
+		this.design = design;
+		
 		layers = new ArrayList<EDLayer>();
 
-		uiCreator = new UICreator();
+		uiCreator = new UICreator(design);
 
 		compBuffer = new ArrayList<EDComponent>();
 		compOutput = new ArrayList<EDComponent>();
@@ -77,6 +78,8 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 		renderPanel.setVisible(true);
 		add(renderPanel);
 
+		eH = new EventHandler(design, this);
+		
 		for(EDLayer edL : layers)
 		{
 			eH.registerLayer(edL);

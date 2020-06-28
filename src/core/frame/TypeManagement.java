@@ -2,16 +2,16 @@ package core.frame;
 
 import java.awt.geom.Path2D;
 
-import core.gui.EDText;
+import core.gui.EDComponent;
 import core.gui.component.standard.EDButton;
-import core.gui.decoration.EDImage;
-import core.gui.decoration.EDPath;
+import core.gui.special.EDImage;
+import core.gui.special.EDPath;
 
 public interface TypeManagement
 {
 	public void addPath(EDPath p);
 
-	public void addText(EDText edT);
+	public void addComponent(EDComponent edT);
 
 	public void addImage(EDImage edI);
 

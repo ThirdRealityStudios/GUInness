@@ -10,7 +10,6 @@ import core.event.LoopedThread;
 import core.frame.LayeredRenderFrame;
 import core.gui.EDComponent;
 import core.gui.EDLayer;
-import core.gui.EDText;
 import core.io.Interrupt;
 
 public class MouseDriver extends LoopedThread implements MouseMotionListener, MouseListener
@@ -195,7 +194,7 @@ public class MouseDriver extends LoopedThread implements MouseMotionListener, Mo
 	}
 	
 	// Tests if the user is clicking a component.
-	public boolean isClicking(EDText edT)
+	public boolean isClicking(EDComponent edT)
 	{
 		return isFocusing(edT) && isClicking();
 	}

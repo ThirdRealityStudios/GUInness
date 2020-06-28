@@ -1,5 +1,9 @@
 package core;
 
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -22,5 +26,19 @@ public class Essentials
 	public static boolean isAlphanumeric(char c)
 	{
 		return acceptedChars.contains(c) || (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122);
+	}
+	
+	public static Shape getLocalizedShape(Point loc)
+	{
+		return new Rectangle(loc);
+	}
+	
+	public static Shape getLocalizedShape(Point loc, Dimension dim)
+	{
+		Shape s = getLocalizedShape(loc);
+		
+		s.getBounds().setSize(dim);
+		
+		return s;
 	}
 }

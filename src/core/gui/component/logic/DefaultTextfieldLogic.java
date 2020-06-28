@@ -1,14 +1,12 @@
 package core.gui.component.logic;
 
-import java.awt.event.KeyEvent;
-
 import core.driver.KeyboardDriver;
 import core.driver.MouseDriver;
 import core.event.ComponentHandler;
 import core.event.EventHandler;
-import core.gui.EDText;
+import core.gui.EDComponent;
 import core.gui.component.Logic;
-import core.gui.component.standard.EDTextfield;
+import core.gui.special.EDTextfield;
 
 public class DefaultTextfieldLogic implements ComponentLogic
 {
@@ -66,7 +64,7 @@ public class DefaultTextfieldLogic implements ComponentLogic
 	}
 	
 	@Override
-	public void exec(EDText target)
+	public void exec(EDComponent target)
 	{
 		logic.exec(target);
 	}

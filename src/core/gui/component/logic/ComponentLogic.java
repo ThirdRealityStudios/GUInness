@@ -1,8 +1,8 @@
 package core.gui.component.logic;
 
-import core.gui.EDText;
+import core.gui.EDComponent;
 
 public interface ComponentLogic
 {
-	public void exec(EDText target);
+	public void exec(EDComponent target);
 }

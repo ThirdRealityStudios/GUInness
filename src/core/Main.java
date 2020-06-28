@@ -7,10 +7,12 @@ import java.awt.Point;
 import core.frame.LayeredRenderFrame;
 import core.gui.EDLayer;
 import core.gui.component.standard.EDButton;
-import core.gui.component.standard.EDTextfield;
+import core.gui.special.EDImage;
+import core.gui.special.EDPath;
+import core.gui.special.EDTextfield;
 import core.gui.component.standard.EDDescription;
-import core.gui.decoration.EDImage;
-import core.gui.decoration.EDPath;
+import core.gui.design.Classic;
+import core.gui.design.Design;
 import core.io.Loader;
 import core.maker.Path2DMaker;
 
@@ -25,6 +27,10 @@ public class Main
 	private EDImage img0;
 
 	private EDLayer layer0, layer1;
+	
+	private final Color brightGray = new Color(0.7f, 0.7f, 0.7f);
+	
+	private Design design;
 
 	public static void main(String[] args)
 	{
@@ -36,7 +42,10 @@ public class Main
 
 	public void init()
 	{
-		start = new EDButton(Color.GRAY, Color.LIGHT_GRAY, new Color(0.7f, 0.7f, 0.7f), new Point(50, 50), "START", Color.BLACK, 20, 5, 1, Color.BLACK, true)
+		design = new Classic(Color.BLACK, brightGray, Color.GRAY, Color.LIGHT_GRAY, Color.BLACK, 2, 2);
+		
+		/*
+		start = new EDButton(design, new Point(50, 50), "START", 20, true)
 		{
 			@Override
 			public void onHover()
@@ -67,8 +76,9 @@ public class Main
 		};
 
 		start.actsOnHover(false);
+		*/
 
-		exit = new EDButton(Color.GRAY, Color.YELLOW, Color.BLUE, new Point(50, 150), "EXIT", Color.BLACK, 20, 5, 1, Color.BLACK, true)
+		exit = new EDButton(design, new Point(50, 50), "EXIT", 20, true)
 		{
 			@Override
 			public void onHover()
@@ -86,7 +96,8 @@ public class Main
 
 		exit.actsOnHover(false);
 
-		input1 = new EDTextfield(Color.GRAY, Color.RED, new Point(220, 300), "EMPTY STR", 10, Color.BLACK, 20, 5, 1, Color.DARK_GRAY, true)
+		/*
+		input1 = new EDTextfield(design, new Point(220, 300), "EMPTY STR", 10, 20, true)
 		{
 			@Override
 			public void onHover()
@@ -95,7 +106,7 @@ public class Main
 			}
 		};
 
-		input2 = new EDTextfield(Color.GRAY, Color.RED, new Point(220, 400), "SECOND", 10, Color.BLACK, 20, 5, 1, Color.DARK_GRAY, true)
+		input2 = new EDTextfield(design, new Point(220, 400), "SECOND", 10, 20, true)
 		{
 			@Override
 			public void onHover()
@@ -103,8 +114,9 @@ public class Main
 
 			}
 		};
+		*/
 
-		input3 = new EDTextfield(Color.GRAY, Color.WHITE, new Point(220, 500), "THIRD", 50, Color.BLACK, 10, 5, 1, Color.DARK_GRAY, true)
+		input3 = new EDTextfield(design, new Point(200, 500), "THIRD", 50, 20, true)
 		{
 			@Override
 			public void onHover()
@@ -115,29 +127,29 @@ public class Main
 
 		Image i = Loader.loadImage("C:\\Users\\Hameg\\Desktop\\4.jpg");
 
-		img0 = new EDImage(new Point(220, 100), 300, false, i, true);
+		img0 = new EDImage(design, new Point(20, 100), 300, false, i, true);
 	}
 
 	public void setupLayer0()
-	{		
-		EDDescription edD = new EDDescription(new Point(220, 50), "Money here for nothing!", 25, Color.WHITE, true);
+	{
+		EDDescription edD = new EDDescription(design, new Point(220, 50), "Money here for nothing!", 25, true);
 		
-		layer0.add(new EDPath(Path2DMaker.makeRectangle(0, 0, 200, 300), Color.RED, true, new Point(0, 300), true));
-		layer0.add(new EDPath(Path2DMaker.makeRectangle(0, 570-31, 800, 30), Color.PINK, true, new Point(100, 300), true));
+		//layer0.add(new EDPath(design, Path2DMaker.makeRectangle(0, 0, 200, 300), Color.RED, true, new Point(0, 300), true));
+		layer0.add(new EDPath(design, Path2DMaker.makeRectangle(0, 570-31, 800, 30), Color.PINK, true, new Point(100, 300), true));
 		
 		layer0.add(img0);
 		
-		layer0.add(start);
+		//layer0.add(start);
 		layer0.add(exit);
-		layer0.add(input1);
-		layer0.add(input2);
 		layer0.add(input3);
+		//layer0.add(input2);
+		//layer0.add(input1);
 		layer0.add(edD);
 	}
 
 	public void run()
 	{		
-		rF = new LayeredRenderFrame();
+		rF = new LayeredRenderFrame(design);
 		rF.setAlwaysOnTop(true);
 
 		rF.setSize(800, 600);

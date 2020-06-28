@@ -3,9 +3,11 @@ package core.gui.component.logic;
 import java.util.Stack;
 
 import core.driver.MouseDriver;
-import core.gui.EDText;
+import core.gui.EDComponent;
 import core.gui.component.Logic;
 import core.gui.component.standard.EDButton;
+import core.gui.design.Classic;
+import core.gui.design.Design;
 import core.io.Interrupt;
 
 public class DefaultButtonLogic implements ComponentLogic
@@ -16,8 +18,10 @@ public class DefaultButtonLogic implements ComponentLogic
 	
 	private static Stack<Thread> actions = new Stack<Thread>();
 	
-	public DefaultButtonLogic(MouseDriver mouseDriver)
-	{		
+	private Design design;
+	
+	public DefaultButtonLogic(Design design, MouseDriver mouseDriver)
+	{
 		logic = new Logic()
 		{
 			@Override
@@ -30,7 +34,7 @@ public class DefaultButtonLogic implements ComponentLogic
 				// Make sure, the original color is saved to restore when the user exits the area of the button.
 				if(targetED.getBufferedColor() == null)
 				{
-					targetED.setBufferedColor(targetED.getBackground());
+					targetED.setBufferedColor(design.getBackgroundColor());
 				}
 				
 				// Simply, when a user clicks on a button.
@@ -48,7 +52,7 @@ public class DefaultButtonLogic implements ComponentLogic
 							public void run()
 							{
 								// Change the current color of the button but save it before to restore later.
-								targetED.setBackground(targetED.getActiveColor());
+								targetED.setPrimaryColor(design.getActiveColor());
 								
 								// The duration of the color which should appear on the button when clicked.
 								Interrupt.pauseMillisecond(200);
@@ -61,7 +65,7 @@ public class DefaultButtonLogic implements ComponentLogic
 				else
 				{
 					// Otherwise just highlight the button with the hover color.
-					targetED.setBackground(targetED.getHoverColor());
+					targetED.setPrimaryColor(design.getHoverColor());
 					
 					// Only execute the implemented 'hover action' when it is allowed/wanted.
 					if(targetED.actsOnHover() && actions.size() < maxActions)
@@ -122,14 +126,24 @@ public class DefaultButtonLogic implements ComponentLogic
 		// When there was a change in color, restore it.
 		if(target.getBufferedColor() != null)
 		{
-			target.setBackground(target.getBufferedColor());
+			target.setPrimaryColor(target.getBufferedColor());
 			target.setBufferedColor(null);
 		}
 	}
-	
+
 	@Override
-	public void exec(EDText target)
+	public void exec(EDComponent target)
 	{
 		logic.exec(target);
+	}
+
+	public Design getDesign()
+	{
+		return design;
+	}
+
+	public void setDesign(Design design)
+	{
+		this.design = design;
 	}
 }

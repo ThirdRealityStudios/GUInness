@@ -6,6 +6,7 @@ import core.driver.KeyboardDriver;
 import core.driver.MouseDriver;
 import core.frame.LayeredRenderFrame;
 import core.gui.EDLayer;
+import core.gui.design.Design;
 import core.io.Interrupt;
 
 public class EventHandler
@@ -22,7 +23,7 @@ public class EventHandler
 	// Used to receive detailed information about the keyboard activity.
 	private KeyboardDriver keyboardDriver = null;
 
-	public EventHandler(LayeredRenderFrame rF)
+	public EventHandler(Design design, LayeredRenderFrame rF)
 	{
 		if (rF != null)
 			this.rF = rF;
@@ -43,7 +44,7 @@ public class EventHandler
 
 		registeredLayers = new ArrayList<EDLayer>();
 
-		componentHandler = new ComponentHandler(this);
+		componentHandler = new ComponentHandler(design, this);
 	}
 
 	public synchronized void registerLayer(EDLayer edL)

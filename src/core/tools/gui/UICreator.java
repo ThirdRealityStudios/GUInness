@@ -3,29 +3,47 @@ package core.tools.gui;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-import core.gui.EDText;
+import core.gui.EDComponent;
+import core.gui.design.Design;
 
 public class UICreator
 {
 	private FontLoader fL = new FontLoader();
-
-	public void createText(Graphics g, EDText text)
+	
+	private Design design;
+	
+	public UICreator(Design design)
 	{
-		Rectangle bounds = text.getShape().getBounds();
+		this.setDesign(design);
+	}
+
+	public void createText(Graphics g, EDComponent c)
+	{
+		Rectangle bounds = c.getShape().getBounds();
 		
-		g.setColor(text.getBorder());
+		g.setColor(design.getBorderColor());
 		g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 		
-		int titleWidth = text.getFontSize() * text.getValue().length();
+		int titleWidth = c.getFontSize() * c.getValue().length();
 
-		g.setColor(text.getBackground());
-		g.fillRect(bounds.x + text.getBorderThickness(), bounds.y + text.getBorderThickness(), titleWidth + 2 * text.getInnerThickness(), text.getFontSize() + 2 * text.getInnerThickness());
+		g.setColor(design.getBackgroundColor());
+		g.fillRect(bounds.x + design.getBorderThickness(), bounds.y + design.getBorderThickness(), titleWidth + 2 * design.getInnerThickness(), c.getFontSize() + 2 * design.getInnerThickness());
 
-		fL.display(g, text.getValue(), bounds.x + text.getInnerThickness() + text.getBorderThickness(), bounds.y + text.getInnerThickness() + text.getBorderThickness(), text.getFontSize(), text.getFontColor());
+		fL.display(g, c.getValue(), bounds.x + design.getInnerThickness() + design.getBorderThickness(), bounds.y + design.getInnerThickness() + design.getBorderThickness(), c.getFontSize(), design.getFontColor());
 	}
 
 	public FontLoader getFontLoader()
 	{
 		return fL;
+	}
+
+	public Design getDesign()
+	{
+		return design;
+	}
+
+	public void setDesign(Design design)
+	{
+		this.design = design;
 	}
 }

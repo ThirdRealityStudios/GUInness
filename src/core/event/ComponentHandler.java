@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import core.Essentials;
 import core.driver.MouseDriver;
 import core.gui.EDComponent;
-import core.gui.EDText;
 import core.gui.component.standard.EDButton;
-import core.gui.component.standard.EDTextfield;
+import core.gui.design.Design;
+import core.gui.special.EDTextfield;
 import core.gui.component.logic.DefaultButtonLogic;
 import core.gui.component.logic.DefaultTextfieldLogic;
 
@@ -43,7 +43,7 @@ public class ComponentHandler
 	// it will reset the color etc.
 	private ArrayList<String> resetableTypes = new ArrayList<String>();
 
-	public ComponentHandler(EventHandler eventHandler)
+	public ComponentHandler(Design design, EventHandler eventHandler)
 	{
 		initResetTypes(); // Adds all resetable EasyDraw component types.
 
@@ -53,7 +53,7 @@ public class ComponentHandler
 		// The implemented ComponentLogic classes are used to tell the ComponentHandler how to treat each type of component.
 		// The MouseDriver is used here to serve the logic classes below with all necessary information about the mouse, e.g. cursor position, if it is clicking etc.
 		// If a EventHandler is passed, then the logic will use more than just a mouse driver, e.g. keyboard driver etc.
-		this.defaultButtonLogic = new DefaultButtonLogic(mouseDriver);
+		this.defaultButtonLogic = new DefaultButtonLogic(design, mouseDriver);
 		this.defaultTextfieldLogic = new DefaultTextfieldLogic(eventHandler);
 
 		// The EventHandler is, let's say, the superior class which serves the ComponentHandler as a main source of information for events and management of everything.
@@ -65,9 +65,15 @@ public class ComponentHandler
 			@Override
 			public void loop()
 			{
+				updateComponent(); // Updates the components values based on the design.
 				triggerComponent();
 			}
 		};
+	}
+	
+	private void updateComponent()
+	{
+		
 	}
 
 	// Returns the handling thread, so the thread which frequently handles all components to make them work.
@@ -291,11 +297,11 @@ public class ComponentHandler
 	// Can be the case if the component or button is exited per cursor or such.
 	public void reset(EDComponent target)
 	{
-		EDText targetConverted = (EDText) target;
+		EDComponent targetConverted = (EDComponent) target;
 
 		if(targetConverted.getBufferedColor() != null)
 		{
-			targetConverted.setBackground(targetConverted.getBufferedColor());
+			targetConverted.setPrimaryColor(targetConverted.getBufferedColor());
 			targetConverted.setBufferedColor(null);
 		}
 	}

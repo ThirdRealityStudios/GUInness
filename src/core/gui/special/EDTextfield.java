@@ -1,30 +1,29 @@
-package core.gui.component.standard;
+package core.gui.special;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.event.KeyEvent;
 
-import core.gui.EDText;
-import core.tools.gui.FontLoader;
+import core.gui.EDComponent;
+import core.gui.design.Design;
 
-public abstract class EDTextfield extends EDText
+public abstract class EDTextfield extends EDComponent
 {
 	private boolean active = false;
 
-	public String value = null;
+	private Color clicked;
 
-	public String bufferedValue = null;
-
-	private FontLoader fL;
-
-	public EDTextfield(Color background, Color active, Point location, String title, int maxInput, Color fontColor, int fontSize, int innerThickness, int borderThickness, Color border, boolean visible)
+	public EDTextfield(Design design, Point location, String title, int maxInput, int fontSize, boolean visible)
 	{
-		super(-1, background, active, background, location, title, fontColor, fontSize, innerThickness, borderThickness, border, visible);
+		super(design, "textfield", location, null, -1, title, fontSize, visible);
 
-		fL = new FontLoader();
-
+		// This method is always called after the base values have been set, e.g. font size.
+		Shape s = design.generateDefaultShape(this);
+		s.getBounds().setLocation(location);
+		setShape(s);
+		
 		if (maxInput > 0)
 			setLength(maxInput);
 		else
@@ -42,13 +41,13 @@ public abstract class EDTextfield extends EDText
 	// It will save the value before in the buffer.
 	public synchronized void write(char key)
 	{		
-		boolean noSafeCopy = bufferedValue == null;
+		boolean noSafeCopy = getBufferedValue() == null;
 
 		boolean noOverflow = (getValue().length() + 1) <= getLength();
 
 		if(noSafeCopy)
 		{
-			bufferedValue = getValue();
+			setBufferedValue(getValue());
 		}
 		else if(noOverflow)
 		{
@@ -80,38 +79,38 @@ public abstract class EDTextfield extends EDText
 	
 	public synchronized void save()
 	{
-		bufferedValue = null;
+		setBufferedValue(null);
 	}
 	
 	public synchronized void revert()
 	{
-		setValue(bufferedValue);
+		setValue(getBufferedValue());
 	}
 	
 	public void setActive()
 	{
-		if(backgroundColor == null)
+		if(getPrimaryColor() == null)
 		{
 			return;
 		}
 		
-		bufferedColor = backgroundColor;
+		setBufferedColor(getPrimaryColor());
 		
-		backgroundColor = activeColor;
+		setPrimaryColor(getColorClicked());
 		
 		active = true;
 	}
 	
 	public void setInactive()
 	{
-		if(bufferedColor == null)
+		if(getBufferedColor() == null)
 		{
 			return;
 		}
 		
-		backgroundColor = bufferedColor;
+		setPrimaryColor(getBufferedColor());
 		
-		bufferedColor = null;
+		setBufferedColor(null);
 		
 		active = false;
 	}
@@ -127,17 +126,17 @@ public abstract class EDTextfield extends EDText
 	{
 		if(isVisible())
 		{
-			Rectangle bounds = getShape().getBounds();
 			
-			g.setColor(getBorder());
-			g.fillRect(bounds.getLocation().x, bounds.getLocation().y, bounds.getSize().width, bounds.getSize().height);
-			
-			int titleWidth = getFontSize() * getValue().length();
-
-			g.setColor(getBackground());
-			g.fillRect(bounds.getLocation().x + getBorderThickness(), bounds.getLocation().y + getBorderThickness(), titleWidth + 2 * getInnerThickness(), getFontSize() + 2 * getInnerThickness());
-
-			fL.display(g, getValue(), bounds.getLocation().x + getInnerThickness() + getBorderThickness(), bounds.getLocation().y + getInnerThickness() + getBorderThickness(), getFontSize(), getFontColor());
 		}
+	}
+
+	public Color getColorClicked()
+	{
+		return clicked;
+	}
+
+	public void setClicked(Color clicked)
+	{
+		this.clicked = clicked;
 	}
 }
