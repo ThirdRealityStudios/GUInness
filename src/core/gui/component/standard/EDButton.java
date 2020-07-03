@@ -10,7 +10,7 @@ public abstract class EDButton extends EDComponent
 {	
 	public EDButton(Design design, Point location, String title, int fontSize, boolean visible)
 	{
-		super(design, "standard", location, null, title.length(), title, fontSize, visible);
+		super(design, "button", location, null, title.length(), title, fontSize, visible);
 		
 		// This method is always called after the base values have been set, e.g. font size.
 		Shape s = design.generateDefaultShape(this);

@@ -7,6 +7,8 @@ import java.awt.Shape;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import core.gui.EDComponent;
+
 public class Essentials
 {
 	// This array contains a few of the accepted special chars.
@@ -19,8 +21,15 @@ public class Essentials
 	// Returns the type of an object.
 	// Returns an empty String if the given reference is null.
 	public static String typeof(Object o)
-	{		
+	{
 		return o != null ? o.getClass().getSuperclass().getSimpleName() : "";
+	}
+	
+	// Returns the type of an EDComponent.
+	// Returns an empty String if the given reference is null.
+	public static String typeof(EDComponent c)
+	{
+		return c != null ? c.getType() : "";
 	}
 	
 	public static boolean isAlphanumeric(char c)

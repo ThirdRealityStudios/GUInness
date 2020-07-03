@@ -11,7 +11,7 @@ public class EDDescription extends EDComponent
 	
 	public EDDescription(Design design, Point location, String title, int fontSize, boolean visible)
 	{
-		super(design, "standard", location, null, title.length(), title, fontSize, visible);
+		super(design, "description", location, null, title.length(), title, fontSize, visible);
 		
 		Rectangle rect = design.generateDefaultShape(this);
 		setShape(rect);

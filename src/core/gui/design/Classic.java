@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 
@@ -79,7 +78,7 @@ public class Classic extends Design
 			}
 		}
 	}
-	
+
 	protected void drawDefault(Graphics g, EDComponent c)
 	{
 		Rectangle bounds = c.getShape().getBounds();

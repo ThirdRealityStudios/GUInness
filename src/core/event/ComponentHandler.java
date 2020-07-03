@@ -70,7 +70,7 @@ public class ComponentHandler
 			}
 		};
 	}
-	
+
 	private void updateComponent()
 	{
 		
@@ -86,7 +86,7 @@ public class ComponentHandler
 	// Adding types, will only affect the background color.
 	private void initResetTypes()
 	{
-		resetableTypes.add("EDButton");
+		resetableTypes.add("button");
 	}
 
 	// Saves necessary data about the mouse, e.g. position, if it was clicked and which was the last known component what was clicked.
@@ -233,7 +233,9 @@ public class ComponentHandler
 						char keyChar = (char) keyStroked;
 
 						if(Essentials.isAlphanumeric(keyChar))
+						{
 							selectedTextfield.write(keyChar);
+						}
 					}
 				}
 			
@@ -245,7 +247,7 @@ public class ComponentHandler
 			// The actions in between decide what to do for each type.
 			switch(type)
 			{
-			case "EDButton":
+			case "button":
 				{
 					EDButton button = (EDButton) focusedComponent;
 
@@ -253,7 +255,7 @@ public class ComponentHandler
 				}
 			break;
 
-			case "EDTextfield":
+			case "textfield":
 				{
 					EDTextfield textfield = (EDTextfield) focusedComponent;
 
@@ -265,10 +267,17 @@ public class ComponentHandler
 				}
 			break;
 
-			case "EDText":
+			case "description":
 			{
 				if(eventHandler.getMouseDriver().isClicking())
-					System.out.println("Clicked a EDText component");
+					System.out.println("Clicked a EDDescription component");
+			}
+			break;
+			
+			case "image":
+			{
+				if(eventHandler.getMouseDriver().isClicking())
+					System.out.println("Clicked a EDImage component");
 			}
 			break;
 

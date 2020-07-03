@@ -39,8 +39,8 @@ public abstract class EDTextfield extends EDComponent
 
 	// Will write add a new char in the variable 'value' of type String.
 	// It will save the value before in the buffer.
-	public synchronized void write(char key)
-	{		
+	public void write(char key)
+	{
 		boolean noSafeCopy = getBufferedValue() == null;
 
 		boolean noOverflow = (getValue().length() + 1) <= getLength();
@@ -49,9 +49,10 @@ public abstract class EDTextfield extends EDComponent
 		{
 			setBufferedValue(getValue());
 		}
-		else if(noOverflow)
-		{
-				writeDirectly(key);
+		
+		if(noOverflow)
+		{			
+			writeDirectly(key);
 		}
 	}
 	
@@ -71,10 +72,12 @@ public abstract class EDTextfield extends EDComponent
 		}
 	}
 	
-	private synchronized void writeDirectly(char key)
+	private void writeDirectly(char key)
 	{
 		if(key != KeyEvent.VK_UNDEFINED)
+		{
 			setValue(getValue() + key);
+		}
 	}
 	
 	public synchronized void save()

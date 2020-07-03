@@ -94,7 +94,7 @@ public class Main
 			}
 		};
 
-		exit.actsOnHover(false);
+		exit.actsOnHover(true);
 
 		/*
 		input1 = new EDTextfield(design, new Point(220, 300), "EMPTY STR", 10, 20, true)
@@ -116,7 +116,7 @@ public class Main
 		};
 		*/
 
-		input3 = new EDTextfield(design, new Point(200, 500), "THIRD", 50, 20, true)
+		input3 = new EDTextfield(design, new Point(200, 500), "Zuhaelter", 10, 20, true)
 		{
 			@Override
 			public void onHover()

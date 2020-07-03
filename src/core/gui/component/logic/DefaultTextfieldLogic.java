@@ -1,8 +1,6 @@
 package core.gui.component.logic;
 
-import core.driver.KeyboardDriver;
 import core.driver.MouseDriver;
-import core.event.ComponentHandler;
 import core.event.EventHandler;
 import core.gui.EDComponent;
 import core.gui.component.Logic;
@@ -14,22 +12,11 @@ public class DefaultTextfieldLogic implements ComponentLogic
 	
 	private EDTextfield focused = null;
 	
-	private EventHandler eventHandler;
-	
 	private MouseDriver mouseDriver;
 	
-	private KeyboardDriver keyboardDriver;
-	
-	private ComponentHandler componentHandler;
-	
 	public DefaultTextfieldLogic(EventHandler eventHandler)
-	{
-		this.eventHandler = eventHandler;
-		
-		componentHandler = eventHandler.getComponentHandler();
-		
+	{		
 		mouseDriver = eventHandler.getMouseDriver();
-		keyboardDriver = eventHandler.getKeyboardDriver();
 		
 		logic = new Logic()
 		{
