@@ -40,19 +40,46 @@ public class EDLayer implements Comparable
 		this.backgroundEnabled = backgroundEnabled;
 	}
 
+	// Checks whether the newly given EDComponent is at the same place as another component
+	// which is added yet to the layer.
+	// In this case it returns false.
+	private boolean isPositionValid(EDComponent check)
+	{
+		for(EDComponent comp : getComponentBuffer())
+		{
+			// Checks whether both components would be in conflict with each other when appearing at the same position.
+			// In future there needs to be function which is able to test shapes regardless of whether it is a rectangle or something else.
+			if(check.getShape().intersects(comp.getShape().getBounds2D()))
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
 	public ArrayList<EDComponent> getComponentBuffer()
 	{
 		return compBuffer;
 	}
 
-	public void setComponentBuffer(ArrayList<EDComponent> compBuffer)
+	// Is "protected" because you need to make sure no components are at the same position.
+	// To use a new ArrayList of type EDComponent, create a new EDLayer instead.
+	protected void setComponentBuffer(ArrayList<EDComponent> compBuffer)
 	{
 		this.compBuffer = compBuffer;
 	}
 
-	public void add(EDComponent comp)
+	public void add(EDComponent comp) throws IllegalArgumentException
 	{
-		compBuffer.add(comp);
+		if(isPositionValid(comp))
+		{
+			compBuffer.add(comp);
+		}
+		else
+		{
+			throw new IllegalArgumentException("tried to add a component to the position of another component (intersection).\nMore details:\n" + comp);
+		}
 	}
 
 	public int getPriority()
@@ -110,7 +137,7 @@ public class EDLayer implements Comparable
 	{
 		EDLayer comp = (EDLayer) o;
 
-		return this.getPriority() - comp.getPriority();
+		return comp.getPriority() - this.getPriority();
 	}
 
 }

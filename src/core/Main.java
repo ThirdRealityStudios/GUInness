@@ -8,22 +8,20 @@ import core.frame.LayeredRenderFrame;
 import core.gui.EDLayer;
 import core.gui.component.standard.EDButton;
 import core.gui.special.EDImage;
-import core.gui.special.EDPath;
 import core.gui.special.EDTextfield;
 import core.gui.component.standard.EDDescription;
 import core.gui.design.Classic;
 import core.gui.design.Design;
 import core.io.Loader;
-import core.maker.Path2DMaker;
 
 public class Main
 {
 	private LayeredRenderFrame rF;
 
 	private EDButton start, exit;
-
+	
 	private EDTextfield input1, input2, input3;
-
+	
 	private EDImage img0;
 
 	private EDLayer layer0, layer1;
@@ -42,9 +40,9 @@ public class Main
 
 	public void init()
 	{
-		design = new Classic(Color.BLACK, brightGray, Color.GRAY, Color.LIGHT_GRAY, Color.BLACK, 2, 2);
+		design = new Classic(Color.BLACK, brightGray, Color.GRAY, Color.LIGHT_GRAY, Color.BLACK, 2, 1);
 		
-		/*
+		
 		start = new EDButton(design, new Point(50, 50), "START", 20, true)
 		{
 			@Override
@@ -76,9 +74,9 @@ public class Main
 		};
 
 		start.actsOnHover(false);
-		*/
+		
 
-		exit = new EDButton(design, new Point(50, 50), "EXIT", 20, true)
+		exit = new EDButton(design, new Point(0, 0), "EXIT", 20, true)
 		{
 			@Override
 			public void onHover()
@@ -132,19 +130,19 @@ public class Main
 
 	public void setupLayer0()
 	{
-		EDDescription edD = new EDDescription(design, new Point(220, 50), "Money here for nothing!", 25, true);
+		EDDescription edD = new EDDescription(design, new Point(0, 50), "Money here for nothing!", 25, true);
 		
 		//layer0.add(new EDPath(design, Path2DMaker.makeRectangle(0, 0, 200, 300), Color.RED, true, new Point(0, 300), true));
-		layer0.add(new EDPath(design, Path2DMaker.makeRectangle(0, 570-31, 800, 30), Color.PINK, true, new Point(100, 300), true));
+		//layer0.add(new EDPath(design, Path2DMaker.makeRectangle(0, 0, 800, 30), Color.PINK, true, new Point(100, 300), true));
 		
 		layer0.add(img0);
 		
-		//layer0.add(start);
+		layer0.add(start);
 		layer0.add(exit);
-		layer0.add(input3);
+		//layer0.add(input3);
 		//layer0.add(input2);
 		//layer0.add(input1);
-		layer0.add(edD);
+		//layer0.add(edD);
 	}
 
 	public void run()
@@ -155,10 +153,10 @@ public class Main
 		rF.setSize(800, 600);
 		rF.center();
 		rF.setVisible(true);
-		
+
 		layer0 = new EDLayer(0, true);
-		layer1 = new EDLayer(0, true);
-		
+		layer1 = new EDLayer(1, true);
+
 		setupLayer0();
 
 		rF.addLayer(layer0);

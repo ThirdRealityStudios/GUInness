@@ -100,16 +100,6 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 		return mirror;
 	}
 
-	public void addComponent(EDLayer edL)
-	{
-		layers.add(edL);
-	}
-
-	public void removeComponent(EDComponent edC)
-	{
-		compBuffer.remove(compBuffer.indexOf(edC));
-	}
-
 	// Erases the internal buffer.
 	public synchronized void erase()
 	{
@@ -124,12 +114,13 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 	}
 
 	// Write the entered alphabetic chars into the text field.
-	public void loadNext(char input, EDTextfield target)
+	public void writeNext(char input, EDTextfield target)
 	{
 		if(uiCreator.getFontLoader().isValid(input) && (target.getValue().length() + 1) <= target.getLength()) 
 			target.setValue(target.getValue() + input);
 	}
 
+	// Adds all components of a layer to the internal component buffer (which is used for drawing only).
 	private void apply(EDLayer target)
 	{
 		if(target.isVisible())
@@ -168,13 +159,40 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 				apply(layers.get(0));
 			}
 		}
-		
+
 		copy();
 	}
-
-	public void addLayer(EDLayer layer)
+	
+	// This will check whether a given layer has the same priority as a layer which is added yet to the list.
+	private boolean isDoublePriority(EDLayer layer)
 	{
-		layers.add(layer);
+		for(EDLayer current : layers)
+		{
+			if(current.getPriority() == layer.getPriority())
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	// The priority of a layer has to be at least zero or greater.
+	private boolean isValidPriority(EDLayer layer)
+	{
+		return layer.getPriority() >= 0 && !isDoublePriority(layer);
+	}
+
+	public void addLayer(EDLayer layer) throws IllegalArgumentException
+	{
+		if(isValidPriority(layer))
+		{
+			layers.add(layer);
+		}
+		else
+		{
+			throw new IllegalArgumentException("The given layers priority is invalid (< 0 or reason is \"double priority\")");
+		}
 
 		applyChanges();
 	}

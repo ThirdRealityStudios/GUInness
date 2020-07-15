@@ -5,6 +5,8 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import core.event.LoopedThread;
 import core.frame.LayeredRenderFrame;
@@ -84,13 +86,13 @@ public class MouseDriver extends LoopedThread implements MouseMotionListener, Mo
 	{	
 		return isClicking() || mouseSpeed > 0;
 	}
-	
+
 	// Tells when the mouse is inactive, so doing nothing.
 	public boolean isInactive()
 	{		
 		return !isActive();
 	}
-	
+
 	@Override
 	public void loop()
 	{
@@ -101,20 +103,20 @@ public class MouseDriver extends LoopedThread implements MouseMotionListener, Mo
 			action = null;
 		}
 	}
-	
+
 	@Override
 	public void mouseDragged(MouseEvent mouseEvent)
 	{
 		// Not used.
 	}
-	
+
 	@Override
 	public void mouseMoved(MouseEvent mouseEvent)
 	{
 		// The cursor was generally just moved somewhere on the frame (false).
 		action = false;
 	}
-	
+
 	@Override
 	public void mouseClicked(MouseEvent mouseEvent)
 	{

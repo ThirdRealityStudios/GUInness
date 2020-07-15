@@ -82,7 +82,7 @@ public class Classic extends Design
 	protected void drawDefault(Graphics g, EDComponent c)
 	{
 		Rectangle bounds = c.getShape().getBounds();
-		
+
 		g.setColor(getBorderColor());
 
 		g.fillRect(bounds.getLocation().x, bounds.getLocation().y, bounds.getSize().width, bounds.getSize().height);

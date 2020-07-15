@@ -65,15 +65,9 @@ public class ComponentHandler
 			@Override
 			public void loop()
 			{
-				updateComponent(); // Updates the components values based on the design.
 				triggerComponent();
 			}
 		};
-	}
-
-	private void updateComponent()
-	{
-		
 	}
 
 	// Returns the handling thread, so the thread which frequently handles all components to make them work.
