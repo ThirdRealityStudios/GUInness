@@ -78,7 +78,7 @@ public class EDLayer implements Comparable
 		}
 		else
 		{
-			throw new IllegalArgumentException("tried to add a component to the position of another component (intersection).\nMore details:\n" + comp);
+			throw new IllegalArgumentException("Tried to add a component to the position of another component (intersection).\nMore details:\n" + comp);
 		}
 	}
 
@@ -137,7 +137,7 @@ public class EDLayer implements Comparable
 	{
 		EDLayer comp = (EDLayer) o;
 
-		return comp.getPriority() - this.getPriority();
+		return this.getPriority() - comp.getPriority();
 	}
 
 }

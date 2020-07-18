@@ -42,8 +42,7 @@ public class Main
 	{
 		design = new Classic(Color.BLACK, brightGray, Color.GRAY, Color.LIGHT_GRAY, Color.BLACK, 2, 1);
 		
-		
-		start = new EDButton(design, new Point(50, 50), "START", 20, true)
+		start = new EDButton(design, new Point(20, 75), "START", 20, true)
 		{
 			@Override
 			public void onHover()
@@ -58,13 +57,13 @@ public class Main
 			{
 				if(!clicked)
 				{
-					img0.setVisible(false);
+					layer0.setVisible(false);
 
 					clicked = true;
 				}
 				else
 				{
-					img0.setVisible(true);
+					layer0.setVisible(true);
 
 					clicked = false;
 				}
@@ -76,7 +75,7 @@ public class Main
 		start.actsOnHover(false);
 		
 
-		exit = new EDButton(design, new Point(0, 0), "EXIT", 20, true)
+		exit = new EDButton(design, new Point(20, 150), "EXIT", 20, true)
 		{
 			@Override
 			public void onHover()
@@ -94,8 +93,7 @@ public class Main
 
 		exit.actsOnHover(true);
 
-		/*
-		input1 = new EDTextfield(design, new Point(220, 300), "EMPTY STR", 10, 20, true)
+		input1 = new EDTextfield(design, new Point(20, 300), "GERMAN", 10, 20, true)
 		{
 			@Override
 			public void onHover()
@@ -104,7 +102,7 @@ public class Main
 			}
 		};
 
-		input2 = new EDTextfield(design, new Point(220, 400), "SECOND", 10, 20, true)
+		input2 = new EDTextfield(design, new Point(20, 375), "DEUTSCH", 10, 20, true)
 		{
 			@Override
 			public void onHover()
@@ -112,9 +110,8 @@ public class Main
 
 			}
 		};
-		*/
 
-		input3 = new EDTextfield(design, new Point(200, 500), "Zuhaelter", 10, 20, true)
+		input3 = new EDTextfield(design, new Point(20, 450), "ALEMAN", 10, 20, true)
 		{
 			@Override
 			public void onHover()
@@ -125,28 +122,29 @@ public class Main
 
 		Image i = Loader.loadImage("C:\\Users\\Hameg\\Desktop\\4.jpg");
 
-		img0 = new EDImage(design, new Point(20, 100), 300, false, i, true);
+		img0 = new EDImage(design, new Point(0, 0), 600, false, i, true);
 	}
 
 	public void setupLayer0()
 	{
-		EDDescription edD = new EDDescription(design, new Point(0, 50), "Money here for nothing!", 25, true);
+		EDDescription edD = new EDDescription(design, new Point(20, 520), "Money here for nothing!", 25, true);
 		
 		//layer0.add(new EDPath(design, Path2DMaker.makeRectangle(0, 0, 200, 300), Color.RED, true, new Point(0, 300), true));
 		//layer0.add(new EDPath(design, Path2DMaker.makeRectangle(0, 0, 800, 30), Color.PINK, true, new Point(100, 300), true));
 		
 		layer0.add(img0);
 		
-		layer0.add(start);
-		layer0.add(exit);
-		//layer0.add(input3);
-		//layer0.add(input2);
-		//layer0.add(input1);
-		//layer0.add(edD);
+		layer1.add(edD);
+		layer1.add(exit);
+		layer1.add(start);
+		
+		layer1.add(input3);
+		layer1.add(input2);
+		layer1.add(input1);
 	}
 
 	public void run()
-	{		
+	{
 		rF = new LayeredRenderFrame(design);
 		rF.setAlwaysOnTop(true);
 
