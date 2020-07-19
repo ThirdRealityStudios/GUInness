@@ -11,6 +11,8 @@ import core.io.Interrupt;
 
 public class EventHandler
 {
+	// ~30% overall CPU usage
+	
 	private LayeredRenderFrame rF = null;
 
 	private ArrayList<EDLayer> registeredLayers;
@@ -40,7 +42,6 @@ public class EventHandler
 		// Initialize the keyboard driver with the RenderFrame context.
 		// The RenderFrame context is needed for getting front-end-window-related keyboard data.
 		keyboardDriver = new KeyboardDriver(rF);
-		keyboardDriver.getThread().start();
 
 		registeredLayers = new ArrayList<EDLayer>();
 

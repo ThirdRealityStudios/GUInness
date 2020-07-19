@@ -54,11 +54,18 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 			drawBackground(g);
 
 			drawComponents(g);
-
-			repaint();
+			
+			new Thread()
+			{
+				@Override
+				public void run()
+				{
+					repaint();
+				}
+			}.start();
 		}
 	};
-
+	
 	public LayeredRenderFrame(Design design)
 	{
 		this.design = design;
@@ -162,7 +169,7 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 
 		copy();
 	}
-	
+
 	// This will check whether a given layer has the same priority as a layer which is added yet to the list.
 	private boolean isDoublePriority(EDLayer layer)
 	{
@@ -176,7 +183,7 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 		
 		return false;
 	}
-	
+
 	// The priority of a layer has to be at least zero or greater.
 	private boolean isValidPriority(EDLayer layer)
 	{
@@ -227,7 +234,7 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 	{
 		return layers.get(index);
 	}
-	
+
 	public void center()
 	{
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();

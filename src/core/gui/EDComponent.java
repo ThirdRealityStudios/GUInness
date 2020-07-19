@@ -39,13 +39,9 @@ public abstract class EDComponent
 	// If you want the EDComponent to be rendered as an image,
 	// you need to clarify it in the variable "type" above (String value needs to be "image" then).
 	private Image img;
-	
-	// This will represent the error log.
-	// It can be used for later analysis on which 
-	private String errorLog = "";
 
 	public EDComponent(Design design, String type, Point location, Shape shape, int length, String val, int fontSize, boolean visible)
-	{
+	{		
 		setDesign(design);
 		setPrimaryColor(design.getBackgroundColor());
 		

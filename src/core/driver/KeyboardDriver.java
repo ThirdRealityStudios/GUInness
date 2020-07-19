@@ -3,21 +3,16 @@ package core.driver;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import core.event.LoopedThread;
 import core.frame.LayeredRenderFrame;
 
-public class KeyboardDriver extends LoopedThread implements KeyListener
+public class KeyboardDriver implements KeyListener
 {
 	private int keyActive = KeyEvent.VK_UNDEFINED, keyTyped = KeyEvent.VK_UNDEFINED;
 	
 	boolean duplicate = false;
 	
-	private LayeredRenderFrame context;
-	
 	public KeyboardDriver(LayeredRenderFrame context)
 	{
-		this.context = context;
-		
 		/*
 		 *  'context' is the variable to use
 		 *  for detecting keystrokes and additional data.
@@ -99,11 +94,5 @@ public class KeyboardDriver extends LoopedThread implements KeyListener
 	public char getTypedKeyChar()
 	{
 		return (char) keyTyped;
-	}
-	
-	@Override
-	public void loop()
-	{
-		
 	}
 }

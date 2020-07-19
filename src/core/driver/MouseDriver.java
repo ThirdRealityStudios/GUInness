@@ -5,9 +5,6 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
-import java.util.Collections;
-
 import core.event.LoopedThread;
 import core.frame.LayeredRenderFrame;
 import core.gui.EDComponent;
