@@ -40,42 +40,33 @@ public class Main
 
 	public void init()
 	{
-		design = new Classic(Color.BLACK, brightGray, Color.GRAY, Color.LIGHT_GRAY, Color.BLACK, 2, 1);
+		design = new Classic(Color.BLACK, Color.LIGHT_GRAY, Color.DARK_GRAY, Color.GRAY, Color.BLACK, 2, 1);
+
+		rF = new LayeredRenderFrame(design);
 		
-		start = new EDButton(design, new Point(20, 75), "START", 20, true)
+		start = new EDButton(rF, new Point(20, 75), "START", 20, true)
 		{
 			@Override
 			public void onHover()
 			{
-				
+				System.out.println("Hover babe!");
 			}
-
-			private boolean clicked = false;
 
 			@Override
 			public void onClick()
 			{
-				if(!clicked)
-				{
-					layer0.setVisible(false);
+				rF.setGamingMode(!rF.isGamingModeOn());
 
-					clicked = true;
-				}
-				else
-				{
-					layer0.setVisible(true);
-
-					clicked = false;
-				}
-
-				rF.applyChanges();
+				System.out.println("Gaming mode is on! Watch your CPU usage and see which mode is more efficient :D..");
 			}
 		};
 
 		start.actsOnHover(false);
+		start.actsOnClick(true);
+		start.setRealtimeExecution(true); // This will run parallel (with threads) which is in some cases faster (of course unnecessary if you just want to print something to the console).
 		
 
-		exit = new EDButton(design, new Point(20, 150), "EXIT", 20, true)
+		exit = new EDButton(rF, new Point(20, 150), "EXIT", 20, true)
 		{
 			@Override
 			public void onHover()
@@ -91,9 +82,10 @@ public class Main
 			}
 		};
 
-		exit.actsOnHover(true);
+		exit.actsOnHover(false);
+		exit.actsOnClick(true);
 
-		input1 = new EDTextfield(design, new Point(20, 300), "GERMAN", 10, 20, true)
+		input1 = new EDTextfield(rF, new Point(20, 300), "GERMAN", 10, 20, true)
 		{
 			@Override
 			public void onHover()
@@ -102,16 +94,16 @@ public class Main
 			}
 		};
 
-		input2 = new EDTextfield(design, new Point(20, 375), "DEUTSCH", 10, 20, true)
+		input2 = new EDTextfield(rF, new Point(20, 375), "DEUTSCH", 10, 20, true)
 		{
 			@Override
 			public void onHover()
 			{
-
+				
 			}
 		};
 
-		input3 = new EDTextfield(design, new Point(20, 450), "ALEMAN", 10, 20, true)
+		input3 = new EDTextfield(rF, new Point(20, 450), "ALEMAN", 10, 20, true)
 		{
 			@Override
 			public void onHover()
@@ -122,12 +114,12 @@ public class Main
 
 		Image i = Loader.loadImage("C:\\Users\\Hameg\\Desktop\\4.jpg");
 
-		img0 = new EDImage(design, new Point(0, 0), 600, false, i, true);
+		img0 = new EDImage(rF, new Point(0, 0), 600, false, i, true);
 	}
 
 	public void setupLayer0()
 	{
-		EDDescription edD = new EDDescription(design, new Point(20, 520), "Money here for nothing!", 25, true);
+		EDDescription edD = new EDDescription(rF, new Point(20, 520), "Money here for nothing!", 25, true);
 		
 		//layer0.add(new EDPath(design, Path2DMaker.makeRectangle(0, 0, 200, 300), Color.RED, true, new Point(0, 300), true));
 		//layer0.add(new EDPath(design, Path2DMaker.makeRectangle(0, 0, 800, 30), Color.PINK, true, new Point(100, 300), true));
@@ -145,7 +137,6 @@ public class Main
 
 	public void run()
 	{
-		rF = new LayeredRenderFrame(design);
 		rF.setAlwaysOnTop(true);
 
 		rF.setSize(800, 600);

@@ -5,11 +5,13 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import core.event.LoopedThread;
+import java.util.ArrayList;
+
 import core.frame.LayeredRenderFrame;
 import core.gui.EDComponent;
 import core.gui.EDLayer;
 import core.io.Interrupt;
+import core.thread.LoopedThread;
 
 public class MouseDriver extends LoopedThread implements MouseMotionListener, MouseListener
 {
@@ -160,7 +162,7 @@ public class MouseDriver extends LoopedThread implements MouseMotionListener, Mo
 	// Tells whether the mouse is being clicked.
 	public Boolean isClicking()
 	{
-		return getAction() != null && getAction() == true;
+		return (getAction() != null) ? getAction() == true : false;
 	}
 	
 	// Returns the absolute current cursor location.
@@ -227,8 +229,18 @@ public class MouseDriver extends LoopedThread implements MouseMotionListener, Mo
 	
 	// Checks whether the cursor is over any EasyDraw component.
 	// Should be avoided if used too often because of performance reasons.
-	public boolean isFocusingAny()
+	public boolean isFocusingAny(ArrayList<String> exceptionalTypes)
 	{
-		return getFocusedComponent() != null;
+		boolean assigned = getFocusedComponent() != null;
+		
+		for(String type : exceptionalTypes)
+		{
+			if(assigned && (getFocusedComponent().getType() == type))
+			{
+				return false;
+			}
+		}
+		
+		return assigned;
 	}
 }

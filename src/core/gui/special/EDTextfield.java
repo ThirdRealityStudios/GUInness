@@ -1,13 +1,12 @@
 package core.gui.special;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Shape;
 import java.awt.event.KeyEvent;
 
+import core.frame.LayeredRenderFrame;
 import core.gui.EDComponent;
-import core.gui.design.Design;
 
 public abstract class EDTextfield extends EDComponent
 {
@@ -15,12 +14,12 @@ public abstract class EDTextfield extends EDComponent
 
 	private Color clicked;
 
-	public EDTextfield(Design design, Point location, String title, int maxInput, int fontSize, boolean visible)
+	public EDTextfield(LayeredRenderFrame rF, Point location, String title, int maxInput, int fontSize, boolean visible)
 	{
-		super(design, "textfield", location, null, -1, title, fontSize, visible);
+		super(rF, "textfield", location, null, -1, title, fontSize, visible);
 
 		// This method is always called after the base values have been set, e.g. font size.
-		Shape s = design.generateDefaultShape(this);
+		Shape s = getDesign().generateDefaultShape(this);
 		s.getBounds().setLocation(location);
 		setShape(s);
 		
@@ -36,58 +35,10 @@ public abstract class EDTextfield extends EDComponent
 	}
 
 	public void onClick(){}
-
-	// Will write add a new char in the variable 'value' of type String.
-	// It will save the value before in the buffer.
-	public void write(char key)
-	{
-		boolean noSafeCopy = getBufferedValue() == null;
-
-		boolean noOverflow = (getValue().length() + 1) <= getLength();
-
-		if(noSafeCopy)
-		{
-			setBufferedValue(getValue());
-		}
-		
-		if(noOverflow)
-		{			
-			writeDirectly(key);
-		}
-	}
-	
-	// Will do the exact opposite of the write(char key) function.
-	// It will delete the last char in the variable 'value' of type String.
-	// It will save the value before in the buffer.
-	public void eraseLastChar()
-	{
-		// Checking whether deleting one more char is still possible due to the length of 'value'.
-		if(getValue().length() > 0)
-		{
-			setBufferedValue(getBufferedValue());
-			
-			char[] charValues = getValue().toCharArray();
-			
-			setValue(getValue().valueOf(charValues, 0, charValues.length-1));
-		}
-	}
-	
-	private void writeDirectly(char key)
-	{
-		if(key != KeyEvent.VK_UNDEFINED)
-		{
-			setValue(getValue() + key);
-		}
-	}
 	
 	public synchronized void save()
 	{
 		setBufferedValue(null);
-	}
-	
-	public synchronized void revert()
-	{
-		setValue(getBufferedValue());
 	}
 	
 	public void setActive()
@@ -124,14 +75,6 @@ public abstract class EDTextfield extends EDComponent
 	}
 
 	public abstract void onHover();
-
-	public void draw(Graphics g)
-	{
-		if(isVisible())
-		{
-			
-		}
-	}
 
 	public Color getColorClicked()
 	{

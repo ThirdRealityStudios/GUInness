@@ -25,7 +25,7 @@ public class EventHandler
 	// Used to receive detailed information about the keyboard activity.
 	private KeyboardDriver keyboardDriver = null;
 
-	public EventHandler(Design design, LayeredRenderFrame rF)
+	public EventHandler(LayeredRenderFrame rF)
 	{
 		if (rF != null)
 			this.rF = rF;
@@ -45,7 +45,7 @@ public class EventHandler
 
 		registeredLayers = new ArrayList<EDLayer>();
 
-		componentHandler = new ComponentHandler(design, this);
+		componentHandler = new ComponentHandler(rF);
 	}
 
 	public synchronized void registerLayer(EDLayer edL)

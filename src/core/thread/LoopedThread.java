@@ -1,4 +1,4 @@
-package core.event;
+package core.thread;
 
 import core.io.Interrupt;
 

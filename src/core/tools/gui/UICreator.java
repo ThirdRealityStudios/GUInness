@@ -9,9 +9,9 @@ import core.gui.design.Design;
 public class UICreator
 {
 	private FontLoader fL = new FontLoader();
-	
+
 	private Design design;
-	
+
 	public UICreator(Design design)
 	{
 		this.setDesign(design);

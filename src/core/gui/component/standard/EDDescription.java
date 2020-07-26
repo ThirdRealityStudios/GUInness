@@ -2,6 +2,8 @@ package core.gui.component.standard;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+
+import core.frame.LayeredRenderFrame;
 import core.gui.EDComponent;
 import core.gui.design.Design;
 
@@ -9,11 +11,11 @@ public class EDDescription extends EDComponent
 {
 	private boolean interaction = true;
 	
-	public EDDescription(Design design, Point location, String title, int fontSize, boolean visible)
+	public EDDescription(LayeredRenderFrame rF, Point location, String title, int fontSize, boolean visible)
 	{
-		super(design, "description", location, null, title.length(), title, fontSize, visible);
+		super(rF, "description", location, null, title.length(), title, fontSize, visible);
 		
-		Rectangle rect = design.generateDefaultShape(this);
+		Rectangle rect = getDesign().generateDefaultShape(this);
 		setShape(rect);
 	}
 

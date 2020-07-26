@@ -13,21 +13,35 @@ import core.event.EventHandler;
 import core.gui.EDComponent;
 import core.gui.EDLayer;
 import core.gui.design.Design;
-import core.gui.special.EDTextfield;
-import core.tools.gui.UICreator;
 
 public class LayeredRenderFrame extends JFrame implements RenderFrame
 {
 	private Design design;
 	
+	// This will let you determine whether you want to call the 'repaint'-method only
+	// on specific events or regardless always.
+	// You can reduce the CPU load by disabling this option.
+	// If you try to build a "real-time graphics game",
+	// you should activate this option.
+	// In own tests this option reduces the CPU load by about 35% - 45% (update: 25th July 2020).
+	private boolean gamingMode = false;
+	
+	public Design getDesign()
+	{
+		return design;
+	}
+
+	public void setDesign(Design design)
+	{
+		this.design = design;
+	}
+
 	private ArrayList<EDLayer> layers;
 
 	private ArrayList<EDComponent> compBuffer, compOutput;
 
 	private volatile EventHandler eH;
 
-	private UICreator uiCreator;
-	
 	private JPanel renderPanel = new JPanel()
 	{
 		private void drawBackground(Graphics g)
@@ -49,30 +63,26 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 		}
 
 		@Override
-		public void paint(Graphics g)
+		public void paintComponent(Graphics g)
 		{
 			drawBackground(g);
 
 			drawComponents(g);
 			
-			new Thread()
+			if(gamingMode)
 			{
-				@Override
-				public void run()
-				{
-					repaint();
-				}
-			}.start();
+				repaint();
+			}
 		}
 	};
 	
 	public LayeredRenderFrame(Design design)
 	{
-		this.design = design;
+		System.gc(); // This should just make up more space for this application.
+		
+		setDesign(design);
 		
 		layers = new ArrayList<EDLayer>();
-
-		uiCreator = new UICreator(design);
 
 		compBuffer = new ArrayList<EDComponent>();
 		compOutput = new ArrayList<EDComponent>();
@@ -85,7 +95,7 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 		renderPanel.setVisible(true);
 		add(renderPanel);
 
-		eH = new EventHandler(design, this);
+		eH = new EventHandler(this);
 		
 		for(EDLayer edL : layers)
 		{
@@ -93,6 +103,20 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 		}
 
 		eH.start();
+	}
+	
+	// This method can be used by all EDComponents to invoke a 'repaint',
+	// meaning all changes on any EDComponent needs to be made visible with this method.
+	// It is mainly there to reduce the CPU load by manually calling it in a specific event,
+	// like when the user clicks on a button or writes on a text-field etc.
+	// If 'gaming mode' is on,
+	// this method will not be executed because the 'repaint'-method is called repeatedly then in the 'paintComponents'-method above.
+	public void updateEDComponents()
+	{
+		if(!gamingMode)
+		{
+			getRenderPanel().repaint();
+		}
 	}
 
 	private ArrayList<EDComponent> copyComponents()
@@ -118,13 +142,6 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 	public synchronized void copy()
 	{
 		compOutput = copyComponents();
-	}
-
-	// Write the entered alphabetic chars into the text field.
-	public void writeNext(char input, EDTextfield target)
-	{
-		if(uiCreator.getFontLoader().isValid(input) && (target.getValue().length() + 1) <= target.getLength()) 
-			target.setValue(target.getValue() + input);
 	}
 
 	// Adds all components of a layer to the internal component buffer (which is used for drawing only).
@@ -168,6 +185,9 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 		}
 
 		copy();
+		
+		// Makes all changes also graphically visible.
+		updateEDComponents();
 	}
 
 	// This will check whether a given layer has the same priority as a layer which is added yet to the list.
@@ -250,5 +270,30 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 	public EventHandler getEventHandler()
 	{
 		return eH;
+	}
+	
+	public JPanel getRenderPanel()
+	{
+		return renderPanel;
+	}
+
+	public boolean isGamingModeOn()
+	{
+		return gamingMode;
+	}
+
+	public void setGamingMode(boolean gamingMode)
+	{
+		this.gamingMode = gamingMode;
+		
+		if(gamingMode)
+		{
+			// This will call the 'paintComponents'-method.
+			// Because the 'paintComponents'-method contains a 'repaint'-method on its own when gaming mode is activated,
+			// it will steadily refresh the screen until gaming mode is disabled again.
+			// Meaning that,
+			// this method invokes the whole chain or process only at the beginning.
+			renderPanel.repaint();
+		}
 	}
 }

@@ -4,19 +4,42 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Shape;
+import java.awt.event.KeyEvent;
+import java.security.InvalidParameterException;
 
+import core.frame.LayeredRenderFrame;
 import core.gui.design.Design;
+import core.tools.gui.UICreator;
 
 public abstract class EDComponent
 {
 	// Will tell the render method how to render this component.
 	private Design design;
-	
+
 	// Determines the type of the EDComponent, e.g. image, path or default.
 	// This will determine the render method later.
 	private String type;
-	
+
 	private volatile boolean interaction = true, isHovered = false, actionOnClick = true, actionOnHover = true;
+
+	// "Realtime execution" means that if you interact with an EDComponent it will
+	// execute as fast as it can the corresponding method,
+	// e.g. you click a button for one second which means the onClick() method is
+	// executed as often as possible depending the computer.
+	// If disabled the corresponding method is called only once in a time which
+	// prevents too much execution and load.
+	// Anyway, you can define a component specific delay below before the method may
+	// be called again (which is actually not real-time anymore but yeah, you know
+	// what I mean..).
+	private volatile boolean realtimeExecution = false;
+
+	// This means, in best case scenario you are able to interact with the component
+	// 4 times a second or 4 Hz.
+	// How you can interact with it depends of course on the type of the component.
+	// Not all components support this feature, e.g. text-fields.
+	// Also, from this point the delay is currently only compatible with buttons and
+	// similar components which will probably follow in future.
+	private int delayMs = 250;
 
 	// Contains the shape of the component.
 	private Shape shape;
@@ -37,44 +60,100 @@ public abstract class EDComponent
 
 	// Just contains an image in case it is wanted.
 	// If you want the EDComponent to be rendered as an image,
-	// you need to clarify it in the variable "type" above (String value needs to be "image" then).
+	// you need to clarify it in the variable "type" above (String value needs to be
+	// "image" then).
 	private Image img;
 
-	public EDComponent(Design design, String type, Point location, Shape shape, int length, String val, int fontSize, boolean visible)
-	{		
-		setDesign(design);
-		setPrimaryColor(design.getBackgroundColor());
-		
+	// The main reference to all major functions of this whole program.
+	private LayeredRenderFrame rF;
+
+	public EDComponent(LayeredRenderFrame rF, String type, Point location, Shape shape, int length, String val,
+			int fontSize, boolean visible)
+	{
+		this.setRenderFrame(rF);
+
+		setDesign(rF.getDesign());
+		setPrimaryColor(getDesign().getBackgroundColor());
+
 		setType(type);
 		setLocation(location);
 		setShape(shape);
-		
+
 		setFontSize(fontSize);
-		
+
 		setVisible(visible);
-		
+
 		// Set all important attributes below:
 		setLength(length);
 		setValue(val);
-		
+
 		// Checks whether it needs to adjust the design values for the current type.
 		if(getType().contentEquals("default"))
 		{
 			// After knowing all necessary attributes:
-			design.updateDefaultShape(this); // Calculates the correct size of the rectangle for an EDComponent of type "default". Will not apply to "image" or "path".
+			getDesign().updateDefaultShape(this); // Calculates the correct size of the rectangle for an EDComponent of
+													// type "default". Will not apply to "image" or "path".
+		}
+	}
+
+	// Will write add a new char in the variable 'value' of type String.
+	// It will save the value before in the buffer.
+	public void write(char key)
+	{
+		boolean noOverflow = (getValue().length() + 1) <= getLength();
+
+		if(noOverflow)
+		{
+			setValue(getValue() + key);
+		}
+	}
+
+	// Will do the exact opposite of the write(char key) function.
+	// It will delete the last char in the variable 'value' of type String.
+	// It will save the value before in the buffer.
+	public void eraseLastChar()
+	{
+		// Checking whether deleting one more char is still possible due to the length
+		// of 'value'.
+		if(getValue().length() > 0)
+		{
+			setBufferedValue(getBufferedValue());
+
+			char[] charValues = getValue().toCharArray();
+
+			setValue(getValue().valueOf(charValues, 0, charValues.length - 1));
 		}
 	}
 	
+	// Tells you whether the cursor of 'value' is at the beginning,
+	// meaning 'value' is empty.
+	public boolean isCursorAtBeginning()
+	{
+		return getValue().length() == 0;
+	}
+	
+	// Tells you whether the cursor of 'value' is at the end,
+	// meaning 'value' is full.
+	public boolean isCursorAtEnd()
+	{
+		return (getValue().length() + 1) > getLength();
+	}
+
+	public synchronized void revert()
+	{
+		setValue(getBufferedValue());
+	}
+
 	public void setImage(Image img)
 	{
 		this.img = img;
 	}
-	
+
 	public Image getImage()
 	{
 		return img;
 	}
-	
+
 	// Returns whether the component contains an image.
 	// Could affect the way the component is rendered.
 	public boolean containsImage()
@@ -96,14 +175,12 @@ public abstract class EDComponent
 	{
 		return shape;
 	}
-	
+
 	public void setShape(Shape shape)
 	{
 		this.shape = shape;
 	}
-	
-	// Part of "EDText"
-	
+
 	public synchronized String getValue()
 	{
 		return value;
@@ -115,9 +192,9 @@ public abstract class EDComponent
 		{
 			return;
 		}
-		
+
 		this.value = title;
-		design.updateDefaultShape(this);
+		getDesign().updateDefaultShape(this);
 	}
 
 	public int getLength()
@@ -139,7 +216,7 @@ public abstract class EDComponent
 	{
 		return bufferedValue;
 	}
-	
+
 	public int getFontSize()
 	{
 		return fontSize;
@@ -149,27 +226,27 @@ public abstract class EDComponent
 	{
 		this.fontSize = fontSize;
 	}
-	
+
 	public void setBufferedColor(Color pBufferedColor)
 	{
 		this.bufferedColor = pBufferedColor;
 	}
-	
+
 	public Color getBufferedColor()
 	{
 		return this.bufferedColor;
 	}
-	
+
 	public void setPrimaryColor(Color pPrimaryColor)
 	{
 		this.primaryColor = pPrimaryColor;
 	}
-	
+
 	public Color getPrimaryColor()
 	{
 		return this.primaryColor;
 	}
-	
+
 	public Point getLocation()
 	{
 		return location;
@@ -179,7 +256,7 @@ public abstract class EDComponent
 	{
 		this.location = location;
 	}
-	
+
 	public boolean isInteractionEnabled()
 	{
 		return interaction;
@@ -243,16 +320,48 @@ public abstract class EDComponent
 	{
 		this.design = d;
 	}
-	
+
 	public void print()
 	{
 		System.out.println();
 		System.out.println(this);
 	}
-	
+
 	@Override
 	public String toString()
 	{
-		return getClass().hashCode() + " (class: " + this.getClass().getSimpleName() + ", type: \"" + getType() + "\"):\ndesign = " + design.getClass().getSimpleName() + "\nshape = " + shape + "\nlength = " + length + "\nvalue = \"" + value + "\"\nfontSize = " + fontSize + "\nvisible = " + visible;
+		return getClass().hashCode() + " (class: " + this.getClass().getSimpleName() + ", type: \"" + getType()
+				+ "\"):\ndesign = " + getDesign().getClass().getSimpleName() + "\nshape = " + shape + "\nlength = "
+				+ length + "\nvalue = \"" + value + "\"\nfontSize = " + fontSize + "\nvisible = " + visible;
+	}
+
+	public LayeredRenderFrame getRenderFrame()
+	{
+		return rF;
+	}
+
+	public void setRenderFrame(LayeredRenderFrame rF)
+	{
+		this.rF = rF;
+	}
+
+	public boolean isRealtimeExecutionOn()
+	{
+		return realtimeExecution;
+	}
+
+	public void setRealtimeExecution(boolean realtimeExecution)
+	{
+		this.realtimeExecution = realtimeExecution;
+	}
+
+	public int getDelayMilliseconds()
+	{
+		return delayMs;
+	}
+
+	public void setDelayMilliseconds(int delayMs)
+	{
+		this.delayMs = delayMs;
 	}
 }

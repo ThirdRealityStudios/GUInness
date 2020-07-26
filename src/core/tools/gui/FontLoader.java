@@ -17,7 +17,7 @@ import core.tools.image.Manipulation;
 public class FontLoader
 {
 	private final ArrayList<Character> specialChars;
-	
+
 	private final BufferedImage pattern;
 
 	public FontLoader()
@@ -29,7 +29,7 @@ public class FontLoader
 		specialChars.add(':');
 		specialChars.add(';');
 		specialChars.add(',');
-		
+
 		pattern = loadPattern();
 	}
 
@@ -56,7 +56,7 @@ public class FontLoader
 	{
 		for (char c : specialChars)
 		{
-			if (c == symbol)
+			if(c == symbol)
 			{
 				return true;
 			}
@@ -80,7 +80,7 @@ public class FontLoader
 	}
 
 	public boolean isValid(char symbol)
-	{
+	{		
 		char upperCase = (symbol + "").toUpperCase().charAt(0);
 
 		symbol = upperCase;
@@ -88,18 +88,28 @@ public class FontLoader
 		return (isAlphabetic(symbol) || Character.isDigit(symbol) || isValidSpecialChar(symbol));
 	}
 
+	// Checks whether the given key is a control code,
+	// e.g. alert or 0 (device should do nothing).
+	public boolean isDeviceControlCode(int key)
+	{
+		return key > 31 && key < 127 || key > 127 && key < 65535;
+	}
+
 	private int getSymbolIndex(char symbol)
 	{
-		if (Character.isAlphabetic(symbol))
+		if(Character.isAlphabetic(symbol))
 		{
 			return getAlphabeticIndex(symbol);
-		} else if (Character.isDigit(symbol))
+		}
+		else if(Character.isDigit(symbol))
 		{
 			return getDigitIndex(symbol);
-		} else if (isValidSpecialChar(symbol))
+		}
+		else if(isValidSpecialChar(symbol))
 		{
 			return getSpecialSymbolIndex(symbol);
-		} else
+		}
+		else
 		{
 			// Character not found.
 			return -1;
@@ -108,39 +118,55 @@ public class FontLoader
 
 	private BufferedImage loadPattern()
 	{
-		BufferedImage imgLoaded = null;
-
 		try
 		{
+			BufferedImage loaded = null;
+
 			String path = Path.CORE_MEDIA + "\\StandardFont.png";
 
-			imgLoaded = ImageIO.read(new File(path));
+			loaded = ImageIO.read(new File(path));
+
+			return loaded;
 		} catch (IOException e)
 		{
 			e.printStackTrace();
-		}
 
-		return imgLoaded;
+			return null;
+		}
 	}
 
 	// Displays a letter from the delivered alphabet pattern on the specified
 	// graphics object.
 	public void display(Graphics g, char letter, int xPos, int yPos, int fontSize, Color fontColor)
-	{
+	{		
 		int index = getSymbolIndex(letter);
 
-		if (index == -1)
-			return;
-
-		int x = (index - 1) * 30 + index, y = 1;
-
 		int dim = 30;
-		
-		BufferedImage img = pattern.getSubimage(x, y, dim, dim);
 
-		Image colorized = Manipulation.colorize(img, fontColor).getScaledInstance(fontSize, fontSize, pattern.SCALE_SMOOTH);
-		
-		g.drawImage(colorized, xPos, yPos, null);
+		if(isValid(letter) && index > -1)
+		{
+			int x = (index - 1) * 30 + index, y = 1;
+
+			BufferedImage img = pattern.getSubimage(x, y, dim, dim);
+
+			Image colorized = Manipulation.colorize(img, fontColor).getScaledInstance(fontSize, fontSize,
+					pattern.SCALE_SMOOTH);
+
+			g.drawImage(colorized, xPos, yPos, null);
+		}
+		else
+		{
+			int indexSymbolNotFound = getDigitIndex('0');
+
+			int xSymbolNotFound = (indexSymbolNotFound - 1) * 30 + indexSymbolNotFound, ySymbolNotFound = 1;
+
+			BufferedImage img = pattern.getSubimage(xSymbolNotFound, ySymbolNotFound, dim, dim);
+
+			Image colorized = Manipulation.colorize(img, fontColor).getScaledInstance(fontSize, fontSize,
+					pattern.SCALE_SMOOTH);
+
+			g.drawImage(colorized, xPos, yPos, null);
+		}
 	}
 
 	// Displays a whole string (only alphabetic letters) and scales it according to
@@ -151,7 +177,7 @@ public class FontLoader
 
 		int offset = 0;
 
-		for(char c : converted)
+		for (char c : converted)
 		{
 			display(g, c, xPos + fontSize * offset, yPos, fontSize, fontColor);
 

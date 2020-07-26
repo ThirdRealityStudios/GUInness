@@ -4,14 +4,16 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+
+import core.frame.LayeredRenderFrame;
 import core.gui.EDComponent;
 import core.gui.design.Design;
 
 public class EDImage extends EDComponent
 {
-	public EDImage(Design design, Point location, Image content, boolean visible)
+	public EDImage(LayeredRenderFrame rF, Point location, Image content, boolean visible)
 	{
-		super(design, "image", location, null, 0, null, 0, visible);
+		super(rF, "image", location, null, 0, null, 0, visible);
 		
 		Rectangle rect = new Rectangle(location.x, location.y, content.getWidth(null), content.getHeight(null));
 		
@@ -19,9 +21,9 @@ public class EDImage extends EDComponent
 		setImage(content);
 	}
 
-	public EDImage(Design design, Point location, float scale, Image content, boolean visible)
+	public EDImage(LayeredRenderFrame rF, Point location, float scale, Image content, boolean visible)
 	{
-		super(design, "image", location, null, 0, null, 0, visible);
+		super(rF, "image", location, null, 0, null, 0, visible);
 		
 		Dimension scaled = new Dimension((int) (scale * content.getWidth(null)), (int) (scale * content.getHeight(null)));
 		
@@ -31,9 +33,9 @@ public class EDImage extends EDComponent
 		setImage(content);
 	}
 
-	public EDImage(Design design, Point location, Dimension size, Image content, boolean visible)
+	public EDImage(LayeredRenderFrame rF, Point location, Dimension size, Image content, boolean visible)
 	{
-		super(design, "image", location, null, 0, null, 0, visible);
+		super(rF, "image", location, null, 0, null, 0, visible);
 		
 		Rectangle rect = new Rectangle(location.x, location.y, size.width, size.height);
 		
@@ -41,9 +43,9 @@ public class EDImage extends EDComponent
 		setImage(content);
 	}
 
-	public EDImage(Design design, Point location, int length, boolean useAsWidth, Image content, boolean visible)
+	public EDImage(LayeredRenderFrame rF, Point location, int length, boolean useAsWidth, Image content, boolean visible)
 	{
-		super(design, "image", location, null, 0, null, 0, visible);
+		super(rF, "image", location, null, 0, null, 0, visible);
 		
 		Dimension scaled = useAsWidth ? new Dimension(length, (int) (((float) length / content.getWidth(null)) * content.getHeight(null))) : new Dimension((int) (((float) length / content.getHeight(null)) * content.getWidth(null)), length);
 		
