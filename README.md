@@ -1,8 +1,20 @@
 # EasyDraw
 A simple tool to draw and use predefined GUI components.
 
+
 # History
-This project was primarily developed privately but now it is continued in terms of a school project of the Hermann-Emanuel-Berufskolleg.
+This API was originally written first because I wanted to build a solid structure in order
+to build 2D games more easily.
+Because the UI was the first thing for me before I could go on this project was unavoidable.
+In future,
+EasyDraw should help me to create a simple 2D strategy game which is deprecated in terms of graphics
+but it should offer a wide range of features,
+including political strucures, diplomacy, limited resources, global markets, wars and countries.
+It should be based on a multiplayer concept so every country is actually represented by a player.
+The player can hire ministers (also players) and is the head the country.
+He / She can change the governmental form of rule,
+e.g. to dictatorship or to a true democrcacy.
+At least that's plan.
 
 
 # Component Features
