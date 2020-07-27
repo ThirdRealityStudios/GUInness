@@ -21,6 +21,17 @@ This project was primarily developed privately but now it is continued in terms 
 - The other way around (turned off) the draw context is only redrawn on specific events to reduce CPU usage.
 
 
+# CPU Usage
+- Gaming Mode on: >85%
+- Gaming Mode off: <60%
+
+
+# Efficiency first
+The main goal is it to reduce the CPU usage and other time intensive processes.
+Before a new feature is introduced,
+it is tried as best as possible to work on the efficiency.
+
+
 # Planed features
 - add video components
 - add simple background sound tracks.
