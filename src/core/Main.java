@@ -88,11 +88,12 @@ public class Main
 			@Override
 			public void onHover()
 			{
-				
+				System.out.println("Hover");
 			}
 		};
 		
 		input1.setInteraction(false);
+		input1.actsOnClick(false);
 
 		input2 = new EDTextfield(rF, new Point(20, 375), "DEUTSCH", 10, 20, true)
 		{
