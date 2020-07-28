@@ -20,7 +20,7 @@ public abstract class EDComponent
 	// This will determine the render method later.
 	private String type;
 
-	private volatile boolean interaction = true, isHovered = false, actionOnClick = true, actionOnHover = true;
+	private volatile boolean interaction = true, actionOnClick = true, actionOnHover = true;
 
 	// "Realtime execution" means that if you interact with an EDComponent it will
 	// execute as fast as it can the corresponding method,
@@ -269,16 +269,6 @@ public abstract class EDComponent
 	public synchronized void setInteraction(boolean interaction)
 	{
 		this.interaction = interaction;
-	}
-
-	public synchronized boolean isHovered()
-	{
-		return isHovered;
-	}
-
-	protected void setHovered(boolean isHovered)
-	{
-		this.isHovered = isHovered;
 	}
 
 	public boolean actsOnClick()
