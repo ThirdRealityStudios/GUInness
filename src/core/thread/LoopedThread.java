@@ -11,6 +11,8 @@ public abstract class LoopedThread
 
 	public LoopedThread()
 	{
+		System.out.println("LoopedThread created!");
+		
 		loop = new Thread()
 		{
 			@Override

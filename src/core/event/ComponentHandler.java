@@ -1,7 +1,6 @@
 package core.event;
 
 import java.awt.event.KeyEvent;
-
 import core.frame.LayeredRenderFrame;
 import core.gui.EDComponent;
 import core.io.Interrupt;
@@ -27,6 +26,12 @@ public class ComponentHandler
 
 	// If there was a text-field selected, it will be stored here for a time.
 	private EDComponent textfield;
+	
+	// Tells whether a component was clicked before.
+	private EDComponent clickedYet = null;
+	
+	// Tells by using 'clickedYet' whether the checked component was double clicked.
+	private boolean doubleClicked = false;
 	
 	// This is the lastly focused component from the previous cycle always.
 	private EDComponent lastlyFocused;
@@ -128,7 +133,9 @@ public class ComponentHandler
 			}
 		}
 
-		if(textfield != null)
+		// This is the actual part where text-fields are modified, meaning the value or text it contains gets changed.
+		// If there is no key delivered (KeyEvent.VK_UNDEFINED), this part is ignored for faster execution.
+		if(textfield != null && !(keyStroke == KeyEvent.VK_UNDEFINED))
 		{
 			boolean isDeviceControlCode = textfield.getDesign().getFontLoader().isDeviceControlCode(keyStroke);
 			
@@ -167,14 +174,19 @@ public class ComponentHandler
 
 			if(clicking && focused.actsOnClick()) // ask whether it should run the onClick() method if wished by the components configuration.
 			{
-				// This will decide internally whether the component is being executed by threads or in sequence order.
-				executeClick(focused);
+				if(!doubleClicked || focused.isDoubleClickingAllowed())
+				{
+					System.out.println("SUCCESS!");
+					
+					// This will decide internally whether the component is being executed by threads or in sequence order.
+					executeClick(focused);
+				}
 			}
 		}
 
 		return graphicalChanges;
 	}
-	
+
 	private int triggerAnimation(EDComponent focused, boolean clicking)
 	{
 		if(focused != null)
@@ -233,12 +245,31 @@ public class ComponentHandler
 	{
 		EDComponent focused = renderFrame.getEventHandler().getMouseDriver().getFocusedComponent();
 		
+		if(clickedYet == focused)
+		{
+			this.doubleClicked = true;
+		}
+
 		boolean clicking = renderFrame.getEventHandler().getMouseDriver().isClicking();
 		
-		int keyStroke = renderFrame.getEventHandler().getKeyboardDriver().getActiveKey();
+		// This line means if the KeyboardDriver is active, then only read the currently pressed key from it.
+		// This is because the KeyboardDriver is only available (!= null) when it is necessary to save resources on the CPU.
+		// Anyway, in Gaming Mode (see definition of it in LayeredRenderFrame.java for reference) the KeyboardDriver is always initialized and available.
+		int keyStroke = KeyEvent.VK_UNDEFINED;
+		
+		if(textfield != null)
+		{
+			renderFrame.getEventHandler().enableKeyboardDriver();
+			
+			keyStroke = renderFrame.getEventHandler().getKeyboardDriver().getActiveKey();
+		}
+		else if(!renderFrame.getEventHandler().isNoKeylistenerActive())
+		{
+			renderFrame.getEventHandler().disableKeyboardDriver();
+		}
 		
 		int graphicalChanges = 0;
-
+		
 		graphicalChanges += triggerGeneralLogic(focused, clicking, keyStroke);
 		graphicalChanges += triggerAnimation(focused, clicking);
 		
@@ -249,12 +280,21 @@ public class ComponentHandler
 				@Override
 				public void run()
 				{
-					System.out.println("Updating screen..");
 					renderFrame.updateEDComponents();
 				}
 			};
 			
 			updateTManager.fire(screenUpdate);
+		}
+		
+		if(clicking)
+		{
+			clickedYet = focused;
+		}
+		else
+		{
+			clickedYet = null;
+			doubleClicked = false;
 		}
 		
 		lastlyFocused = focused;

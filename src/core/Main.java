@@ -43,7 +43,7 @@ public class Main
 		design = new Classic(Color.BLACK, Color.LIGHT_GRAY, Color.DARK_GRAY, Color.GRAY, Color.BLACK, 2, 1);
 
 		rF = new LayeredRenderFrame(design);
-		
+
 		start = new EDButton(rF, new Point(20, 75), "START", 20, true)
 		{
 			@Override
@@ -56,14 +56,13 @@ public class Main
 			public void onClick()
 			{
 				rF.setGamingMode(!rF.isGamingModeOn());
-
 				System.out.println("Gaming mode is on! Watch your CPU usage and see which mode is more efficient :D..");
 			}
 		};
 
 		start.actsOnHover(false);
 		start.actsOnClick(true);
-		start.setRealtimeExecution(true); // This will run parallel (with threads) which is in some cases faster (of course unnecessary if you just want to print something to the console).
+		start.setRealtimeExecution(false); // This will run parallel (with threads) which is in some cases faster (of course unnecessary if you just want to print something to the console).
 		
 
 		exit = new EDButton(rF, new Point(20, 150), "EXIT", 20, true)

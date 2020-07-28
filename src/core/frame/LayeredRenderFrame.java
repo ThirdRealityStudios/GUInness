@@ -9,6 +9,7 @@ import java.util.Collections;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import core.driver.KeyboardDriver;
 import core.event.EventHandler;
 import core.gui.EDComponent;
 import core.gui.EDLayer;
@@ -103,6 +104,17 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 		}
 
 		eH.start();
+		
+		// Make sure the KeyboardDriver is only running when it is necessary (not in gaming mode).
+		// => The KeyboardDriver is only used when components request it or enable it.
+		if(!isGamingModeOn())
+		{
+			eH.disableKeyboardDriver();
+		}
+		else // otherwise always check for the key input (more CPU usage).
+		{
+			eH.enableKeyboardDriver();
+		}
 	}
 	
 	// This method can be used by all EDComponents to invoke a 'repaint',
@@ -286,14 +298,23 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 	{
 		this.gamingMode = gamingMode;
 		
+		// Prevent double calls by checking the mode yet.
 		if(gamingMode)
 		{
+			// Make sure it is running again when it was turned off before.
+			eH.enableKeyboardDriver();
+			
 			// This will call the 'paintComponents'-method.
 			// Because the 'paintComponents'-method contains a 'repaint'-method on its own when gaming mode is activated,
 			// it will steadily refresh the screen until gaming mode is disabled again.
 			// Meaning that,
 			// this method invokes the whole chain or process only at the beginning.
 			renderPanel.repaint();
+		}
+		else
+		{
+			// Make sure it is isabled to save CPU usage..
+			eH.disableKeyboardDriver();
 		}
 	}
 }

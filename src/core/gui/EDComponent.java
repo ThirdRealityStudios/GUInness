@@ -39,7 +39,11 @@ public abstract class EDComponent
 	// Not all components support this feature, e.g. text-fields.
 	// Also, from this point the delay is currently only compatible with buttons and
 	// similar components which will probably follow in future.
-	private int delayMs = 250;
+	private int delayMs = 0;
+	
+	// Decide whether it is allowed to run the same method multiple times when the component is clicked a specific time..
+	// Is not compatible with all EDComponents.
+	private boolean doubleClickingAllowed = false;
 
 	// Contains the shape of the component.
 	private Shape shape;
@@ -363,5 +367,16 @@ public abstract class EDComponent
 	public void setDelayMilliseconds(int delayMs)
 	{
 		this.delayMs = delayMs;
+	}
+	
+	// Decide whether it is allowed to run the same method multiple times when the button is pressed..
+	public void setDoubleClickingAllowed(boolean allowed)
+	{
+		this.doubleClickingAllowed = allowed;
+	}
+	
+	public boolean isDoubleClickingAllowed()
+	{
+		return doubleClickingAllowed;
 	}
 }
