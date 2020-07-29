@@ -137,6 +137,27 @@ public class EventHandler
 	{
 		return keyboardDriver;
 	}
+	
+	public boolean isNoKeylistenerActive()
+	{
+		return rF.getKeyListeners().length == 0;
+	}
+
+	public void disableKeyboardDriver()
+	{
+		if(!isNoKeylistenerActive())
+		{
+			rF.removeKeyListener(keyboardDriver);
+		}
+	}
+
+	public void enableKeyboardDriver()
+	{
+		if(isNoKeylistenerActive())
+		{
+			rF.addKeyListener(keyboardDriver);
+		}
+	}
 
 	public ComponentHandler getComponentHandler()
 	{
