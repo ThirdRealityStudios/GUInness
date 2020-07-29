@@ -1,5 +1,6 @@
 package core.event;
 
+import java.awt.Cursor;
 import java.awt.event.KeyEvent;
 import core.frame.LayeredRenderFrame;
 import core.gui.EDComponent;
@@ -131,7 +132,7 @@ public class ComponentHandler
 					&& focused.isInteractionEnabled() && focused.actsOnClick();
 
 			if(canTextfieldBeFocussed)
-			{
+			{				
 				textfield = focused;
 			}
 
@@ -213,7 +214,7 @@ public class ComponentHandler
 			switch(focused.getType())
 			{
 				case "button":
-				{
+				{					
 					// The next two booleans prevent the redraw algorithm to run again if there was
 					// no change in color..
 					boolean activeColorIsSame = focused.getPrimaryColor().equals(focused.getDesign().getActiveColor());
@@ -237,14 +238,30 @@ public class ComponentHandler
 					{
 						focused.setPrimaryColor(focused.getDesign().getHoverColor());
 
+						// When hovering (once!) over a button the cursor is changed.
+						renderFrame.getRenderPanel().setCursor(new Cursor(Cursor.HAND_CURSOR));
+
 						return 1;
 					}
+
+					break;
+				}
+				case "textfield":
+				{
+					// When hovering over a text-field the cursor is changed.
+					renderFrame.getRenderPanel().setCursor(new Cursor(Cursor.TEXT_CURSOR));
+
+					break;
 				}
 
 				default:
 				{
+					// Make sure the 'default' branch is executed only once.
 					if(lastlyFocused != focused && lastlyFocused != null)
 					{
+						// When hovering over something else the cursor is set to default.
+						renderFrame.getRenderPanel().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+						
 						switch(lastlyFocused.getType())
 						{
 							case "button":

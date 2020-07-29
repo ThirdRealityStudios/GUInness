@@ -23,6 +23,8 @@ public class Main
 	private EDTextfield input1, input2, input3;
 	
 	private EDImage img0;
+	
+	private EDDescription description;
 
 	private EDLayer layer0, layer1;
 	
@@ -56,7 +58,8 @@ public class Main
 			public void onClick()
 			{
 				rF.setGamingMode(!rF.isGamingModeOn());
-				System.out.println("Gaming mode is " + (rF.isGamingModeOn() ? "on" : "off") + "! Watch your CPU usage and see which mode is more efficient :D..");
+				
+				description.setValue("Gaming Mode is " + (rF.isGamingModeOn() ? "on" : "off"));
 			}
 		};
 
@@ -120,14 +123,14 @@ public class Main
 
 	public void setupLayer0()
 	{
-		EDDescription edD = new EDDescription(rF, new Point(20, 520), "Money here for nothing!", 25, true);
+		description = new EDDescription(rF, new Point(20, 520), "Money here for nothing!", 25, true);
 		
 		//layer0.add(new EDPath(design, Path2DMaker.makeRectangle(0, 0, 200, 300), Color.RED, true, new Point(0, 300), true));
 		//layer0.add(new EDPath(design, Path2DMaker.makeRectangle(0, 0, 800, 30), Color.PINK, true, new Point(100, 300), true));
 		
 		layer0.add(img0);
 		
-		layer1.add(edD);
+		layer1.add(description);
 		layer1.add(exit);
 		layer1.add(start);
 		
