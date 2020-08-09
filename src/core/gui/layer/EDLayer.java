@@ -69,7 +69,7 @@ public class EDLayer implements Comparable
 	}
 
 	// Is "protected" because you need to make sure no components are at the same position.
-	// To use a new ArrayList of type EDComponent, create a new EDLayer instead.
+	// To use a new CopyOnWriteArrayList of type EDComponent, create a new EDLayer instead.
 	protected void setComponentBuffer(CopyOnWriteArrayList<EDComponent> compBuffer)
 	{
 		this.compBuffer = compBuffer;

@@ -85,6 +85,8 @@ public class Main
 			public void onClick()
 			{
 				// layer0.setVisible(false);
+				
+				input1.write('o');
 			}
 		};
 
