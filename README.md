@@ -6,7 +6,7 @@ This API was originally written first because I wanted to build a solid structur
 to build 2D games more easily.
 Because the UI was the first thing for me before I could go on this project was unavoidable.
 In future,
-EasyDraw should help me to create a simple 2D strategy game which is deprecated in terms of graphics
+GUInness should help me to create a simple 2D strategy game which is deprecated in terms of graphics
 but it should offer a wide range of features,
 including political strucures, diplomacy, limited resources, global markets, wars and countries.
 It should be based on a multiplayer concept so every country is actually represented by a player.
