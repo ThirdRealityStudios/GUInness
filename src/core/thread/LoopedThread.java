@@ -1,6 +1,6 @@
 package core.thread;
 
-import core.io.Interrupt;
+import core.io.Timer;
 
 public abstract class LoopedThread
 {
@@ -11,8 +11,6 @@ public abstract class LoopedThread
 
 	public LoopedThread()
 	{
-		System.out.println("LoopedThread created!");
-		
 		loop = new Thread()
 		{
 			@Override

@@ -3,15 +3,15 @@ package core.driver;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import core.frame.LayeredRenderFrame;
+import core.frame.Display;
 
-public class KeyboardDriver implements KeyListener
+public class KeyAdapter implements KeyListener
 {
 	private int keyActive = KeyEvent.VK_UNDEFINED, keyTyped = KeyEvent.VK_UNDEFINED;
 	
 	boolean duplicate = false;
 	
-	public KeyboardDriver(LayeredRenderFrame context)
+	public KeyAdapter(Display context)
 	{
 		/*
 		 *  'context' is the variable to use
@@ -21,7 +21,7 @@ public class KeyboardDriver implements KeyListener
 		 *  you can use the given methods below.
 		 */
 		
-		// Add this keyboard driver as a KeyListener in order to work with the context.
+		// Add this KeyAdapter as a KeyListener in order to work with the context.
 		context.addKeyListener(this);
 	}
 	

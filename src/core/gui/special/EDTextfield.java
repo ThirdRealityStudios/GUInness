@@ -5,7 +5,7 @@ import java.awt.Point;
 import java.awt.Shape;
 import java.awt.event.KeyEvent;
 
-import core.frame.LayeredRenderFrame;
+import core.frame.Display;
 import core.gui.EDComponent;
 
 public abstract class EDTextfield extends EDComponent
@@ -14,9 +14,9 @@ public abstract class EDTextfield extends EDComponent
 
 	private Color clicked;
 
-	public EDTextfield(LayeredRenderFrame rF, Point location, String title, int maxInput, int fontSize, boolean visible)
+	public EDTextfield(Display display, Point location, String title, int maxInput, int fontSize, boolean visible)
 	{
-		super(rF, "textfield", location, null, -1, title, fontSize, visible);
+		super(display, "textfield", location, null, -1, title, fontSize, visible);
 
 		// This method is always called after the base values have been set, e.g. font size.
 		Shape s = getDesign().generateDefaultShape(this);

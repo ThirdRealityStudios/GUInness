@@ -7,13 +7,13 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
-import core.frame.LayeredRenderFrame;
+import core.frame.Display;
 import core.gui.EDComponent;
 import core.gui.EDLayer;
-import core.io.Interrupt;
+import core.io.Timer;
 import core.thread.LoopedThread;
 
-public class MouseDriver extends LoopedThread implements MouseMotionListener, MouseListener
+public class MouseAdapter extends LoopedThread implements MouseMotionListener, MouseListener
 {
 	/*
 	 *  'context' is the variable to use
@@ -22,7 +22,7 @@ public class MouseDriver extends LoopedThread implements MouseMotionListener, Mo
 	 *  To do so,
 	 *  you can use the given methods below.
 	 */
-	private LayeredRenderFrame context;
+	private Display context;
 	
 	// The variable is used to calculate the mouse speed below.
 	private Point cursorLast = null;
@@ -41,7 +41,7 @@ public class MouseDriver extends LoopedThread implements MouseMotionListener, Mo
 	 */
 	private Boolean action = null;
 
-	public MouseDriver(LayeredRenderFrame context)
+	public MouseAdapter(Display context)
 	{
 		this.context = context;
 		
@@ -53,10 +53,10 @@ public class MouseDriver extends LoopedThread implements MouseMotionListener, Mo
 		 *  you can use the given methods below.
 		 */
 		
-		// Add this mouse driver as a MouseListener to in order to work with the context.
+		// Add this MouseAdapter as a MouseListener to in order to work with the context.
 		context.addMouseListener(this);
 		
-		// Add this mouse driver as a MouseListener to in order to work with the context.
+		// Add this MouseAdapter as a MouseListener to in order to work with the context.
 		context.addMouseMotionListener(this);
 	}
 	
@@ -65,7 +65,7 @@ public class MouseDriver extends LoopedThread implements MouseMotionListener, Mo
 	{
 		cursorLast = getCursorLocation();
 		
-		Interrupt.pauseMillisecond(10);
+		Timer.pauseMillisecond(10);
 		
 		double distance = cursorLast.distance(getCursorLocation());
 		

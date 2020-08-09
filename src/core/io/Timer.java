@@ -1,6 +1,6 @@
 package core.io;
 
-public class Interrupt
+public class Timer
 {
 	/*
 	 * Do not use these methods too often as the while loop could stress your CPU

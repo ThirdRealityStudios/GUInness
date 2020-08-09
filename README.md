@@ -16,7 +16,7 @@ This project was primarily developed privately but now it is continued in terms 
 
 # Known bugs
 none so far but:
-- it might be the case that the "mouse driver" crashes at the start of the program but this didn't happen anymore..
+- it might be the case that the "MouseAdapter" crashes at the start of the program but this didn't happen anymore..
 
 
 # Planed features
