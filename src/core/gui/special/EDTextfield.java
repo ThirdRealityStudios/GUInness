@@ -5,8 +5,8 @@ import java.awt.Point;
 import java.awt.Shape;
 import java.awt.event.KeyEvent;
 
-import core.frame.Display;
-import core.gui.EDComponent;
+import core.gui.Display;
+import core.gui.component.EDComponent;
 
 public abstract class EDTextfield extends EDComponent
 {

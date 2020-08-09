@@ -4,15 +4,15 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
 
-import core.frame.Display;
-import core.gui.EDLayer;
+import core.feature.Loader;
+import core.gui.Display;
 import core.gui.component.standard.EDButton;
 import core.gui.special.EDImage;
 import core.gui.special.EDTextfield;
 import core.gui.component.standard.EDDescription;
 import core.gui.design.Classic;
 import core.gui.design.Design;
-import core.io.Loader;
+import core.gui.layer.EDLayer;
 
 public class Main
 {

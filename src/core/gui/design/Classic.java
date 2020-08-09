@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
 
-import core.gui.EDComponent;
+import core.gui.component.EDComponent;
 import core.gui.special.EDPath;
 
 // The classic design without which looks very retro-stylish or ugly.

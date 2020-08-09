@@ -3,8 +3,9 @@ package core.gui.design;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import core.gui.EDComponent;
-import core.tools.gui.FontLoader;
+
+import core.gui.component.EDComponent;
+import core.gui.font.FontLoader;
 
 public abstract class Design
 {
