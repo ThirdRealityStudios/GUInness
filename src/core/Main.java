@@ -1,11 +1,13 @@
 package core;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
 
 import core.feature.Loader;
 import core.gui.Display;
+import core.gui.Viewport;
 import core.gui.component.standard.EDButton;
 import core.gui.special.EDImage;
 import core.gui.special.EDTextfield;
@@ -19,6 +21,8 @@ public class Main
 	private Display display;
 
 	private EDButton start, exit;
+	
+	private EDButton hidden;
 	
 	private EDTextfield input1, input2, input3;
 	
@@ -42,18 +46,20 @@ public class Main
 
 	public void init()
 	{
-		design = new Classic(Color.BLACK, Color.LIGHT_GRAY, Color.DARK_GRAY, Color.GRAY, Color.BLACK, 2, 1);
+		design = new Classic(Color.BLACK, Color.LIGHT_GRAY, Color.DARK_GRAY, Color.GRAY, Color.BLACK, 5, 1);
 
-		display = new Display(design);
+		display = new Display();
+		
+		display.setViewport(new Viewport(display.getEventHandler()));
 
-		start = new EDButton(display, new Point(20, 75), "START", 20, true)
+		hidden = new EDButton(new Point(300, 75), "HIDDEN BUTTON", 20, true)
 		{
 			boolean sampleFlag = false;
 			
 			@Override
 			public void onHover()
 			{
-				System.out.println("Hover babe!");
+				
 			}
 
 			@Override
@@ -64,12 +70,28 @@ public class Main
 				description.setValue("Switch is " + (sampleFlag ? "on" : "off"));
 			}
 		};
+		
+		start = new EDButton(new Point(20, 75), "Hide image", 20, true)
+		{
+			@Override
+			public void onHover()
+			{
+				System.out.println("Hover babe!");
+			}
+
+			@Override
+			public void onClick()
+			{
+				img0.setVisible(!img0.isVisible());
+				this.setValue((img0.isVisible() ? "Hide again " : "Show ") + "image");
+			}
+		};
 
 		start.actsOnHover(false);
 		start.actsOnClick(true);
 		start.setRealtimeExecution(false); // This will run parallel (with threads) which is in some cases faster (of course unnecessary if you just want to print something to the console).
 
-		exit = new EDButton(display, new Point(20, 150), "EXIT", 20, true)
+		exit = new EDButton(new Point(20, 150), "EXIT", 20, true)
 		{
 			@Override
 			public void onHover()
@@ -88,7 +110,7 @@ public class Main
 		exit.actsOnHover(false);
 		exit.actsOnClick(true);
 
-		input1 = new EDTextfield(display, new Point(20, 300), "GERMAN", 10, 20, true)
+		input1 = new EDTextfield(new Point(20, 300), "GERMAN", 10, 20, true)
 		{
 			@Override
 			public void onHover()
@@ -100,7 +122,7 @@ public class Main
 		input1.setInteraction(false);
 		input1.actsOnClick(false);
 
-		input2 = new EDTextfield(display, new Point(20, 375), "DEUTSCH", 10, 20, true)
+		input2 = new EDTextfield(new Point(20, 375), "DEUTSCH", 10, 20, true)
 		{
 			@Override
 			public void onHover()
@@ -109,7 +131,7 @@ public class Main
 			}
 		};
 
-		input3 = new EDTextfield(display, new Point(20, 450), "ALEMAN", 10, 20, true)
+		input3 = new EDTextfield(new Point(20, 450), "ALEMAN", 10, 20, true)
 		{
 			@Override
 			public void onHover()
@@ -120,13 +142,13 @@ public class Main
 
 		Image i = Loader.loadImage("C:\\Users\\Hameg\\Desktop\\4.jpg");
 
-		img0 = new EDImage(display, new Point(0, 0), 600, false, i, true);
+		img0 = new EDImage(new Point(0, 0), 600, false , i, true);
 		img0.actsOnHover(false);
 	}
 
 	public void setupLayer0()
 	{
-		description = new EDDescription(display, new Point(20, 520), "Money here for nothing!", 25, true);
+		description = new EDDescription(new Point(20, 520), "Money here for nothing!", 25, true);
 		
 		//layer0.add(new EDPath(design, Path2DMaker.makeRectangle(0, 0, 200, 300), Color.RED, true, new Point(0, 300), true));
 		//layer0.add(new EDPath(design, Path2DMaker.makeRectangle(0, 0, 800, 30), Color.PINK, true, new Point(100, 300), true));
@@ -150,12 +172,12 @@ public class Main
 		display.center();
 		display.setVisible(true);
 
-		layer0 = new EDLayer(0, true);
-		layer1 = new EDLayer(1, true);
+		layer0 = new EDLayer(0, true, design);
+		layer1 = new EDLayer(1, true, design);
 
 		setupLayer0();
 
-		display.addLayer(layer0);
-		display.addLayer(layer1);
+		display.getViewport().addLayer(layer0);
+		display.getViewport().addLayer(layer1);
 	}
 }

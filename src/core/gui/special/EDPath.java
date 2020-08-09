@@ -14,9 +14,9 @@ public class EDPath extends EDComponent
 	private Path2D.Double path;
 	private boolean fill;
 
-	public EDPath(Display display, Path2D.Double path, Color drawColor, boolean fill, Point location, boolean visible)
+	public EDPath(Path2D.Double path, Color drawColor, boolean fill, Point location, boolean visible)
 	{
-		super(display, "path", location, null, 0, null, 0, visible);
+		super("path", location, null, 0, null, 0, visible);
 		
 		Rectangle bounds = path.getBounds();
 		Rectangle rect = new Rectangle(location.x, location.y, bounds.width, bounds.height);
@@ -58,6 +58,12 @@ public class EDPath extends EDComponent
 	public void onHover()
 	{
 		// Not implemented for paths yet.
+	}
+
+	@Override
+	public void setValue(String val)
+	{
+		// Unused
 	}
 
 }

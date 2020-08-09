@@ -1,16 +1,16 @@
 package core.exec;
 
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ThreadManager
 {
-	private ArrayList<Thread> threads;
+	private CopyOnWriteArrayList<Thread> threads;
 	
 	private int maximumThreads = 0;
 	
 	public ThreadManager(int maximumThreads)
 	{
-		threads = new ArrayList<Thread>();
+		threads = new CopyOnWriteArrayList<Thread>();
 		
 		this.maximumThreads = maximumThreads;
 	}

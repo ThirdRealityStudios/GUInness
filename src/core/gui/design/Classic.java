@@ -31,7 +31,7 @@ public class Classic extends Design
 		switch(c.getType())
 		{
 			case "image":
-			{
+			{				
 				g.drawImage(c.getImage(), bounds.getLocation().x, bounds.getLocation().y, bounds.width, bounds.height, null);
 				
 				break;
@@ -97,12 +97,11 @@ public class Classic extends Design
 
 	// Returns a determined shape which uses the design defined in this class.
 	public Rectangle generateDefaultShape(EDComponent c)
-	{
+	{		
 		// Calculates the correct size of the rectangle for the text component.
 		Dimension backgroundSize = new Dimension(c.getLength() * c.getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness(), c.getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness());
 
 		Rectangle rect = new Rectangle(c.getLocation(), backgroundSize);
-		// rect.setLocation(c.getShape().getBounds().getLocation());
 		
 		return rect;
 	}

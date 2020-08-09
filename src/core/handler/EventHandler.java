@@ -1,12 +1,11 @@
 package core.handler;
 
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import core.feature.Timer;
 import core.gui.Display;
 import core.gui.adapter.KeyAdapter;
 import core.gui.adapter.MouseAdapter;
-import core.gui.design.Design;
 import core.gui.layer.EDLayer;
 
 public class EventHandler
@@ -15,7 +14,7 @@ public class EventHandler
 	
 	private Display display = null;
 
-	private ArrayList<EDLayer> registeredLayers;
+	private CopyOnWriteArrayList<EDLayer> registeredLayers;
 
 	private ComponentHandler componentHandler = null;
 
@@ -43,7 +42,7 @@ public class EventHandler
 		// The Display context is needed for getting front-end-window-related keyboard data.
 		keyboardDriver = new KeyAdapter(display);
 
-		registeredLayers = new ArrayList<EDLayer>();
+		registeredLayers = new CopyOnWriteArrayList<EDLayer>();
 
 		componentHandler = new ComponentHandler(display);
 	}
@@ -70,7 +69,7 @@ public class EventHandler
 
 	public synchronized void unregisterAllLayers()
 	{
-		registeredLayers = new ArrayList<EDLayer>();
+		registeredLayers = new CopyOnWriteArrayList<EDLayer>();
 	}
 
 	public void start()
@@ -123,7 +122,7 @@ public class EventHandler
 		stopMouseDriver();
 	}
 
-	public ArrayList<EDLayer> getRegisteredLayers()
+	public CopyOnWriteArrayList<EDLayer> getRegisteredLayers()
 	{
 		return registeredLayers;
 	}

@@ -122,7 +122,7 @@ public class FontLoader
 		{
 			BufferedImage loaded = null;
 
-			String path = Path.CORE_MEDIA + "\\StandardFont.png";
+			String path = Path.FONTS + "\\StandardFont.png";
 
 			loaded = ImageIO.read(new File(path));
 
