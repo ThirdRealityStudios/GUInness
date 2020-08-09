@@ -5,8 +5,8 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-import core.frame.Display;
-import core.gui.EDComponent;
+import core.gui.Display;
+import core.gui.component.EDComponent;
 import core.gui.design.Design;
 
 public class EDImage extends EDComponent
