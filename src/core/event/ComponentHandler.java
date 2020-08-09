@@ -208,12 +208,12 @@ public class ComponentHandler
 			switch(focused.getType())
 			{
 				case "button":
-				{					
+				{
 					// The next two booleans prevent the redraw algorithm to run again if there was
 					// no change in color..
 					boolean activeColorIsSame = focused.getPrimaryColor().equals(focused.getDesign().getActiveColor());
 					boolean hoverColorIsSame = focused.getPrimaryColor().equals(focused.getDesign().getHoverColor());
-
+					
 					if(clicking)
 					{
 						if(!activeColorIsSame)
@@ -221,8 +221,7 @@ public class ComponentHandler
 							focused.setPrimaryColor(focused.getDesign().getActiveColor());
 						}
 					}
-
-					if(!hoverColorIsSame)
+					else if(!hoverColorIsSame)
 					{
 						focused.setPrimaryColor(focused.getDesign().getHoverColor());
 
@@ -308,7 +307,7 @@ public class ComponentHandler
 		// pressed key from it.
 		// This is because the KeyAdapter is only available (!= null) when it is
 		// necessary to save resources on the CPU.
-		// Anyway, in Gaming Mode (see definition of it in LayeredRenderFrame.java for
+		// Anyway, in Gaming Mode (see definition of it in LayeredDisplay.java for
 		// reference) the KeyAdapter is always initialized and available.
 		int keyStroke = KeyEvent.VK_UNDEFINED;
 

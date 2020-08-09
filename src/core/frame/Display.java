@@ -76,7 +76,7 @@ public class Display extends JFrame
 		compBuffer = new ArrayList<EDComponent>();
 		compOutput = new ArrayList<EDComponent>();
 
-		setTitle("Standard RenderFrame");
+		setTitle("Standard Display");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		setSize(1280, 720);

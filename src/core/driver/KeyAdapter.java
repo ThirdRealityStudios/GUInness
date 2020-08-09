@@ -16,7 +16,7 @@ public class KeyAdapter implements KeyListener
 		/*
 		 *  'context' is the variable to use
 		 *  for detecting keystrokes and additional data.
-		 *  The data related to the given RenderFrame can then be used in real-time.
+		 *  The data related to the given Display can then be used in real-time.
 		 *  To do so,
 		 *  you can use the given methods below.
 		 */

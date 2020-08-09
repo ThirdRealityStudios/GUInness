@@ -74,7 +74,7 @@ public abstract class EDComponent
 	public EDComponent(Display display, String type, Point location, Shape shape, int length, String val,
 			int fontSize, boolean visible)
 	{
-		this.setRenderFrame(display);
+		this.setDisplay(display);
 
 		setDesign(display.getDesign());
 		setPrimaryColor(getDesign().getBackgroundColor());
@@ -329,12 +329,12 @@ public abstract class EDComponent
 				+ length + "\nvalue = \"" + value + "\"\nfontSize = " + fontSize + "\nvisible = " + visible;
 	}
 
-	public Display getRenderFrame()
+	public Display getDisplay()
 	{
 		return display;
 	}
 
-	public void setRenderFrame(Display display)
+	public void setDisplay(Display display)
 	{
 		this.display = display;
 	}
