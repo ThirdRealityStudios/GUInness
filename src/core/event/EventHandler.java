@@ -2,50 +2,50 @@ package core.event;
 
 import java.util.ArrayList;
 
-import core.driver.KeyboardDriver;
-import core.driver.MouseDriver;
-import core.frame.LayeredRenderFrame;
+import core.driver.KeyAdapter;
+import core.driver.MouseAdapter;
+import core.frame.Display;
 import core.gui.EDLayer;
 import core.gui.design.Design;
-import core.io.Interrupt;
+import core.io.Timer;
 
 public class EventHandler
 {
 	// ~30% overall CPU usage
 	
-	private LayeredRenderFrame rF = null;
+	private Display display = null;
 
 	private ArrayList<EDLayer> registeredLayers;
 
 	private ComponentHandler componentHandler = null;
 
 	// Used to receive detailed information about the mouse movement.
-	private MouseDriver mouseDriver = null;
+	private MouseAdapter mouseDriver = null;
 
 	// Used to receive detailed information about the keyboard activity.
-	private KeyboardDriver keyboardDriver = null;
+	private KeyAdapter keyboardDriver = null;
 
-	public EventHandler(LayeredRenderFrame rF)
+	public EventHandler(Display display)
 	{
-		if (rF != null)
-			this.rF = rF;
+		if (display != null)
+			this.display = display;
 		else
 			throw new NullPointerException("Passed RenderFrame is null!");
 
-		// Initialize the mouse driver with the RenderFrame context.
+		// Initialize the MouseAdapter with the RenderFrame context.
 		// The RenderFrame context is needed for calculating front-end-window-related mouse data.
-		mouseDriver = new MouseDriver(rF);
+		mouseDriver = new MouseAdapter(display);
 
 		// After starting the driver (thread) you can receive movement data in real-time.
 		mouseDriver.getThread().start();
 
-		// Initialize the keyboard driver with the RenderFrame context.
+		// Initialize the KeyAdapter with the RenderFrame context.
 		// The RenderFrame context is needed for getting front-end-window-related keyboard data.
-		keyboardDriver = new KeyboardDriver(rF);
+		keyboardDriver = new KeyAdapter(display);
 
 		registeredLayers = new ArrayList<EDLayer>();
 
-		componentHandler = new ComponentHandler(rF);
+		componentHandler = new ComponentHandler(display);
 	}
 
 	public synchronized void registerLayer(EDLayer edL)
@@ -89,7 +89,7 @@ public class EventHandler
 		while(componentHandler.getHandlingThread().getThread().isAlive())
 		{
 			System.out.println("[EventHandler]: ComponentHandler not responding.. [Breaking? " + componentHandler.getHandlingThread().tryingBreak() + "]");
-			Interrupt.pauseSecond(1);
+			Timer.pauseSecond(1);
 		};
 
 		System.out.println("[EventHandler]: ComponentHandler successfully closed!");
@@ -97,19 +97,19 @@ public class EventHandler
 
 	private void stopMouseDriver()
 	{
-		System.out.println("[EventHandler]: Stopping MouseDriver");
+		System.out.println("[EventHandler]: Stopping MouseAdapter");
 
-		// Tell the mouse driver to stop (does not stop it directly).
+		// Tell the MouseAdapter to stop (does not stop it directly).
 		mouseDriver.breakLoop();
 
-		// Wait until the mouse driver has finished and stopped.
+		// Wait until the MouseAdapter has finished and stopped.
 		while(mouseDriver.getThread().isAlive())
 		{
-			System.out.println("[EventHandler]: MouseDriver not responding..");
-			Interrupt.pauseSecond(1);
+			System.out.println("[EventHandler]: MouseAdapter not responding..");
+			Timer.pauseSecond(1);
 		};
 
-		System.out.println("[EventHandler]: MouseDriver successfully closed!");
+		System.out.println("[EventHandler]: MouseAdapter successfully closed!");
 	}
 
 	// Stops the whole mechanism behind this which handles events of all kind of things, e.g. component events or periphery devices.
@@ -128,26 +128,26 @@ public class EventHandler
 		return registeredLayers;
 	}
 
-	public MouseDriver getMouseDriver()
+	public MouseAdapter getMouseDriver()
 	{
 		return mouseDriver;
 	}
 
-	public KeyboardDriver getKeyboardDriver()
+	public KeyAdapter getKeyboardDriver()
 	{
 		return keyboardDriver;
 	}
 	
 	public boolean isNoKeylistenerActive()
 	{
-		return rF.getKeyListeners().length == 0;
+		return display.getKeyListeners().length == 0;
 	}
 
 	public void disableKeyboardDriver()
 	{
 		if(!isNoKeylistenerActive())
 		{
-			rF.removeKeyListener(keyboardDriver);
+			display.removeKeyListener(keyboardDriver);
 		}
 	}
 
@@ -155,7 +155,7 @@ public class EventHandler
 	{
 		if(isNoKeylistenerActive())
 		{
-			rF.addKeyListener(keyboardDriver);
+			display.addKeyListener(keyboardDriver);
 		}
 	}
 
@@ -164,8 +164,8 @@ public class EventHandler
 		return componentHandler;
 	}
 
-	public LayeredRenderFrame getLayeredRenderFrame()
+	public Display getLayeredRenderFrame()
 	{
-		return rF;
+		return display;
 	}
 }

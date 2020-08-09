@@ -9,23 +9,14 @@ import java.util.Collections;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import core.driver.KeyboardDriver;
 import core.event.EventHandler;
 import core.gui.EDComponent;
 import core.gui.EDLayer;
 import core.gui.design.Design;
 
-public class LayeredRenderFrame extends JFrame implements RenderFrame
+public class Display extends JFrame
 {
 	private Design design;
-	
-	// This will let you determine whether you want to call the 'repaint'-method only
-	// on specific events or regardless always.
-	// You can reduce the CPU load by disabling this option.
-	// If you try to build a "real-time graphics game",
-	// you should activate this option.
-	// In own tests this option reduces the CPU load by about 35% - 45% (update: 25th July 2020).
-	private boolean gamingMode = false;
 	
 	public Design getDesign()
 	{
@@ -69,15 +60,12 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 			drawBackground(g);
 
 			drawComponents(g);
-			
-			if(gamingMode)
-			{
-				repaint();
-			}
+
+			repaint();
 		}
 	};
 	
-	public LayeredRenderFrame(Design design)
+	public Display(Design design)
 	{
 		System.gc(); // This should just make up more space for this application.
 		
@@ -105,30 +93,7 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 
 		eH.start();
 		
-		// Make sure the KeyboardDriver is only running when it is necessary (not in gaming mode).
-		// => The KeyboardDriver is only used when components request it or enable it.
-		if(!isGamingModeOn())
-		{
-			eH.disableKeyboardDriver();
-		}
-		else // otherwise always check for the key input (more CPU usage).
-		{
-			eH.enableKeyboardDriver();
-		}
-	}
-	
-	// This method can be used by all EDComponents to invoke a 'repaint',
-	// meaning all changes on any EDComponent needs to be made visible with this method.
-	// It is mainly there to reduce the CPU load by manually calling it in a specific event,
-	// like when the user clicks on a button or writes on a text-field etc.
-	// If 'gaming mode' is on,
-	// this method will not be executed because the 'repaint'-method is called repeatedly then in the 'paintComponents'-method above.
-	public void updateEDComponents()
-	{
-		if(!gamingMode)
-		{
-			getRenderPanel().repaint();
-		}
+		eH.enableKeyboardDriver();
 	}
 
 	private ArrayList<EDComponent> copyComponents()
@@ -197,9 +162,6 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 		}
 
 		copy();
-		
-		// Makes all changes also graphically visible.
-		updateEDComponents();
 	}
 
 	// This will check whether a given layer has the same priority as a layer which is added yet to the list.
@@ -287,34 +249,5 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 	public JPanel getRenderPanel()
 	{
 		return renderPanel;
-	}
-
-	public boolean isGamingModeOn()
-	{
-		return gamingMode;
-	}
-
-	public void setGamingMode(boolean gamingMode)
-	{
-		this.gamingMode = gamingMode;
-		
-		// Prevent double calls by checking the mode yet.
-		if(gamingMode)
-		{
-			// Make sure it is running again when it was turned off before.
-			eH.enableKeyboardDriver();
-			
-			// This will call the 'paintComponents'-method.
-			// Because the 'paintComponents'-method contains a 'repaint'-method on its own when gaming mode is activated,
-			// it will steadily refresh the screen until gaming mode is disabled again.
-			// Meaning that,
-			// this method invokes the whole chain or process only at the beginning.
-			renderPanel.repaint();
-		}
-		else
-		{
-			// Make sure it is isabled to save CPU usage..
-			eH.disableKeyboardDriver();
-		}
 	}
 }

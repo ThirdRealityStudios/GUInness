@@ -22,29 +22,23 @@ At least that's plan.
 - Buttons
 - Text-fields
 - Images/pictures
-- Paths
 - Rectangles
 
 
 # Runtime Features
 - Components tasks can be executed using threads (real-time mode)
-- Draw context can be run in "Gaming Mode"
-- "Gaming Mode" is a new feature which just infinitely executes the repaint-method as fast as possible.
-- The other way around (turned off) the draw context is only redrawn on specific events to reduce CPU usage.
 
 
-# CPU Usage
-- Gaming Mode on: >85%
-- Gaming Mode off: <60%
-
-
-# Efficiency first
+# Efficiency and solidity first
 The main goal is it to reduce the CPU usage and other time intensive processes.
 Before a new feature is introduced,
-it is tried as best as possible to work on the efficiency.
+it is tried as best as possible to work on the efficiency and solidity.
 
 
 # Planed features
+- add paths
+- add checkboxes
+- add comobo boxes
 - add video components
 - add simple background sound tracks.
 - add complex buttons: a button which has a complex shape.

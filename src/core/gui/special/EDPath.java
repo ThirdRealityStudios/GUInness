@@ -5,7 +5,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Path2D;
 
-import core.frame.LayeredRenderFrame;
+import core.frame.Display;
 import core.gui.EDComponent;
 import core.gui.design.Design;
 
@@ -14,9 +14,9 @@ public class EDPath extends EDComponent
 	private Path2D.Double path;
 	private boolean fill;
 
-	public EDPath(LayeredRenderFrame rF, Path2D.Double path, Color drawColor, boolean fill, Point location, boolean visible)
+	public EDPath(Display display, Path2D.Double path, Color drawColor, boolean fill, Point location, boolean visible)
 	{
-		super(rF, "path", location, null, 0, null, 0, visible);
+		super(display, "path", location, null, 0, null, 0, visible);
 		
 		Rectangle bounds = path.getBounds();
 		Rectangle rect = new Rectangle(location.x, location.y, bounds.width, bounds.height);

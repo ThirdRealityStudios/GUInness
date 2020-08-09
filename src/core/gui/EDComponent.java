@@ -7,7 +7,7 @@ import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.security.InvalidParameterException;
 
-import core.frame.LayeredRenderFrame;
+import core.frame.Display;
 import core.gui.design.Design;
 import core.tools.gui.UICreator;
 
@@ -69,14 +69,14 @@ public abstract class EDComponent
 	private Image img;
 
 	// The main reference to all major functions of this whole program.
-	private LayeredRenderFrame rF;
+	private Display display;
 
-	public EDComponent(LayeredRenderFrame rF, String type, Point location, Shape shape, int length, String val,
+	public EDComponent(Display display, String type, Point location, Shape shape, int length, String val,
 			int fontSize, boolean visible)
 	{
-		this.setRenderFrame(rF);
+		this.setRenderFrame(display);
 
-		setDesign(rF.getDesign());
+		setDesign(display.getDesign());
 		setPrimaryColor(getDesign().getBackgroundColor());
 
 		setType(type);
@@ -329,14 +329,14 @@ public abstract class EDComponent
 				+ length + "\nvalue = \"" + value + "\"\nfontSize = " + fontSize + "\nvisible = " + visible;
 	}
 
-	public LayeredRenderFrame getRenderFrame()
+	public Display getRenderFrame()
 	{
-		return rF;
+		return display;
 	}
 
-	public void setRenderFrame(LayeredRenderFrame rF)
+	public void setRenderFrame(Display display)
 	{
-		this.rF = rF;
+		this.display = display;
 	}
 
 	public boolean isRealtimeExecutionOn()

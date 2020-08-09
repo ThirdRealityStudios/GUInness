@@ -2,9 +2,9 @@ package core.event;
 
 import java.awt.Cursor;
 import java.awt.event.KeyEvent;
-import core.frame.LayeredRenderFrame;
+import core.frame.Display;
 import core.gui.EDComponent;
-import core.io.Interrupt;
+import core.io.Timer;
 import core.thread.LoopedThread;
 import core.thread.ThreadManager;
 
@@ -18,11 +18,7 @@ public class ComponentHandler
 	// interactions etc.
 	private LoopedThread handler = null;
 
-	private LayeredRenderFrame renderFrame;
-
-	// This is the component to be remembered, e.g. when user has left the area of a
-	// button already.
-	private EDComponent lastCycle;
+	private Display display;
 
 	private ThreadManager hoverTManager, clickTManager;
 
@@ -42,9 +38,13 @@ public class ComponentHandler
 	// This is the lastly focused component from the previous cycle always.
 	private EDComponent lastlyFocused;
 
-	public ComponentHandler(LayeredRenderFrame renderFrame)
+	private boolean doubleHovered;
+
+	private EDComponent hoveredYet;
+
+	public ComponentHandler(Display display)
 	{
-		this.renderFrame = renderFrame;
+		this.display = display;
 
 		final int maximumThreads = 2;
 
@@ -94,7 +94,7 @@ public class ComponentHandler
 			execute.onClick();
 		}
 
-		Interrupt.pauseMillisecond(execute.getDelayMilliseconds());
+		Timer.pauseMillisecond(execute.getDelayMilliseconds());
 	}
 
 	private void executeHover(EDComponent execute)
@@ -118,21 +118,19 @@ public class ComponentHandler
 			execute.onHover();
 		}
 
-		Interrupt.pauseMillisecond(execute.getDelayMilliseconds());
+		Timer.pauseMillisecond(execute.getDelayMilliseconds());
 	}
 
 	// Is responsible for firing the implemented functions by the component.
-	private int triggerGeneralLogic(EDComponent focused, boolean clicking, int keyStroke)
+	private void triggerGeneralLogic(EDComponent focused, boolean clicking, int keyStroke)
 	{
-		int graphicalChanges = 0;
-
 		if(clicking) // relates to text-fields only.
 		{
 			boolean canTextfieldBeFocussed = focused != null && focused.getType().contentEquals("textfield")
 					&& focused.isInteractionEnabled() && focused.actsOnClick();
 
 			if(canTextfieldBeFocussed)
-			{				
+			{
 				textfield = focused;
 			}
 
@@ -156,8 +154,6 @@ public class ComponentHandler
 			if(isDeviceControlCode && !textfield.isCursorAtEnd())
 			{
 				textfield.write((char) keyStroke);
-
-				graphicalChanges++;
 			}
 			else
 			{
@@ -168,8 +164,6 @@ public class ComponentHandler
 						if(!textfield.isCursorAtBeginning())
 						{
 							textfield.eraseLastChar();
-
-							graphicalChanges++;
 						}
 
 						break;
@@ -203,12 +197,12 @@ public class ComponentHandler
 				}
 			}
 		}
-
-		return graphicalChanges;
 	}
 
-	private int triggerAnimation(EDComponent focused, boolean clicking)
+	private void triggerAnimation(EDComponent focused, boolean clicking)
 	{
+		boolean sameComponentFocused = lastlyFocused != focused && lastlyFocused != null;
+		
 		if(focused != null)
 		{
 			switch(focused.getType())
@@ -225,12 +219,6 @@ public class ComponentHandler
 						if(!activeColorIsSame)
 						{
 							focused.setPrimaryColor(focused.getDesign().getActiveColor());
-
-							return 1;
-						}
-						else
-						{
-							return 0;
 						}
 					}
 
@@ -239,17 +227,18 @@ public class ComponentHandler
 						focused.setPrimaryColor(focused.getDesign().getHoverColor());
 
 						// When hovering (once!) over a button the cursor is changed.
-						renderFrame.getRenderPanel().setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-						return 1;
+						display.getRenderPanel().setCursor(new Cursor(Cursor.HAND_CURSOR));
 					}
 
 					break;
 				}
 				case "textfield":
 				{
-					// When hovering over a text-field the cursor is changed.
-					renderFrame.getRenderPanel().setCursor(new Cursor(Cursor.TEXT_CURSOR));
+					if(!doubleHovered)
+					{
+						// When hovering over a text-field the cursor is changed.
+						display.getRenderPanel().setCursor(new Cursor(Cursor.TEXT_CURSOR));
+					}
 
 					break;
 				}
@@ -257,77 +246,43 @@ public class ComponentHandler
 				default:
 				{
 					// Make sure the 'default' branch is executed only once.
-					if(lastlyFocused != focused && lastlyFocused != null)
-					{
+					if(sameComponentFocused)
+					{						
 						// When hovering over something else the cursor is set to default.
-						renderFrame.getRenderPanel().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+						display.getRenderPanel().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 						
 						switch(lastlyFocused.getType())
 						{
 							case "button":
 							{
 								lastlyFocused.setPrimaryColor(lastlyFocused.getDesign().getBackgroundColor());
-
-								return 1;
 							}
 						}
 					}
 				}
 			}
 		}
-
-		return 0;
 	}
 
-	private void triggerComponent()
+	private void preEvaluateEvents(EDComponent focused)
 	{
-		EDComponent focused = renderFrame.getEventHandler().getMouseDriver().getFocusedComponent();
-
+		if(hoveredYet == focused)
+		{
+			this.doubleHovered = true;
+		}
+		else
+		{
+			this.doubleHovered = false;
+		}
+		
 		if(clickedYet == focused)
 		{
 			this.doubleClicked = true;
 		}
+	}
 
-		boolean clicking = renderFrame.getEventHandler().getMouseDriver().isClicking();
-
-		// This line means if the KeyboardDriver is active, then only read the currently
-		// pressed key from it.
-		// This is because the KeyboardDriver is only available (!= null) when it is
-		// necessary to save resources on the CPU.
-		// Anyway, in Gaming Mode (see definition of it in LayeredRenderFrame.java for
-		// reference) the KeyboardDriver is always initialized and available.
-		int keyStroke = KeyEvent.VK_UNDEFINED;
-
-		if(textfield != null)
-		{
-			renderFrame.getEventHandler().enableKeyboardDriver();
-
-			keyStroke = renderFrame.getEventHandler().getKeyboardDriver().getActiveKey();
-		}
-		else if(!renderFrame.getEventHandler().isNoKeylistenerActive())
-		{
-			renderFrame.getEventHandler().disableKeyboardDriver();
-		}
-
-		int graphicalChanges = 0;
-
-		graphicalChanges += triggerGeneralLogic(focused, clicking, keyStroke);
-		graphicalChanges += triggerAnimation(focused, clicking);
-
-		if(graphicalChanges > 0)
-		{
-			Thread screenUpdate = new Thread()
-			{
-				@Override
-				public void run()
-				{
-					renderFrame.updateEDComponents();
-				}
-			};
-
-			updateTManager.fire(screenUpdate);
-		}
-
+	private void postEvaluateEvents(boolean clicking, EDComponent focused)
+	{
 		if(clicking)
 		{
 			clickedYet = focused;
@@ -337,6 +292,41 @@ public class ComponentHandler
 			clickedYet = null;
 			doubleClicked = false;
 		}
+
+		hoveredYet = focused;
+	}
+
+	private void triggerComponent()
+	{
+		EDComponent focused = display.getEventHandler().getMouseDriver().getFocusedComponent();
+
+		preEvaluateEvents(focused);
+
+		boolean clicking = display.getEventHandler().getMouseDriver().isClicking();
+
+		// This line means if the KeyAdapter is active, then only read the currently
+		// pressed key from it.
+		// This is because the KeyAdapter is only available (!= null) when it is
+		// necessary to save resources on the CPU.
+		// Anyway, in Gaming Mode (see definition of it in LayeredRenderFrame.java for
+		// reference) the KeyAdapter is always initialized and available.
+		int keyStroke = KeyEvent.VK_UNDEFINED;
+
+		if(textfield != null)
+		{
+			display.getEventHandler().enableKeyboardDriver();
+
+			keyStroke = display.getEventHandler().getKeyboardDriver().getActiveKey();
+		}
+		else if(!display.getEventHandler().isNoKeylistenerActive())
+		{
+			display.getEventHandler().disableKeyboardDriver();
+		}
+		
+		triggerGeneralLogic(focused, clicking, keyStroke);
+		triggerAnimation(focused, clicking);
+
+		postEvaluateEvents(clicking, focused);
 
 		lastlyFocused = focused;
 	}
