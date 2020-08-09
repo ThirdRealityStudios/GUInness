@@ -18,7 +18,7 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	/*
 	 *  'context' is the variable to use
 	 *  for calculating mouse movement and additional data.
-	 *  The data related to the given RenderFrame can then be used in real-time.
+	 *  The data related to the given Display can then be used in real-time.
 	 *  To do so,
 	 *  you can use the given methods below.
 	 */
@@ -31,7 +31,7 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	private volatile double mouseSpeed = 0f;
 	
 	/* 
-	 * The 'action' variable below tells how the user interacts with the components on the RenderFrame.
+	 * The 'action' variable below tells how the user interacts with the components on the Display.
 	 * 
 	 * Explanation of the states:
 	 * 
@@ -48,7 +48,7 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 		/*
 		 *  'context' is the variable to use
 		 *  for calculating mouse movement and additional data.
-		 *  The data related to the given RenderFrame can then be used in real-time.
+		 *  The data related to the given Display can then be used in real-time.
 		 *  To do so,
 		 *  you can use the given methods below.
 		 */
@@ -138,13 +138,13 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	@Override
 	public void mouseEntered(MouseEvent e)
 	{
-		// When the cursor enter the area of the RenderFrame.
+		// When the cursor enter the area of the Display.
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e)
 	{
-		// When the cursor exits the area of the RenderFrame.
+		// When the cursor exits the area of the Display.
 	}
 	
 	// Returns the current action.
@@ -172,7 +172,7 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	}
 	
 	// Tests if the cursor is on the position of a component.
-	// Meaning: Tests whether the mouse cursor (relative to the RenderFrame) is inside the given component.
+	// Meaning: Tests whether the mouse cursor (relative to the Display) is inside the given component.
 	// Returns 'false' if target is 'null'.
 	public boolean isFocusing(EDComponent target)
 	{
@@ -186,12 +186,12 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 		Point desktopCursor = getCursorLocation();
 		
 		// Frame offset for the relative cursor position.
-		Point frameOffset = new Point(-8, -31);
+		Point viewportOffset = new Point(-8, -31);
 		
 		// The current mouse position relative to the JFrame.
-		Point frameCursor = new Point(desktopCursor.x - context.getLocation().x + frameOffset.x, desktopCursor.y - context.getLocation().y + frameOffset.y);
+		Point viewportCursor = new Point(desktopCursor.x - context.getLocation().x + viewportOffset.x, desktopCursor.y - context.getLocation().y + viewportOffset.y);
 		
-		return target.getShape().contains(frameCursor);
+		return target.getShape().contains(viewportCursor);
 	}
 	
 	// Tests if the user is clicking a component.

@@ -30,17 +30,17 @@ public class EventHandler
 		if (display != null)
 			this.display = display;
 		else
-			throw new NullPointerException("Passed RenderFrame is null!");
+			throw new NullPointerException("Passed Display is null!");
 
-		// Initialize the MouseAdapter with the RenderFrame context.
-		// The RenderFrame context is needed for calculating front-end-window-related mouse data.
+		// Initialize the MouseAdapter with the Display context.
+		// The Display context is needed for calculating front-end-window-related mouse data.
 		mouseDriver = new MouseAdapter(display);
 
 		// After starting the driver (thread) you can receive movement data in real-time.
 		mouseDriver.getThread().start();
 
-		// Initialize the KeyAdapter with the RenderFrame context.
-		// The RenderFrame context is needed for getting front-end-window-related keyboard data.
+		// Initialize the KeyAdapter with the Display context.
+		// The Display context is needed for getting front-end-window-related keyboard data.
 		keyboardDriver = new KeyAdapter(display);
 
 		registeredLayers = new ArrayList<EDLayer>();
@@ -164,7 +164,7 @@ public class EventHandler
 		return componentHandler;
 	}
 
-	public Display getLayeredRenderFrame()
+	public Display getLayeredDisplay()
 	{
 		return display;
 	}
