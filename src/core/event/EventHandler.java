@@ -145,22 +145,18 @@ public class EventHandler
 
 	public void disableKeyboardDriver()
 	{
-		/*
 		if(!isNoKeylistenerActive())
 		{
 			rF.removeKeyListener(keyboardDriver);
 		}
-		*/
 	}
 
 	public void enableKeyboardDriver()
 	{
-		/*
 		if(isNoKeylistenerActive())
 		{
 			rF.addKeyListener(keyboardDriver);
 		}
-		*/
 	}
 
 	public ComponentHandler getComponentHandler()

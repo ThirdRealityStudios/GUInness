@@ -9,7 +9,7 @@ import java.util.Collections;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import core.FPSCounter;
+import core.driver.KeyboardDriver;
 import core.event.EventHandler;
 import core.gui.EDComponent;
 import core.gui.EDLayer;
@@ -18,8 +18,6 @@ import core.gui.design.Design;
 public class LayeredRenderFrame extends JFrame implements RenderFrame
 {
 	private Design design;
-	
-	private FPSCounter fps;
 	
 	// This will let you determine whether you want to call the 'repaint'-method only
 	// on specific events or regardless always.
@@ -64,30 +62,24 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 				}
 			}
 		}
-		
+
 		@Override
 		public void paintComponent(Graphics g)
 		{
-			System.out.println(fps.getFPS() + " FPS");
-
-			fps.count();
-
 			drawBackground(g);
 
 			drawComponents(g);
-
+			
 			if(gamingMode)
 			{
 				repaint();
 			}
 		}
 	};
-
+	
 	public LayeredRenderFrame(Design design)
 	{
 		System.gc(); // This should just make up more space for this application.
-		
-		fps = new FPSCounter();
 		
 		setDesign(design);
 		
@@ -324,23 +316,5 @@ public class LayeredRenderFrame extends JFrame implements RenderFrame
 			// Make sure it is isabled to save CPU usage..
 			eH.disableKeyboardDriver();
 		}
-	}
-	
-	// Returns the certain current FPS count.
-	public float getFPS()
-	{
-		return fps.getFPS();
-	}
-	
-	// Just returns the rough current FPS count.
-	public int getFPSRough()
-	{
-		return (int) fps.getFPS();
-	}
-	
-	// This will give you the current elapsed time since the timer is running (every second again).
-	public long getCurrentDiffMs()
-	{
-		return fps.getCurrentDiffMs();
 	}
 }

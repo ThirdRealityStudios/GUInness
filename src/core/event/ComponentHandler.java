@@ -128,7 +128,8 @@ public class ComponentHandler
 
 		if(clicking) // relates to text-fields only.
 		{
-			boolean canTextfieldBeFocussed = focused != null && focused.getType().contentEquals("textfield") && focused.isInteractionEnabled() && focused.actsOnClick();
+			boolean canTextfieldBeFocussed = focused != null && focused.getType().contentEquals("textfield")
+					&& focused.isInteractionEnabled() && focused.actsOnClick();
 
 			if(canTextfieldBeFocussed)
 			{				
@@ -147,8 +148,8 @@ public class ComponentHandler
 		// text it contains gets changed.
 		// If there is no key delivered (KeyEvent.VK_UNDEFINED), this part is ignored
 		// for faster execution.
-		if(textfield != null && !(keyStroke == KeyEvent.VK_UNDEFINED) && textfield.isInteractionEnabled()
-				&& textfield.actsOnClick())
+		if(textfield != null && !(keyStroke == KeyEvent.VK_UNDEFINED) && focused.isInteractionEnabled()
+				&& focused.actsOnClick())
 		{
 			boolean isDeviceControlCode = textfield.getDesign().getFontLoader().isDeviceControlCode(keyStroke);
 
