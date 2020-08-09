@@ -3,9 +3,6 @@ package core.gui.special;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Shape;
-import java.awt.event.KeyEvent;
-
-import core.gui.Display;
 import core.gui.component.EDComponent;
 
 public abstract class EDTextfield extends EDComponent
@@ -14,14 +11,9 @@ public abstract class EDTextfield extends EDComponent
 
 	private Color clicked;
 
-	public EDTextfield(Display display, Point location, String title, int maxInput, int fontSize, boolean visible)
+	public EDTextfield(Point location, String title, int maxInput, int fontSize, boolean visible)
 	{
-		super(display, "textfield", location, null, -1, title, fontSize, visible);
-
-		// This method is always called after the base values have been set, e.g. font size.
-		Shape s = getDesign().generateDefaultShape(this);
-		s.getBounds().setLocation(location);
-		setShape(s);
+		super("textfield", location, null, -1, title, fontSize, visible);
 		
 		if (maxInput > 0)
 			setLength(maxInput);
@@ -32,14 +24,13 @@ public abstract class EDTextfield extends EDComponent
 			setValue(title);
 		else
 			throw new IllegalArgumentException("Title length is bigger than the specified maximum length!");
+		
+		// This method is always called after the base values have been set, e.g. font size.
+		Shape s = getDesign().generateDefaultShape(this);
+		setShape(s);
 	}
 
 	public void onClick(){}
-	
-	public synchronized void save()
-	{
-		setBufferedValue(null);
-	}
 	
 	public void setActive()
 	{
@@ -84,5 +75,18 @@ public abstract class EDTextfield extends EDComponent
 	public void setClicked(Color clicked)
 	{
 		this.clicked = clicked;
+	}
+	
+	@Override
+	public void setValue(String title)
+	{
+		if(title == null)
+		{
+			return;
+		}
+
+		this.value = title;
+		
+		getDesign().updateDefaultShape(this);
 	}
 }

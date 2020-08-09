@@ -9,7 +9,9 @@ import java.security.InvalidParameterException;
 
 import core.draw.graphics.UICreator;
 import core.gui.Display;
+import core.gui.design.Classic;
 import core.gui.design.Design;
+import core.gui.design.Sample;
 
 public abstract class EDComponent
 {
@@ -50,7 +52,7 @@ public abstract class EDComponent
 
 	private boolean visible = true;
 
-	private volatile String value = "";
+	protected volatile String value = "";
 
 	private volatile String bufferedValue = null;
 
@@ -71,16 +73,16 @@ public abstract class EDComponent
 	// The main reference to all major functions of this whole program.
 	private Display display;
 
-	public EDComponent(Display display, String type, Point location, Shape shape, int length, String val,
+	public EDComponent(String type, Point location, Shape shape, int length, String val,
 			int fontSize, boolean visible)
-	{
-		this.setDisplay(display);
-
-		setDesign(display.getDesign());
-		setPrimaryColor(getDesign().getBackgroundColor());
-
+	{		
 		setType(type);
 		setLocation(location);
+		
+		// When created apply the default design first.
+		this.setDesign(Sample.classic);
+
+		setPrimaryColor(getDesign().getBackgroundColor());
 		setShape(shape);
 
 		setFontSize(fontSize);
@@ -90,14 +92,6 @@ public abstract class EDComponent
 		// Set all important attributes below:
 		setLength(length);
 		setValue(val);
-
-		// Checks whether it needs to adjust the design values for the current type.
-		if(getType().contentEquals("default"))
-		{
-			// After knowing all necessary attributes:
-			getDesign().updateDefaultShape(this); // Calculates the correct size of the rectangle for an EDComponent of
-													// type "default". Will not apply to "image" or "path".
-		}
 	}
 
 	// Will write add a new char in the variable 'value' of type String.
@@ -190,16 +184,9 @@ public abstract class EDComponent
 		return value;
 	}
 
-	public synchronized void setValue(String title)
-	{
-		if(title == null)
-		{
-			return;
-		}
-
-		this.value = title;
-		getDesign().updateDefaultShape(this);
-	}
+	// The implementation depends on the type,
+	// e.g. a text-field is treated differently than an image.
+	public abstract void setValue(String val);
 
 	public int getLength()
 	{

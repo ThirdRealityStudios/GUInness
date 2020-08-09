@@ -7,7 +7,9 @@ import core.exec.LoopedThread;
 import core.exec.ThreadManager;
 import core.feature.Timer;
 import core.gui.Display;
+import core.gui.Viewport;
 import core.gui.component.EDComponent;
+import core.gui.layer.EDLayer;
 
 public class ComponentHandler
 {
@@ -61,10 +63,28 @@ public class ComponentHandler
 			@Override
 			public void loop()
 			{
+				updateChangedLayers();
+				
 				triggerComponent();
 			}
 		};
 
+	}
+	
+	public void updateChangedLayers()
+	{
+		Viewport viewport = display.getViewport();
+		
+		if(viewport != null)
+		{
+			for(EDLayer layer : viewport.getLayers())
+			{
+				if(!layer.isVisible())
+				{
+					display.getViewport().applyChanges();
+				}
+			}
+		}
 	}
 
 	// Returns the handling thread, so the thread which frequently handles all
@@ -227,7 +247,7 @@ public class ComponentHandler
 						focused.setPrimaryColor(focused.getDesign().getHoverColor());
 
 						// When hovering (once!) over a button the cursor is changed.
-						display.getRenderPanel().setCursor(new Cursor(Cursor.HAND_CURSOR));
+						display.setCursor(new Cursor(Cursor.HAND_CURSOR));
 					}
 
 					break;
@@ -237,7 +257,7 @@ public class ComponentHandler
 					if(!doubleHovered)
 					{
 						// When hovering over a text-field the cursor is changed.
-						display.getRenderPanel().setCursor(new Cursor(Cursor.TEXT_CURSOR));
+						display.setCursor(new Cursor(Cursor.TEXT_CURSOR));
 					}
 
 					break;
@@ -249,7 +269,7 @@ public class ComponentHandler
 					if(sameComponentFocused)
 					{						
 						// When hovering over something else the cursor is set to default.
-						display.getRenderPanel().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+						display.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 						
 						switch(lastlyFocused.getType())
 						{

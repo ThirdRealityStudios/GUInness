@@ -6,12 +6,13 @@ import java.awt.Shape;
 import core.gui.Display;
 import core.gui.component.EDComponent;
 import core.gui.design.Design;
+import core.gui.layer.EDLayer;
 
 public abstract class EDButton extends EDComponent
 {	
-	public EDButton(Display display, Point location, String title, int fontSize, boolean visible)
+	public EDButton(Point location, String title, int fontSize, boolean visible)
 	{
-		super(display, "button", location, null, title.length(), title, fontSize, visible);
+		super("button", location, null, title.length(), title, fontSize, visible);
 		
 		// This method is always called after the base values have been set, e.g. font size.
 		Shape s = getDesign().generateDefaultShape(this);
@@ -31,4 +32,18 @@ public abstract class EDButton extends EDComponent
 	public abstract void onClick();
 
 	public abstract void onHover();
+	
+	@Override
+	public void setValue(String title)
+	{
+		if(title == null)
+		{
+			return;
+		}
+
+		this.value = title;
+		
+		// Should not be applied to images.. !
+		getDesign().updateDefaultShape(this);
+	}
 }

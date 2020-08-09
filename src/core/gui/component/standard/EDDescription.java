@@ -11,9 +11,9 @@ public class EDDescription extends EDComponent
 {
 	private boolean interaction = true;
 	
-	public EDDescription(Display display, Point location, String title, int fontSize, boolean visible)
+	public EDDescription(Point location, String title, int fontSize, boolean visible)
 	{
-		super(display, "description", location, null, title.length(), title, fontSize, visible);
+		super("description", location, null, title.length(), title, fontSize, visible);
 		
 		Rectangle rect = getDesign().generateDefaultShape(this);
 		setShape(rect);
@@ -42,5 +42,18 @@ public class EDDescription extends EDComponent
 	public boolean isInteractionEnabled()
 	{
 		return interaction;
+	}
+
+	public void setValue(String title)
+	{
+		if(title == null)
+		{
+			return;
+		}
+
+		this.value = title;
+		
+		// Should not be applied to images.. !
+		getDesign().updateDefaultShape(this);
 	}
 }

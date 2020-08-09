@@ -4,16 +4,13 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-
-import core.gui.Display;
 import core.gui.component.EDComponent;
-import core.gui.design.Design;
 
 public class EDImage extends EDComponent
 {
-	public EDImage(Display display, Point location, Image content, boolean visible)
+	public EDImage(Point location, Image content, boolean visible)
 	{
-		super(display, "image", location, null, 0, null, 0, visible);
+		super("image", location, null, 0, null, 0, visible);
 		
 		Rectangle rect = new Rectangle(location.x, location.y, content.getWidth(null), content.getHeight(null));
 		
@@ -21,9 +18,9 @@ public class EDImage extends EDComponent
 		setImage(content);
 	}
 
-	public EDImage(Display display, Point location, float scale, Image content, boolean visible)
+	public EDImage(Point location, float scale, Image content, boolean visible)
 	{
-		super(display, "image", location, null, 0, null, 0, visible);
+		super("image", location, null, 0, null, 0, visible);
 		
 		Dimension scaled = new Dimension((int) (scale * content.getWidth(null)), (int) (scale * content.getHeight(null)));
 		
@@ -33,9 +30,9 @@ public class EDImage extends EDComponent
 		setImage(content);
 	}
 
-	public EDImage(Display display, Point location, Dimension size, Image content, boolean visible)
+	public EDImage(Point location, Dimension size, Image content, boolean visible)
 	{
-		super(display, "image", location, null, 0, null, 0, visible);
+		super("image", location, null, 0, null, 0, visible);
 		
 		Rectangle rect = new Rectangle(location.x, location.y, size.width, size.height);
 		
@@ -43,9 +40,9 @@ public class EDImage extends EDComponent
 		setImage(content);
 	}
 
-	public EDImage(Display display, Point location, int length, boolean useAsWidth, Image content, boolean visible)
+	public EDImage(Point location, int length, boolean useAsWidth, Image content, boolean visible)
 	{
-		super(display, "image", location, null, 0, null, 0, visible);
+		super("image", location, null, 0, null, 0, visible);
 		
 		Dimension scaled = useAsWidth ? new Dimension(length, (int) (((float) length / content.getWidth(null)) * content.getHeight(null))) : new Dimension((int) (((float) length / content.getHeight(null)) * content.getWidth(null)), length);
 		
@@ -66,5 +63,11 @@ public class EDImage extends EDComponent
 	{
 		// Not implemented for images
 		
+	}
+
+	@Override
+	public void setValue(String val)
+	{
+		// Does nothing..
 	}
 }

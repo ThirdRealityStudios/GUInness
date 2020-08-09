@@ -10,9 +10,9 @@ import core.gui.component.EDComponent;
 
 public class EDCheckbox extends EDComponent
 {
-	public EDCheckbox(Display display, String type, Point location, Shape shape, int length, String val, int fontSize, boolean visible)
+	public EDCheckbox(String type, Point location, Shape shape, int length, String val, int fontSize, boolean visible)
 	{
-		super(display, "checkbox", location, new Rectangle(new Point(location), new Dimension(50,50)), 0, "", 0, visible);
+		super("checkbox", location, new Rectangle(new Point(location), new Dimension(50,50)), 0, "", 0, visible);
 		
 		// The 'value' attribute is used as the marker, meaning if 'value' is null the checkbox is unchecked and otherwise true.
 		
@@ -30,6 +30,12 @@ public class EDCheckbox extends EDComponent
 	{
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setValue(String val)
+	{
+		// Implement later..
 	}
 
 }

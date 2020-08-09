@@ -8,7 +8,7 @@ import core.gui.component.EDComponent;
 import core.gui.font.FontLoader;
 
 public abstract class Design
-{
+{	
 	private Color borderColor, backgroundColor, activeColor, hoverColor, fontColor;
 	
 	private int innerThickness, borderThickness;
