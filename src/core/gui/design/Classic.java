@@ -97,7 +97,7 @@ public class Classic extends Design
 
 	// Returns a determined shape which uses the design defined in this class.
 	public Rectangle generateDefaultShape(EDComponent c)
-	{
+	{		
 		// Calculates the correct size of the rectangle for the text component.
 		Dimension backgroundSize = new Dimension(c.getLength() * c.getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness(), c.getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness());
 

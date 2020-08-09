@@ -43,7 +43,8 @@ public abstract class EDButton extends EDComponent
 
 		this.value = title;
 		
-		// Should not be applied to images.. !
+		setLength(getValue().length());
+
 		getDesign().updateDefaultShape(this);
 	}
 }

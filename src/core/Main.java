@@ -71,10 +71,8 @@ public class Main
 			}
 		};
 		
-		start = new EDButton(new Point(20, 75), "SHOW BUTTON", 20, true)
+		start = new EDButton(new Point(20, 75), "Hide image", 20, true)
 		{
-			boolean sampleFlag = false;
-			
 			@Override
 			public void onHover()
 			{
@@ -84,9 +82,8 @@ public class Main
 			@Override
 			public void onClick()
 			{
-				// layer0.setVisible(false);
-				
-				input1.write('o');
+				img0.setVisible(!img0.isVisible());
+				this.setValue((img0.isVisible() ? "Hide again " : "Show ") + "image");
 			}
 		};
 
@@ -145,7 +142,7 @@ public class Main
 
 		Image i = Loader.loadImage("C:\\Users\\Hameg\\Desktop\\4.jpg");
 
-		img0 = new EDImage(new Point(0, 0), new Dimension(400, 500) , i, true);
+		img0 = new EDImage(new Point(0, 0), 600, false , i, true);
 		img0.actsOnHover(false);
 	}
 
