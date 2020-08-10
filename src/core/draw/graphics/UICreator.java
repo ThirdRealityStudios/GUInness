@@ -3,7 +3,7 @@ package core.draw.graphics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-import core.gui.component.EDComponent;
+import core.gui.component.GComponent;
 import core.gui.design.Design;
 import core.gui.font.FontLoader;
 
@@ -18,7 +18,7 @@ public class UICreator
 		this.setDesign(design);
 	}
 
-	public void createText(Graphics g, EDComponent c)
+	public void createText(Graphics g, GComponent c)
 	{
 		Rectangle bounds = c.getShape().getBounds();
 		

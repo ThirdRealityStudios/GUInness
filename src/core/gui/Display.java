@@ -1,16 +1,15 @@
 package core.gui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
 
-import core.gui.design.Classic;
-import core.gui.design.Design;
 import core.handler.EventHandler;
 
 public class Display extends JFrame
 {
+	private static final long serialVersionUID = 1L;
+	
 	private Viewport viewport;
 
 	private volatile EventHandler eH;
@@ -19,7 +18,7 @@ public class Display extends JFrame
 	{
 		System.gc(); // This should just make up more space for this application.
 
-		setTitle("Standard Display");
+		setTitle("GUInness - Default Display");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		setSize(1280, 720);

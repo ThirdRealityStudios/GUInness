@@ -1,22 +1,21 @@
 package core.gui.component.standard;
 
 import java.awt.Point;
-import java.awt.Rectangle;
 
-import core.gui.Display;
-import core.gui.component.EDComponent;
-import core.gui.design.Design;
+import core.Meta;
+import core.gui.component.GComponent;
 
-public class EDDescription extends EDComponent
+public class GDescription extends GComponent
 {
+	private static final long serialVersionUID = Meta.serialVersionUID;
+	
 	private boolean interaction = true;
 	
-	public EDDescription(Point location, String title, int fontSize, boolean visible)
+	public GDescription(Point location, String title, int fontSize, boolean visible)
 	{
 		super("description", location, null, title.length(), title, fontSize, visible);
 		
-		Rectangle rect = getDesign().generateDefaultShape(this);
-		setShape(rect);
+		updateShape();
 	}
 
 	public String getTitle()
@@ -53,7 +52,6 @@ public class EDDescription extends EDComponent
 
 		this.value = title;
 		
-		// Should not be applied to images.. !
-		getDesign().updateDefaultShape(this);
+		updateShape();
 	}
 }

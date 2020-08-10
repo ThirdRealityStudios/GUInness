@@ -3,12 +3,15 @@ package core.gui.design;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.io.Serializable;
 
-import core.gui.component.EDComponent;
+import core.gui.component.GComponent;
 import core.gui.font.FontLoader;
 
-public abstract class Design
-{	
+public abstract class Design implements Serializable
+{
+	private static final long serialVersionUID = 1L;
+	
 	private Color borderColor, backgroundColor, activeColor, hoverColor, fontColor;
 	
 	private int innerThickness, borderThickness;
@@ -101,11 +104,11 @@ public abstract class Design
 		return fL;
 	}
 	
-	public abstract void drawContext(Graphics g, EDComponent c);
+	public abstract void drawContext(Graphics g, GComponent c);
 	
-	abstract void drawDefault(Graphics g, EDComponent c);
+	abstract void drawDefault(Graphics g, GComponent c);
 	
-	public abstract Rectangle generateDefaultShape(EDComponent c);
+	public abstract Rectangle generateDefaultShape(GComponent c);
 	
-	public abstract void updateDefaultShape(EDComponent c);
+	public abstract void updateDefaultShape(GComponent c);
 }

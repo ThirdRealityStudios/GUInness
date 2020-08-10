@@ -7,12 +7,15 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
 
-import core.gui.component.EDComponent;
-import core.gui.special.EDPath;
+import core.Meta;
+import core.gui.component.GComponent;
+import core.gui.special.GPath;
 
 // The classic design without which looks very retro-stylish or ugly.
 public class Classic extends Design
 {
+	private static final long serialVersionUID = Meta.serialVersionUID;
+
 	public Classic(Color borderColor, Color backgroundColor, Color activeColor, Color hoverColor, Color fontColor, int innerThickness, int borderThickness)
 	{
 		super(borderColor, backgroundColor, activeColor, hoverColor, fontColor, innerThickness, borderThickness);
@@ -20,13 +23,13 @@ public class Classic extends Design
 
 	// Every design has its own draw method in order to know how to draw each component.
 	// This is a "pre-method".
-	public void drawContext(Graphics g, EDComponent c)
+	public void drawContext(Graphics g, GComponent c)
 	{
 		Rectangle bounds = c.getShape().getBounds();
 		
-		// For the case there is an image supplied to the EDComponent object,
+		// For the case there is an image supplied to the GComponent object,
 		// it is considered to be rendered.
-		// The programmer needs to know how to use the features EDComponent delivers and has to ensure
+		// The programmer needs to know how to use the features GComponent delivers and has to ensure
 		// a supplied image will not get in conflict with other settings.
 		switch(c.getType())
 		{
@@ -39,7 +42,7 @@ public class Classic extends Design
 		
 			case "path":
 			{
-				EDPath path = (EDPath) c;
+				GPath path = (GPath) c;
 				
 				Graphics2D g2d = (Graphics2D) g;
 
@@ -79,7 +82,7 @@ public class Classic extends Design
 		}
 	}
 
-	protected void drawDefault(Graphics g, EDComponent c)
+	protected void drawDefault(Graphics g, GComponent c)
 	{
 		Rectangle bounds = c.getShape().getBounds();
 
@@ -96,7 +99,7 @@ public class Classic extends Design
 	}
 
 	// Returns a determined shape which uses the design defined in this class.
-	public Rectangle generateDefaultShape(EDComponent c)
+	public Rectangle generateDefaultShape(GComponent c)
 	{		
 		// Calculates the correct size of the rectangle for the text component.
 		Dimension backgroundSize = new Dimension(c.getLength() * c.getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness(), c.getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness());
@@ -108,7 +111,7 @@ public class Classic extends Design
 
 	// Updates the context component with its corresponding values.
 	// This is a post-method.
-	public void updateDefaultShape(EDComponent c)
+	public void updateDefaultShape(GComponent c)
 	{
 		Shape recalculated = generateDefaultShape(c);
 		

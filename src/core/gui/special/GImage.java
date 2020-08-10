@@ -4,11 +4,15 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-import core.gui.component.EDComponent;
 
-public class EDImage extends EDComponent
+import core.Meta;
+import core.gui.component.GComponent;
+
+public class GImage extends GComponent
 {
-	public EDImage(Point location, Image content, boolean visible)
+	private static final long serialVersionUID = Meta.serialVersionUID;
+	
+	public GImage(Point location, Image content, boolean visible)
 	{
 		super("image", location, null, 0, null, 0, visible);
 		
@@ -18,7 +22,7 @@ public class EDImage extends EDComponent
 		setImage(content);
 	}
 
-	public EDImage(Point location, float scale, Image content, boolean visible)
+	public GImage(Point location, float scale, Image content, boolean visible)
 	{
 		super("image", location, null, 0, null, 0, visible);
 		
@@ -30,17 +34,17 @@ public class EDImage extends EDComponent
 		setImage(content);
 	}
 
-	public EDImage(Point location, Dimension size, Image content, boolean visible)
+	public GImage(Point location, Dimension size, Image content, boolean visible)
 	{
 		super("image", location, null, 0, null, 0, visible);
 		
 		Rectangle rect = new Rectangle(location.x, location.y, size.width, size.height);
-		
 		setShape(rect);
+		
 		setImage(content);
 	}
 
-	public EDImage(Point location, int length, boolean useAsWidth, Image content, boolean visible)
+	public GImage(Point location, int length, boolean useAsWidth, Image content, boolean visible)
 	{
 		super("image", location, null, 0, null, 0, visible);
 		

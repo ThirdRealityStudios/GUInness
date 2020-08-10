@@ -5,16 +5,17 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Path2D;
 
-import core.gui.Display;
-import core.gui.component.EDComponent;
-import core.gui.design.Design;
+import core.Meta;
+import core.gui.component.GComponent;
 
-public class EDPath extends EDComponent
+public class GPath extends GComponent
 {
+	private static final long serialVersionUID = Meta.serialVersionUID;
+	
 	private Path2D.Double path;
 	private boolean fill;
 
-	public EDPath(Path2D.Double path, Color drawColor, boolean fill, Point location, boolean visible)
+	public GPath(Path2D.Double path, Color drawColor, boolean fill, Point location, boolean visible)
 	{
 		super("path", location, null, 0, null, 0, visible);
 		
@@ -24,7 +25,7 @@ public class EDPath extends EDComponent
 		setShape(rect);
 		
 		setPath(path);
-		setPrimaryColor(drawColor); // The "primary color" of EDComponent is used as the "draw color".
+		setPrimaryColor(drawColor); // The "primary color" of GComponent is used as the "draw color".
 		setFill(fill);
 	}
 

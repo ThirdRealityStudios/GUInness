@@ -1,22 +1,20 @@
 package core.gui.component.standard;
 
 import java.awt.Point;
-import java.awt.Shape;
 
-import core.gui.Display;
-import core.gui.component.EDComponent;
-import core.gui.design.Design;
-import core.gui.layer.EDLayer;
+import core.Meta;
+import core.gui.component.GComponent;
 
-public abstract class EDButton extends EDComponent
-{	
-	public EDButton(Point location, String title, int fontSize, boolean visible)
+public abstract class GButton extends GComponent
+{
+	private static final long serialVersionUID = Meta.serialVersionUID;
+	
+	public GButton(Point location, String title, int fontSize, boolean visible)
 	{
 		super("button", location, null, title.length(), title, fontSize, visible);
 		
 		// This method is always called after the base values have been set, e.g. font size.
-		Shape s = getDesign().generateDefaultShape(this);
-		setShape(s);
+		updateShape();
 	}
 
 	public String getTitle()
@@ -45,6 +43,6 @@ public abstract class EDButton extends EDComponent
 		
 		setLength(getValue().length());
 
-		getDesign().updateDefaultShape(this);
+		updateShape();
 	}
 }
