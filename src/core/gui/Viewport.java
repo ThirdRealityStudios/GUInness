@@ -55,10 +55,10 @@ public class Viewport extends JPanel
 	
 	private void drawComponents(Graphics g)
 	{
-		// Render all EasyDraw components.
+		// Render all GUInness components.
 		for(GComponent edC : compOutput)
 		{
-			if(edC.getStyle().isVisible())
+			if(edC.getStyle().isVisible() && edC.isEnabled())
 			{
 				edC.getStyle().getDesign().drawContext(g, edC);
 			}
@@ -93,16 +93,13 @@ public class Viewport extends JPanel
 	// Adds all components of a layer to the internal component buffer (which is used for drawing only).
 		private void apply(GLayer target)
 		{
-			if(target.isVisible())
-			{
-				// Add every component of the current layer.
-				for(GComponent comp : target.getComponentBuffer())
-				{					
-					compBuffer.add(comp);
-				}
-
-				eventHandler.registerLayer(target);
+			// Add every component of the current layer.
+			for(GComponent comp : target.getComponentBuffer())
+			{					
+				compBuffer.add(comp);
 			}
+
+			eventHandler.registerLayer(target);
 		}
 
 		// If a layer was changed, you can call this method to apply all changes.

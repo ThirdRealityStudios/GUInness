@@ -227,7 +227,7 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 		return firstMatch;
 	}
 	
-	// Checks whether the cursor is over any EasyDraw component.
+	// Checks whether the cursor is over any GUInness component.
 	// Should be avoided if used too often because of performance reasons.
 	public boolean isFocusingAny(ArrayList<String> exceptionalTypes)
 	{

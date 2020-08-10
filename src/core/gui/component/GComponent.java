@@ -6,7 +6,6 @@ import java.io.Serializable;
 
 import core.Meta;
 import core.gui.Display;
-import core.gui.design.Design;
 import core.gui.design.Sample;
 
 public abstract class GComponent implements Serializable
@@ -16,6 +15,10 @@ public abstract class GComponent implements Serializable
 	// Determines the type of the GComponent, e.g. image, path or default.
 	// This will determine the render method later.
 	private String type;
+	
+	// Determine whether the component should be enabled or not.
+	// If it's disabled, it is not just invisible but also you cannot interact with it anymore.
+	private boolean enabled = true;
 
 	protected volatile String value = "";
 
@@ -28,8 +31,7 @@ public abstract class GComponent implements Serializable
 	
 	private GLogic logic;
 
-	public GComponent(String type, Point location, Shape shape, int length, String val,
-			int fontSize, boolean visible)
+	public GComponent(String type, Point location, Shape shape, int length, String val, int fontSize, boolean visible)
 	{
 		style = new GStyle();
 		
@@ -156,6 +158,17 @@ public abstract class GComponent implements Serializable
 	public void setDisplay(Display display)
 	{
 		this.display = display;
+	}
+	
+	
+	public boolean isEnabled()
+	{
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled)
+	{
+		this.enabled = enabled;
 	}
 	
 	public GStyle getStyle()
