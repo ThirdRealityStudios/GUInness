@@ -5,12 +5,14 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 
-import core.gui.Display;
-import core.gui.component.EDComponent;
+import core.Meta;
+import core.gui.component.GComponent;
 
-public class EDCheckbox extends EDComponent
+public class GCheckbox extends GComponent
 {
-	public EDCheckbox(String type, Point location, Shape shape, int length, String val, int fontSize, boolean visible)
+	private static final long serialVersionUID = Meta.serialVersionUID;
+	
+	public GCheckbox(String type, Point location, Shape shape, int length, String val, int fontSize, boolean visible)
 	{
 		super("checkbox", location, new Rectangle(new Point(location), new Dimension(50,50)), 0, "", 0, visible);
 		

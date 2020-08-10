@@ -6,7 +6,7 @@ import core.feature.Timer;
 import core.gui.Display;
 import core.gui.adapter.KeyAdapter;
 import core.gui.adapter.MouseAdapter;
-import core.gui.layer.EDLayer;
+import core.gui.layer.GLayer;
 
 public class EventHandler
 {
@@ -14,7 +14,7 @@ public class EventHandler
 	
 	private Display display = null;
 
-	private CopyOnWriteArrayList<EDLayer> registeredLayers;
+	private CopyOnWriteArrayList<GLayer> registeredLayers;
 
 	private ComponentHandler componentHandler = null;
 
@@ -42,12 +42,12 @@ public class EventHandler
 		// The Display context is needed for getting front-end-window-related keyboard data.
 		keyboardDriver = new KeyAdapter(display);
 
-		registeredLayers = new CopyOnWriteArrayList<EDLayer>();
+		registeredLayers = new CopyOnWriteArrayList<GLayer>();
 
 		componentHandler = new ComponentHandler(display);
 	}
 
-	public synchronized void registerLayer(EDLayer edL)
+	public synchronized void registerLayer(GLayer edL)
 	{
 		registeredLayers.add(edL);
 	}
@@ -56,7 +56,7 @@ public class EventHandler
 	{
 		int index = 0;
 
-		for (EDLayer current : registeredLayers)
+		for (GLayer current : registeredLayers)
 		{
 			if (current.getUUID().toString().equals(uuid))
 				break;
@@ -69,7 +69,7 @@ public class EventHandler
 
 	public synchronized void unregisterAllLayers()
 	{
-		registeredLayers = new CopyOnWriteArrayList<EDLayer>();
+		registeredLayers = new CopyOnWriteArrayList<GLayer>();
 	}
 
 	public void start()
@@ -122,7 +122,7 @@ public class EventHandler
 		stopMouseDriver();
 	}
 
-	public CopyOnWriteArrayList<EDLayer> getRegisteredLayers()
+	public CopyOnWriteArrayList<GLayer> getRegisteredLayers()
 	{
 		return registeredLayers;
 	}

@@ -7,34 +7,31 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.JPanel;
 
-import core.gui.component.EDComponent;
-import core.gui.design.Classic;
-import core.gui.layer.EDLayer;
+import core.gui.component.GComponent;
+import core.gui.layer.GLayer;
 import core.handler.EventHandler;
 
 public class Viewport extends JPanel
-{
-	private CopyOnWriteArrayList<EDLayer> layers;
+{	
+	private static final long serialVersionUID = 1L;
+	
+	private CopyOnWriteArrayList<GLayer> layers;
 
-	private CopyOnWriteArrayList<EDComponent> compBuffer, compOutput;
+	private CopyOnWriteArrayList<GComponent> compBuffer, compOutput;
 	
 	private EventHandler eventHandler;
 	
-	private Classic defaultDesign;
-	
 	public Viewport(EventHandler eventHandler)
 	{
-		defaultDesign =  new Classic(Color.BLACK, Color.LIGHT_GRAY, Color.DARK_GRAY, Color.GRAY, Color.BLACK, 2, 1);
-		
 		this.eventHandler = eventHandler;
 		
-		compBuffer = new CopyOnWriteArrayList<EDComponent>();
-		compOutput = new CopyOnWriteArrayList<EDComponent>();
+		compBuffer = new CopyOnWriteArrayList<GComponent>();
+		compOutput = new CopyOnWriteArrayList<GComponent>();
 		
-		layers = new CopyOnWriteArrayList<EDLayer>();
+		layers = new CopyOnWriteArrayList<GLayer>();
 		
 		// Add all new components..
-		for(EDLayer edL : layers)
+		for(GLayer edL : layers)
 		{
 			eventHandler.registerLayer(edL);
 		}
@@ -59,7 +56,7 @@ public class Viewport extends JPanel
 	private void drawComponents(Graphics g)
 	{
 		// Render all EasyDraw components.
-		for(EDComponent edC : compOutput)
+		for(GComponent edC : compOutput)
 		{
 			if(edC.isVisible())
 			{
@@ -68,11 +65,11 @@ public class Viewport extends JPanel
 		}
 	}
 	
-	private CopyOnWriteArrayList<EDComponent> copyComponents()
+	private CopyOnWriteArrayList<GComponent> copyComponents()
 	{
-		CopyOnWriteArrayList<EDComponent> mirror = new CopyOnWriteArrayList<EDComponent>();
+		CopyOnWriteArrayList<GComponent> mirror = new CopyOnWriteArrayList<GComponent>();
 
-		for (EDComponent p : compBuffer)
+		for (GComponent p : compBuffer)
 		{
 			mirror.add(p);
 		}
@@ -94,20 +91,13 @@ public class Viewport extends JPanel
 	}
 	
 	// Adds all components of a layer to the internal component buffer (which is used for drawing only).
-		private void apply(EDLayer target)
+		private void apply(GLayer target)
 		{
 			if(target.isVisible())
 			{
 				// Add every component of the current layer.
-				for(EDComponent comp : target.getComponentBuffer())
-				{
-					boolean updateForShapeNecessary = !comp.getType().contentEquals("image");
-					
-					if(updateForShapeNecessary)
-					{
-						comp.getDesign().updateDefaultShape(comp);
-					}
-					
+				for(GComponent comp : target.getComponentBuffer())
+				{					
 					compBuffer.add(comp);
 				}
 
@@ -129,7 +119,7 @@ public class Viewport extends JPanel
 			{
 				if(layers.size() > 1)
 				{
-					for(EDLayer layer : layers)
+					for(GLayer layer : layers)
 					{
 						apply(layer);
 					}
@@ -144,9 +134,9 @@ public class Viewport extends JPanel
 		}
 		
 		// This will check whether a given layer has the same priority as a layer which is added yet to the list.
-		private boolean isDoublePriority(EDLayer layer)
+		private boolean isDoublePriority(GLayer layer)
 		{
-			for(EDLayer current : layers)
+			for(GLayer current : layers)
 			{
 				if(current.getPriority() == layer.getPriority())
 				{
@@ -158,12 +148,12 @@ public class Viewport extends JPanel
 		}
 		
 		// The priority of a layer has to be at least zero or greater.
-		private boolean isValidPriority(EDLayer layer)
+		private boolean isValidPriority(GLayer layer)
 		{
 			return layer.getPriority() >= 0 && !isDoublePriority(layer);
 		}
 
-		public void addLayer(EDLayer layer) throws IllegalArgumentException
+		public void addLayer(GLayer layer) throws IllegalArgumentException
 		{
 			if(isValidPriority(layer))
 			{
@@ -183,7 +173,7 @@ public class Viewport extends JPanel
 
 			int index = 0;
 
-			for (EDLayer current : layers)
+			for (GLayer current : layers)
 			{
 				if(current.getUUID().toString().equals(uuid))
 					break;
@@ -198,12 +188,12 @@ public class Viewport extends JPanel
 			applyChanges();
 		}
 
-		public CopyOnWriteArrayList<EDLayer> getLayers()
+		public CopyOnWriteArrayList<GLayer> getLayers()
 		{
 			return layers;
 		}
 
-		public EDLayer getLayer(int index)
+		public GLayer getLayer(int index)
 		{
 			return layers.get(index);
 		}

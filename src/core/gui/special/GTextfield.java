@@ -2,16 +2,19 @@ package core.gui.special;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.Shape;
-import core.gui.component.EDComponent;
 
-public abstract class EDTextfield extends EDComponent
+import core.Meta;
+import core.gui.component.GComponent;
+
+public abstract class GTextfield extends GComponent
 {
+	private static final long serialVersionUID = Meta.serialVersionUID;
+	
 	private boolean active = false;
 
 	private Color clicked;
 
-	public EDTextfield(Point location, String title, int maxInput, int fontSize, boolean visible)
+	public GTextfield(Point location, String title, int maxInput, int fontSize, boolean visible)
 	{
 		super("textfield", location, null, -1, title, fontSize, visible);
 		
@@ -26,8 +29,7 @@ public abstract class EDTextfield extends EDComponent
 			throw new IllegalArgumentException("Title length is bigger than the specified maximum length!");
 		
 		// This method is always called after the base values have been set, e.g. font size.
-		Shape s = getDesign().generateDefaultShape(this);
-		setShape(s);
+		updateShape();
 	}
 
 	public void onClick(){}
@@ -86,7 +88,7 @@ public abstract class EDTextfield extends EDComponent
 		}
 
 		this.value = title;
-		
-		getDesign().updateDefaultShape(this);
+
+		updateShape();
 	}
 }

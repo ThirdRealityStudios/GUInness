@@ -7,7 +7,7 @@ import java.awt.Shape;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import core.gui.component.EDComponent;
+import core.gui.component.GComponent;
 
 public class Essentials
 {
@@ -25,9 +25,9 @@ public class Essentials
 		return o != null ? o.getClass().getSuperclass().getSimpleName() : "";
 	}
 	
-	// Returns the type of an EDComponent.
+	// Returns the type of an GComponent.
 	// Returns an empty String if the given reference is null.
-	public static String typeof(EDComponent c)
+	public static String typeof(GComponent c)
 	{
 		return c != null ? c.getType() : "";
 	}

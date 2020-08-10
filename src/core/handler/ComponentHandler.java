@@ -8,8 +8,8 @@ import core.exec.ThreadManager;
 import core.feature.Timer;
 import core.gui.Display;
 import core.gui.Viewport;
-import core.gui.component.EDComponent;
-import core.gui.layer.EDLayer;
+import core.gui.component.GComponent;
+import core.gui.layer.GLayer;
 
 public class ComponentHandler
 {
@@ -23,27 +23,23 @@ public class ComponentHandler
 
 	private Display display;
 
-	private ThreadManager hoverTManager, clickTManager;
-
-	// Takes care about that only one time one thread is running for updating the
-	// screen (repaint).
-	private ThreadManager updateTManager;
+	private ThreadManager hoverTManager, clickTManager;	
 
 	// If there was a text-field selected, it will be stored here for a time.
-	private EDComponent textfield;
+	private GComponent textfield;
 
 	// Tells whether a component was clicked before.
-	private EDComponent clickedYet = null;
+	private GComponent clickedYet = null;
 
 	// Tells by using 'clickedYet' whether the checked component was double clicked.
 	private boolean doubleClicked = false;
 
 	// This is the lastly focused component from the previous cycle always.
-	private EDComponent lastlyFocused;
+	private GComponent lastlyFocused;
 
 	private boolean doubleHovered;
 
-	private EDComponent hoveredYet;
+	private GComponent hoveredYet;
 
 	public ComponentHandler(Display display)
 	{
@@ -53,8 +49,6 @@ public class ComponentHandler
 
 		this.hoverTManager = new ThreadManager(maximumThreads);
 		this.clickTManager = new ThreadManager(maximumThreads);
-
-		this.updateTManager = new ThreadManager(1);
 
 		// Here a thread is created which just serves this class to refresh all
 		// retrievable information on components.
@@ -77,7 +71,7 @@ public class ComponentHandler
 		
 		if(viewport != null)
 		{
-			for(EDLayer layer : viewport.getLayers())
+			for(GLayer layer : viewport.getLayers())
 			{
 				if(!layer.isVisible())
 				{
@@ -94,7 +88,7 @@ public class ComponentHandler
 		return handler;
 	}
 
-	private void executeClick(EDComponent execute)
+	private void executeClick(GComponent execute)
 	{
 		if(execute.isRealtimeExecutionOn())
 		{
@@ -118,7 +112,7 @@ public class ComponentHandler
 		Timer.pauseMillisecond(execute.getDelayMilliseconds());
 	}
 
-	private void executeHover(EDComponent execute)
+	private void executeHover(GComponent execute)
 	{
 		if(execute.isRealtimeExecutionOn())
 		{
@@ -143,7 +137,7 @@ public class ComponentHandler
 	}
 
 	// Is responsible for firing the implemented functions by the component.
-	private void triggerGeneralLogic(EDComponent focused, boolean clicking, int keyStroke)
+	private void triggerGeneralLogic(GComponent focused, boolean clicking, int keyStroke)
 	{
 		if(clicking) // relates to text-fields only.
 		{
@@ -165,7 +159,7 @@ public class ComponentHandler
 
 		// This is the actual part where text-fields are modified, meaning the value or
 		// text it contains gets changed.
-		// If there is no key delivered (KeyEvent.VK_UNDEFINED), this part is ignored
+		// If there is no key delivered (KeyEvent.VK_UNDEFING), this part is ignored
 		// for faster execution.
 		if(textfield != null && !(keyStroke == KeyEvent.VK_UNDEFINED) && focused.isInteractionEnabled()
 				&& focused.actsOnClick())
@@ -220,7 +214,7 @@ public class ComponentHandler
 		}
 	}
 
-	private void triggerAnimation(EDComponent focused, boolean clicking)
+	private void triggerAnimation(GComponent focused, boolean clicking)
 	{
 		boolean sameComponentFocused = lastlyFocused != focused && lastlyFocused != null;
 		
@@ -284,7 +278,7 @@ public class ComponentHandler
 		}
 	}
 
-	private void preEvaluateEvents(EDComponent focused)
+	private void preEvaluateEvents(GComponent focused)
 	{
 		if(hoveredYet == focused)
 		{
@@ -301,7 +295,7 @@ public class ComponentHandler
 		}
 	}
 
-	private void postEvaluateEvents(boolean clicking, EDComponent focused)
+	private void postEvaluateEvents(boolean clicking, GComponent focused)
 	{
 		if(clicking)
 		{
@@ -318,7 +312,7 @@ public class ComponentHandler
 
 	private void triggerComponent()
 	{
-		EDComponent focused = display.getEventHandler().getMouseDriver().getFocusedComponent();
+		GComponent focused = display.getEventHandler().getMouseDriver().getFocusedComponent();
 
 		preEvaluateEvents(focused);
 

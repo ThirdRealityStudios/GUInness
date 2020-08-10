@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import core.exec.LoopedThread;
 import core.feature.Timer;
 import core.gui.Display;
-import core.gui.component.EDComponent;
-import core.gui.layer.EDLayer;
+import core.gui.component.GComponent;
+import core.gui.layer.GLayer;
 
 public class MouseAdapter extends LoopedThread implements MouseMotionListener, MouseListener
 {
@@ -174,7 +174,7 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	// Tests if the cursor is on the position of a component.
 	// Meaning: Tests whether the mouse cursor (relative to the Display) is inside the given component.
 	// Returns 'false' if target is 'null'.
-	public boolean isFocusing(EDComponent target)
+	public boolean isFocusing(GComponent target)
 	{
 		// If there is no component given,
 		// this method assumes no component was found,
@@ -195,7 +195,7 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	}
 	
 	// Tests if the user is clicking a component.
-	public boolean isClicking(EDComponent edT)
+	public boolean isClicking(GComponent edT)
 	{
 		return isFocusing(edT) && isClicking();
 	}
@@ -203,13 +203,13 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	// Returns the first component which is focused by the cursor.
 	// Makes the UI more efficient by breaking at the first component already.
 	// Returns null if there is no such component.
-	public EDComponent getFocusedComponent()
+	public GComponent getFocusedComponent()
 	{
-		EDComponent firstMatch = null;
+		GComponent firstMatch = null;
 		
-		for(EDLayer layer : context.getEventHandler().getRegisteredLayers())
+		for(GLayer layer : context.getEventHandler().getRegisteredLayers())
 		{
-			for(EDComponent selected : layer.getComponentBuffer())
+			for(GComponent selected : layer.getComponentBuffer())
 			{
 				boolean insideComponent = isFocusing(selected);
 				

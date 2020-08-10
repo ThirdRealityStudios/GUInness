@@ -150,7 +150,7 @@ public class FontLoader
 			BufferedImage img = pattern.getSubimage(x, y, dim, dim);
 
 			Image colorized = Manipulation.colorize(img, fontColor).getScaledInstance(fontSize, fontSize,
-					pattern.SCALE_SMOOTH);
+					Image.SCALE_SMOOTH);
 
 			g.drawImage(colorized, xPos, yPos, null);
 		}
@@ -163,7 +163,7 @@ public class FontLoader
 			BufferedImage img = pattern.getSubimage(xSymbolNotFound, ySymbolNotFound, dim, dim);
 
 			Image colorized = Manipulation.colorize(img, fontColor).getScaledInstance(fontSize, fontSize,
-					pattern.SCALE_SMOOTH);
+					Image.SCALE_SMOOTH);
 
 			g.drawImage(colorized, xPos, yPos, null);
 		}

@@ -4,27 +4,27 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Shape;
-import java.awt.event.KeyEvent;
-import java.security.InvalidParameterException;
+import java.io.Serializable;
 
-import core.draw.graphics.UICreator;
+import core.Meta;
 import core.gui.Display;
-import core.gui.design.Classic;
 import core.gui.design.Design;
 import core.gui.design.Sample;
 
-public abstract class EDComponent
+public abstract class GComponent implements Serializable
 {
+	private static final long serialVersionUID = Meta.serialVersionUID;
+	
 	// Will tell the render method how to render this component.
 	private Design design;
 
-	// Determines the type of the EDComponent, e.g. image, path or default.
+	// Determines the type of the GComponent, e.g. image, path or default.
 	// This will determine the render method later.
 	private String type;
 
 	private volatile boolean interaction = true, actionOnClick = true, actionOnHover = true;
 
-	// "Realtime execution" means that if you interact with an EDComponent it will
+	// "Realtime execution" means that if you interact with an GComponent it will
 	// execute as fast as it can the corresponding method,
 	// e.g. you click a button for one second which means the onClick() method is
 	// executed as often as possible depending the computer.
@@ -44,7 +44,7 @@ public abstract class EDComponent
 	private int delayMs = 0;
 	
 	// Decide whether it is allowed to run the same method multiple times when the component is clicked a specific time..
-	// Is not compatible with all EDComponents.
+	// Is not compatible with all GComponents.
 	private boolean doubleClickingAllowed = false;
 
 	// Contains the shape of the component.
@@ -65,7 +65,7 @@ public abstract class EDComponent
 	private Point location;
 
 	// Just contains an image in case it is wanted.
-	// If you want the EDComponent to be rendered as an image,
+	// If you want the GComponent to be rendered as an image,
 	// you need to clarify it in the variable "type" above (String value needs to be
 	// "image" then).
 	private Image img;
@@ -73,15 +73,15 @@ public abstract class EDComponent
 	// The main reference to all major functions of this whole program.
 	private Display display;
 
-	public EDComponent(String type, Point location, Shape shape, int length, String val,
+	public GComponent(String type, Point location, Shape shape, int length, String val,
 			int fontSize, boolean visible)
 	{		
 		setType(type);
 		setLocation(location);
-		
+
 		// When created apply the default design first.
 		this.setDesign(Sample.classic);
-
+ 
 		setPrimaryColor(getDesign().getBackgroundColor());
 		setShape(shape);
 
@@ -345,15 +345,26 @@ public abstract class EDComponent
 	{
 		this.delayMs = delayMs;
 	}
-	
+
 	// Decide whether it is allowed to run the same method multiple times when the button is pressed..
 	public void setDoubleClickingAllowed(boolean allowed)
 	{
 		this.doubleClickingAllowed = allowed;
 	}
-	
+
 	public boolean isDoubleClickingAllowed()
 	{
 		return doubleClickingAllowed;
+	}
+
+	// Updates the shape if possible,
+	// meaning if a design available already.
+	// Otherwise the component needs to be updated internally with one.
+	protected void updateShape()
+	{
+		if(getDesign() != null)
+		{
+			getDesign().updateDefaultShape(this);
+		}
 	}
 }

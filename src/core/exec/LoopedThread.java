@@ -1,7 +1,5 @@
 package core.exec;
 
-import core.feature.Timer;
-
 public abstract class LoopedThread
 {
 	private Thread loop = null;
