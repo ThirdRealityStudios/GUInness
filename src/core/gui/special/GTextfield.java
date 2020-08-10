@@ -19,11 +19,11 @@ public abstract class GTextfield extends GComponent
 		super("textfield", location, null, -1, title, fontSize, visible);
 		
 		if (maxInput > 0)
-			setLength(maxInput);
+			getStyle().setLength(maxInput);
 		else
 			throw new IllegalArgumentException("Maximum length must be 1 or longer!");
 
-		if (title.length() <= getLength())
+		if (title.length() <= getStyle().getLength())
 			setValue(title);
 		else
 			throw new IllegalArgumentException("Title length is bigger than the specified maximum length!");
@@ -36,28 +36,28 @@ public abstract class GTextfield extends GComponent
 	
 	public void setActive()
 	{
-		if(getPrimaryColor() == null)
+		if(getStyle().getPrimaryColor() == null)
 		{
 			return;
 		}
 		
-		setBufferedColor(getPrimaryColor());
+		getStyle().setBufferedColor(getStyle().getPrimaryColor());
 		
-		setPrimaryColor(getColorClicked());
+		getStyle().setPrimaryColor(getColorClicked());
 		
 		active = true;
 	}
 	
 	public void setInactive()
 	{
-		if(getBufferedColor() == null)
+		if(getStyle().getBufferedColor() == null)
 		{
 			return;
 		}
 		
-		setPrimaryColor(getBufferedColor());
+		getStyle().setPrimaryColor(getStyle().getBufferedColor());
 		
-		setBufferedColor(null);
+		getStyle().setBufferedColor(null);
 		
 		active = false;
 	}

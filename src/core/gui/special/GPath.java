@@ -22,10 +22,10 @@ public class GPath extends GComponent
 		Rectangle bounds = path.getBounds();
 		Rectangle rect = new Rectangle(location.x, location.y, bounds.width, bounds.height);
 		
-		setShape(rect);
+		getStyle().setShape(rect);
 		
 		setPath(path);
-		setPrimaryColor(drawColor); // The "primary color" of GComponent is used as the "draw color".
+		getStyle().setPrimaryColor(drawColor); // The "primary color" of GComponent is used as the "draw color".
 		setFill(fill);
 	}
 

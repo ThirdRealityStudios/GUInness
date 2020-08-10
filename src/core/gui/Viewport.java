@@ -58,9 +58,9 @@ public class Viewport extends JPanel
 		// Render all EasyDraw components.
 		for(GComponent edC : compOutput)
 		{
-			if(edC.isVisible())
+			if(edC.getStyle().isVisible())
 			{
-				edC.getDesign().drawContext(g, edC);
+				edC.getStyle().getDesign().drawContext(g, edC);
 			}
 		}
 	}

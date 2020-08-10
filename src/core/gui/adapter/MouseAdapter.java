@@ -191,7 +191,7 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 		// The current mouse position relative to the JFrame.
 		Point viewportCursor = new Point(desktopCursor.x - context.getLocation().x + viewportOffset.x, desktopCursor.y - context.getLocation().y + viewportOffset.y);
 		
-		return target.getShape().contains(viewportCursor);
+		return target.getStyle().getShape().contains(viewportCursor);
 	}
 	
 	// Tests if the user is clicking a component.

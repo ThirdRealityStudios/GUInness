@@ -18,8 +18,8 @@ public class GImage extends GComponent
 		
 		Rectangle rect = new Rectangle(location.x, location.y, content.getWidth(null), content.getHeight(null));
 		
-		setShape(rect);
-		setImage(content);
+		getStyle().setShape(rect);
+		getStyle().setImage(content);
 	}
 
 	public GImage(Point location, float scale, Image content, boolean visible)
@@ -30,8 +30,8 @@ public class GImage extends GComponent
 		
 		Rectangle rect = new Rectangle(location.x, location.y, scaled.width, scaled.height);
 		
-		setShape(rect);
-		setImage(content);
+		getStyle().setShape(rect);
+		getStyle().setImage(content);
 	}
 
 	public GImage(Point location, Dimension size, Image content, boolean visible)
@@ -39,9 +39,9 @@ public class GImage extends GComponent
 		super("image", location, null, 0, null, 0, visible);
 		
 		Rectangle rect = new Rectangle(location.x, location.y, size.width, size.height);
-		setShape(rect);
+		getStyle().setShape(rect);
 		
-		setImage(content);
+		getStyle().setImage(content);
 	}
 
 	public GImage(Point location, int length, boolean useAsWidth, Image content, boolean visible)
@@ -52,8 +52,8 @@ public class GImage extends GComponent
 		
 		Rectangle rect = new Rectangle(location.x, location.y, scaled.width, scaled.height);
 		
-		setShape(rect);
-		setImage(content);
+		getStyle().setShape(rect);
+		getStyle().setImage(content);
 	}
 
 	@Override

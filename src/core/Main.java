@@ -61,14 +61,14 @@ public class Main
 			@Override
 			public void onClick()
 			{
-				img0.setVisible(!img0.isVisible());
-				this.setValue((img0.isVisible() ? "Hide again " : "Show ") + "image");
+				img0.getStyle().setVisible(!img0.getStyle().isVisible());
+				this.setValue((img0.getStyle().isVisible() ? "Hide again " : "Show ") + "image");
 			}
 		};
 
-		start.actsOnHover(false);
-		start.actsOnClick(true);
-		start.setRealtimeExecution(false); // This will run parallel (with threads) which is in some cases faster (of course unnecessary if you just want to print something to the console).
+		start.getLogic().setActionOnHover(false);
+		start.getLogic().setActionOnClick(true);
+		start.getLogic().setMultithreading(false); // This will run parallel (with threads) which is in some cases faster (of course unnecessary if you just want to print something to the console).
 
 		exit = new GButton(new Point(20, 150), "EXIT", 20, true)
 		{
@@ -86,8 +86,8 @@ public class Main
 			}
 		};
 
-		exit.actsOnHover(false);
-		exit.actsOnClick(true);
+		exit.getLogic().setActionOnHover(false);
+		exit.getLogic().setActionOnClick(true);
 
 		input1 = new GTextfield(new Point(20, 300), "GERMAN", 10, 20, true)
 		{
@@ -98,8 +98,8 @@ public class Main
 			}
 		};
 		
-		input1.setInteraction(false);
-		input1.actsOnClick(false);
+		input1.getLogic().setInteractable(false);
+		input1.getLogic().setActionOnClick(false);
 
 		input2 = new GTextfield(new Point(20, 375), "DEUTSCH", 10, 20, true)
 		{
@@ -122,7 +122,7 @@ public class Main
 		Image i = Loader.loadImage("C:\\Users\\Hameg\\Desktop\\4.jpg");
 
 		img0 = new GImage(new Point(0, 0), 600, false , i, true);
-		img0.actsOnHover(false);
+		img0.getLogic().setActionOnHover(false);
 	}
 
 	public void setupLayer0()
