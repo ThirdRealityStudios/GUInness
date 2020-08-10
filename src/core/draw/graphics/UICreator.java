@@ -20,17 +20,17 @@ public class UICreator
 
 	public void createText(Graphics g, GComponent c)
 	{
-		Rectangle bounds = c.getShape().getBounds();
+		Rectangle bounds = c.getStyle().getShape().getBounds();
 		
 		g.setColor(design.getBorderColor());
 		g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 		
-		int titleWidth = c.getFontSize() * c.getValue().length();
+		int titleWidth = c.getStyle().getFontSize() * c.getValue().length();
 
 		g.setColor(design.getBackgroundColor());
-		g.fillRect(bounds.x + design.getBorderThickness(), bounds.y + design.getBorderThickness(), titleWidth + 2 * design.getInnerThickness(), c.getFontSize() + 2 * design.getInnerThickness());
+		g.fillRect(bounds.x + design.getBorderThickness(), bounds.y + design.getBorderThickness(), titleWidth + 2 * design.getInnerThickness(), c.getStyle().getFontSize() + 2 * design.getInnerThickness());
 
-		fL.display(g, c.getValue(), bounds.x + design.getInnerThickness() + design.getBorderThickness(), bounds.y + design.getInnerThickness() + design.getBorderThickness(), c.getFontSize(), design.getFontColor());
+		fL.display(g, c.getValue(), bounds.x + design.getInnerThickness() + design.getBorderThickness(), bounds.y + design.getInnerThickness() + design.getBorderThickness(), c.getStyle().getFontSize(), design.getFontColor());
 	}
 
 	public FontLoader getFontLoader()

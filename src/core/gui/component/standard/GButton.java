@@ -41,7 +41,7 @@ public abstract class GButton extends GComponent
 
 		this.value = title;
 		
-		setLength(getValue().length());
+		getStyle().setLength(getValue().length());
 
 		updateShape();
 	}

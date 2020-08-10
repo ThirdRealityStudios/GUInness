@@ -25,7 +25,7 @@ public class Classic extends Design
 	// This is a "pre-method".
 	public void drawContext(Graphics g, GComponent c)
 	{
-		Rectangle bounds = c.getShape().getBounds();
+		Rectangle bounds = c.getStyle().getShape().getBounds();
 		
 		// For the case there is an image supplied to the GComponent object,
 		// it is considered to be rendered.
@@ -35,7 +35,7 @@ public class Classic extends Design
 		{
 			case "image":
 			{				
-				g.drawImage(c.getImage(), bounds.getLocation().x, bounds.getLocation().y, bounds.width, bounds.height, null);
+				g.drawImage(c.getStyle().getImage(), bounds.getLocation().x, bounds.getLocation().y, bounds.width, bounds.height, null);
 				
 				break;
 			}
@@ -46,7 +46,7 @@ public class Classic extends Design
 				
 				Graphics2D g2d = (Graphics2D) g;
 
-				g2d.setColor(path.getPrimaryColor());
+				g2d.setColor(path.getStyle().getPrimaryColor());
 
 				if(path.isFill())
 				{
@@ -65,12 +65,12 @@ public class Classic extends Design
 				g.setColor(getBorderColor());
 				g.fillRect(bounds.getLocation().x, bounds.getLocation().y, bounds.getSize().width, bounds.getSize().height);
 				
-				int titleWidth = c.getFontSize() * c.getValue().length();
+				int titleWidth = c.getStyle().getFontSize() * c.getValue().length();
 
 				g.setColor(getBackgroundColor());
-				g.fillRect(bounds.getLocation().x + getBorderThickness(), bounds.getLocation().y + getBorderThickness(), titleWidth + 2 * getInnerThickness(), c.getFontSize() + 2 * getInnerThickness());
+				g.fillRect(bounds.getLocation().x + getBorderThickness(), bounds.getLocation().y + getBorderThickness(), titleWidth + 2 * getInnerThickness(), c.getStyle().getFontSize() + 2 * getInnerThickness());
 
-				getFontLoader().display(g, c.getValue(), bounds.getLocation().x + getInnerThickness() + getBorderThickness(), bounds.getLocation().y + getInnerThickness() + getBorderThickness(), c.getFontSize(), getFontColor());
+				getFontLoader().display(g, c.getValue(), bounds.getLocation().x + getInnerThickness() + getBorderThickness(), bounds.getLocation().y + getInnerThickness() + getBorderThickness(), c.getStyle().getFontSize(), getFontColor());
 			
 				break;
 			}
@@ -84,27 +84,27 @@ public class Classic extends Design
 
 	protected void drawDefault(Graphics g, GComponent c)
 	{
-		Rectangle bounds = c.getShape().getBounds();
+		Rectangle bounds = c.getStyle().getShape().getBounds();
 
 		g.setColor(getBorderColor());
 
 		g.fillRect(bounds.getLocation().x, bounds.getLocation().y, bounds.getSize().width, bounds.getSize().height);
 
-		int titleWidth = c.getFontSize() * c.getValue().length();
+		int titleWidth = c.getStyle().getFontSize() * c.getValue().length();
 
-		g.setColor(c.getPrimaryColor());
-		g.fillRect(bounds.getLocation().x + getBorderThickness(), bounds.getLocation().y + getBorderThickness(), titleWidth + 2 * getInnerThickness(), c.getFontSize() + 2 * getInnerThickness());
+		g.setColor(c.getStyle().getPrimaryColor());
+		g.fillRect(bounds.getLocation().x + getBorderThickness(), bounds.getLocation().y + getBorderThickness(), titleWidth + 2 * getInnerThickness(), c.getStyle().getFontSize() + 2 * getInnerThickness());
 
-		getFontLoader().display(g, c.getValue(), bounds.getLocation().x + getInnerThickness() + getBorderThickness(), bounds.getLocation().y + getInnerThickness() + getBorderThickness(), c.getFontSize(), getFontColor());
+		getFontLoader().display(g, c.getValue(), bounds.getLocation().x + getInnerThickness() + getBorderThickness(), bounds.getLocation().y + getInnerThickness() + getBorderThickness(), c.getStyle().getFontSize(), getFontColor());
 	}
 
 	// Returns a determined shape which uses the design defined in this class.
 	public Rectangle generateDefaultShape(GComponent c)
 	{		
 		// Calculates the correct size of the rectangle for the text component.
-		Dimension backgroundSize = new Dimension(c.getLength() * c.getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness(), c.getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness());
+		Dimension backgroundSize = new Dimension(c.getStyle().getLength() * c.getStyle().getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness(), c.getStyle().getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness());
 
-		Rectangle rect = new Rectangle(c.getLocation(), backgroundSize);
+		Rectangle rect = new Rectangle(c.getStyle().getLocation(), backgroundSize);
 		
 		return rect;
 	}
@@ -115,6 +115,6 @@ public class Classic extends Design
 	{
 		Shape recalculated = generateDefaultShape(c);
 		
-		c.setShape(recalculated);
+		c.getStyle().setShape(recalculated);
 	}
 }

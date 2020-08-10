@@ -90,7 +90,7 @@ public class ComponentHandler
 
 	private void executeClick(GComponent execute)
 	{
-		if(execute.isRealtimeExecutionOn())
+		if(execute.getLogic().isMultithreadingOn())
 		{
 			Thread t = new Thread() // Run this task parallel so execution doesn't interfere other components or
 									// interactions with the UI.
@@ -109,12 +109,12 @@ public class ComponentHandler
 			execute.onClick();
 		}
 
-		Timer.pauseMillisecond(execute.getDelayMilliseconds());
+		Timer.pauseMillisecond(execute.getLogic().getDelayMs());
 	}
 
 	private void executeHover(GComponent execute)
 	{
-		if(execute.isRealtimeExecutionOn())
+		if(execute.getLogic().isMultithreadingOn())
 		{
 			Thread t = new Thread() // Run this task parallel so execution doesn't interfere other components or
 									// interactions with the UI.
@@ -133,7 +133,7 @@ public class ComponentHandler
 			execute.onHover();
 		}
 
-		Timer.pauseMillisecond(execute.getDelayMilliseconds());
+		Timer.pauseMillisecond(execute.getLogic().getDelayMs());
 	}
 
 	// Is responsible for firing the implemented functions by the component.
@@ -142,7 +142,7 @@ public class ComponentHandler
 		if(clicking) // relates to text-fields only.
 		{
 			boolean canTextfieldBeFocussed = focused != null && focused.getType().contentEquals("textfield")
-					&& focused.isInteractionEnabled() && focused.actsOnClick();
+					&& focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnClick();
 
 			if(canTextfieldBeFocussed)
 			{
@@ -161,10 +161,10 @@ public class ComponentHandler
 		// text it contains gets changed.
 		// If there is no key delivered (KeyEvent.VK_UNDEFING), this part is ignored
 		// for faster execution.
-		if(textfield != null && !(keyStroke == KeyEvent.VK_UNDEFINED) && focused.isInteractionEnabled()
-				&& focused.actsOnClick())
+		if(textfield != null && !(keyStroke == KeyEvent.VK_UNDEFINED) && focused.getLogic().isInteractionAllowed()
+				&& focused.getLogic().isActingOnClick())
 		{
-			boolean isDeviceControlCode = textfield.getDesign().getFontLoader().isDeviceControlCode(keyStroke);
+			boolean isDeviceControlCode = textfield.getStyle().getDesign().getFontLoader().isDeviceControlCode(keyStroke);
 
 			if(isDeviceControlCode && !textfield.isCursorAtEnd())
 			{
@@ -189,7 +189,7 @@ public class ComponentHandler
 
 		if(focused != null)
 		{
-			if(focused.isInteractionEnabled() && focused.actsOnHover()) // ask whether it should run the onHover()
+			if(focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnHover()) // ask whether it should run the onHover()
 																		// method if wished by the components
 																		// configuration.
 			{
@@ -198,13 +198,13 @@ public class ComponentHandler
 				executeHover(focused);
 			}
 
-			if(clicking && focused.isInteractionEnabled() && focused.actsOnClick()) // ask whether it should run the
+			if(clicking && focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnClick()) // ask whether it should run the
 																					// onClick() method if wished by the
 																					// components configuration.
 			{
 				// Make sure the user cannot double click the same component multiple times if
 				// it is unwanted.
-				if(!doubleClicked || focused.isDoubleClickingAllowed())
+				if(!doubleClicked || focused.getLogic().isDoubleClickingAllowed())
 				{
 					// This will decide internally whether the component is being executed by
 					// threads or in sequence order.
@@ -226,19 +226,19 @@ public class ComponentHandler
 				{
 					// The next two booleans prevent the redraw algorithm to run again if there was
 					// no change in color..
-					boolean activeColorIsSame = focused.getPrimaryColor().equals(focused.getDesign().getActiveColor());
-					boolean hoverColorIsSame = focused.getPrimaryColor().equals(focused.getDesign().getHoverColor());
+					boolean activeColorIsSame = focused.getStyle().getPrimaryColor().equals(focused.getStyle().getDesign().getActiveColor());
+					boolean hoverColorIsSame = focused.getStyle().getPrimaryColor().equals(focused.getStyle().getDesign().getHoverColor());
 					
 					if(clicking)
 					{
 						if(!activeColorIsSame)
 						{
-							focused.setPrimaryColor(focused.getDesign().getActiveColor());
+							focused.getStyle().setPrimaryColor(focused.getStyle().getDesign().getActiveColor());
 						}
 					}
 					else if(!hoverColorIsSame)
 					{
-						focused.setPrimaryColor(focused.getDesign().getHoverColor());
+						focused.getStyle().setPrimaryColor(focused.getStyle().getDesign().getHoverColor());
 
 						// When hovering (once!) over a button the cursor is changed.
 						display.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -269,7 +269,7 @@ public class ComponentHandler
 						{
 							case "button":
 							{
-								lastlyFocused.setPrimaryColor(lastlyFocused.getDesign().getBackgroundColor());
+								lastlyFocused.getStyle().setPrimaryColor(lastlyFocused.getStyle().getDesign().getBackgroundColor());
 							}
 						}
 					}

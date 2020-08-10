@@ -67,7 +67,7 @@ public class GLayer implements Comparable<GLayer>, Serializable
 		{
 			// Checks whether both components would be in conflict with each other when appearing at the same position.
 			// In future there needs to be function which is able to test shapes regardless of whether it is a rectangle or something else.
-			if(check.getShape().intersects(comp.getShape().getBounds2D()))
+			if(check.getStyle().getShape().intersects(comp.getStyle().getShape().getBounds2D()))
 			{
 				return false;
 			}
@@ -94,18 +94,18 @@ public class GLayer implements Comparable<GLayer>, Serializable
 	// the supplied design of the GLayer is used.
 	private void updateDesign(GComponent comp)
 	{
-		boolean isNoDesignAppliedYet = comp.getDesign() == null;
+		boolean isNoDesignAppliedYet = comp.getStyle().getDesign() == null;
 
 		if(isNoDesignAppliedYet)
 		{
-			comp.setDesign(getDesign());
+			comp.getStyle().setDesign(getDesign());
 		}
 
 		boolean updateForShapeNecessary = !comp.getType().contentEquals("image");
 
 		if(updateForShapeNecessary)
 		{
-			comp.getDesign().updateDefaultShape(comp);
+			comp.getStyle().getDesign().updateDefaultShape(comp);
 		}
 	}
 
