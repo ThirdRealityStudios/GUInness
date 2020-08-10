@@ -16,12 +16,16 @@ public class GLayer implements Comparable<GLayer>, Serializable
 	private static final long serialVersionUID = Meta.serialVersionUID;
 	
 	private UUID id;
+	
+	// Determine whether the layer should be enabled or not.
+	// If it's disabled, it is not just invisible but also you cannot interact with it anymore (including all components of course).
+	private boolean enabled = true;
 
 	private CopyOnWriteArrayList<GComponent> compBuffer;
 
 	private int priority;
 
-	private boolean visible;
+	private boolean visible = true;
 	
 	private Design design;
 
@@ -115,6 +119,10 @@ public class GLayer implements Comparable<GLayer>, Serializable
 		{
 			updateDesign(comp);
 			
+			// Make sure all components are "synchronized" with the same settings as the layer.
+			comp.setEnabled(isEnabled());
+			comp.getStyle().setVisible(isVisible());
+			
 			compBuffer.add(comp);
 		}
 		else
@@ -134,6 +142,22 @@ public class GLayer implements Comparable<GLayer>, Serializable
 	{
 		this.priority = priority;
 	}
+	
+	private void setAllComponentsVisible(boolean visible)
+	{
+		for(GComponent current : compBuffer)
+		{
+			current.getStyle().setVisible(visible);
+		}
+	}
+	
+	private void setAllComponentsEnabled(boolean enabled)
+	{
+		for(GComponent current : compBuffer)
+		{
+			current.setEnabled(enabled);
+		}
+	}
 
 	public boolean isVisible()
 	{
@@ -143,6 +167,8 @@ public class GLayer implements Comparable<GLayer>, Serializable
 	public void setVisible(boolean visible)
 	{
 		this.visible = visible;
+		
+		setAllComponentsVisible(visible);
 	}
 
 	public UUID getUUID()
@@ -153,6 +179,18 @@ public class GLayer implements Comparable<GLayer>, Serializable
 	protected void setSize(Dimension size)
 	{
 		this.size = size;
+	}
+	
+	public boolean isEnabled()
+	{
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled)
+	{
+		this.enabled = enabled;
+		
+		setAllComponentsEnabled(enabled);
 	}
 
 	@Override

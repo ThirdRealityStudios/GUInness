@@ -22,7 +22,7 @@ public class ComponentHandler
 	private LoopedThread handler = null;
 
 	private Display display;
-
+ 
 	private ThreadManager hoverTManager, clickTManager;	
 
 	// If there was a text-field selected, it will be stored here for a time.
@@ -73,7 +73,7 @@ public class ComponentHandler
 		{
 			for(GLayer layer : viewport.getLayers())
 			{
-				if(!layer.isVisible())
+				if(!layer.isVisible() && layer.isEnabled())
 				{
 					display.getViewport().applyChanges();
 				}
@@ -310,10 +310,30 @@ public class ComponentHandler
 		hoveredYet = focused;
 	}
 
+	// This will trigger the component where the user has performed an action at.
+	// Anyway, keep in mind that a component can only be triggered if it is also enabled (see 'isEnabled()' at GComponent).
 	private void triggerComponent()
 	{
 		GComponent focused = display.getEventHandler().getMouseDriver().getFocusedComponent();
+		
+		/*
+		 *  WARNING! The code below is executed only under certain circumstances ! ! !
+		 *  
+		 *  Make sure the UI is only treated / handled when the component is also enabled.
+		 */
+		if(focused != null && !focused.isEnabled())
+		{
+			preEvaluateEvents(focused);
+			
+			// Pretend there was no component detected.
+			postEvaluateEvents(false, null);
+			
+			// The remaining part of the code is not executed.
+			return;
+		}
 
+		// If the execution goes until here, it will be triggered in the next steps.
+		
 		preEvaluateEvents(focused);
 
 		boolean clicking = display.getEventHandler().getMouseDriver().isClicking();

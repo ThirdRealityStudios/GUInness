@@ -27,7 +27,7 @@ public class Main
 	
 	private GDescription description;
 
-	private GLayer layer0, layer1;
+	private GLayer layer0, layer1, layer2;
 	
 	private final Color brightGray = new Color(0.7f, 0.7f, 0.7f);
 	
@@ -49,7 +49,7 @@ public class Main
 		
 		display.setViewport(new Viewport(display.getEventHandler()));
 		
-		start = new GButton(new Point(20, 75), "Hide image", 20, true)
+		start = new GButton(new Point(20, 75), "Disable second layer", 20, true)
 		{
 			@Override
 			
@@ -61,8 +61,8 @@ public class Main
 			@Override
 			public void onClick()
 			{
-				img0.getStyle().setVisible(!img0.getStyle().isVisible());
-				this.setValue((img0.getStyle().isVisible() ? "Hide again " : "Show ") + "image");
+				layer2.setEnabled(!layer2.isEnabled());
+				setValue((layer2.isEnabled() ? "Disable again " : "Enable ") + "second layer");
 			}
 		};
 
@@ -125,7 +125,7 @@ public class Main
 		img0.getLogic().setActionOnHover(false);
 	}
 
-	public void setupLayer0()
+	public void setupLayers()
 	{
 		description = new GDescription(new Point(20, 520), "Money here for nothing!", 25, true);
 		
@@ -134,13 +134,14 @@ public class Main
 		
 		layer0.add(img0);
 		
-		layer1.add(description);
-		layer1.add(exit);
 		layer1.add(start);
 		
-		layer1.add(input3);
-		layer1.add(input2);
-		layer1.add(input1);
+		layer2.add(description);
+		layer2.add(exit);
+		
+		layer2.add(input3);
+		layer2.add(input2);
+		layer2.add(input1);
 	}
 
 	public void run()
@@ -153,10 +154,12 @@ public class Main
 
 		layer0 = new GLayer(0, true);
 		layer1 = new GLayer(1, true);
-
-		setupLayer0();
+		layer2 = new GLayer(2, true);
+		
+		setupLayers();
 
 		display.getViewport().addLayer(layer0);
 		display.getViewport().addLayer(layer1);
+		display.getViewport().addLayer(layer2);
 	}
 }
