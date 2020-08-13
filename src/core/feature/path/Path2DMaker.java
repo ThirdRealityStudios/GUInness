@@ -1,9 +1,9 @@
-package core.draw.path;
+package core.feature.path;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
-import core.draw.shape.ShapeMaker;
+import core.feature.shape.ShapeMaker;
 
 public class Path2DMaker
 {

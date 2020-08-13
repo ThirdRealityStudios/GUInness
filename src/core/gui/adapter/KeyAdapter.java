@@ -95,4 +95,11 @@ public class KeyAdapter implements KeyListener
 	{
 		return (char) keyTyped;
 	}
+	
+	// Checks whether the given key is a control code,
+	// e.g. alert or 0 (device should do nothing).
+	public boolean isDeviceControlCode(int key)
+	{
+		return key > 31 && key < 127 || key > 127 && key < 65535;
+	}
 }

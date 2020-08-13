@@ -4,14 +4,15 @@ import java.awt.Point;
 
 import core.Meta;
 import core.gui.component.GComponent;
+import core.gui.font.Font;
 
 public abstract class GButton extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 	
-	public GButton(Point location, String title, int fontSize, boolean visible)
+	public GButton(Point location, String title, Font font, boolean visible)
 	{
-		super("button", location, null, title.length(), title, fontSize, visible);
+		super("button", location, null, title.length(), title, font, visible);
 		
 		// This method is always called after the base values have been set, e.g. font size.
 		updateShape();

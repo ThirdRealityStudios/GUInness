@@ -4,7 +4,8 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
 
-import core.feature.Loader;
+import core.feature.Path;
+import core.feature.image.ImageToolkit;
 import core.gui.Display;
 import core.gui.Viewport;
 import core.gui.component.standard.GButton;
@@ -13,6 +14,7 @@ import core.gui.special.GTextfield;
 import core.gui.component.standard.GDescription;
 import core.gui.design.Classic;
 import core.gui.design.Design;
+import core.gui.font.Font;
 import core.gui.layer.GLayer;
 
 public class Main
@@ -32,6 +34,8 @@ public class Main
 	private final Color brightGray = new Color(0.7f, 0.7f, 0.7f);
 	
 	private Design design;
+	
+	private Font default1 = new Font("default1", Font.getDefaultFilepath(), 25), default2 = new Font("default2", Font.getDefaultFilepath());
 
 	public static void main(String[] args)
 	{
@@ -43,13 +47,15 @@ public class Main
 
 	public void init()
 	{
+		default1.setFontColor(Color.RED);
+		
 		design = new Classic(Color.BLACK, Color.LIGHT_GRAY, Color.DARK_GRAY, Color.GRAY, Color.BLACK, 5, 1);
 
 		display = new Display();
 		
 		display.setViewport(new Viewport(display.getEventHandler()));
 		
-		start = new GButton(new Point(20, 75), "Disable second layer", 20, true)
+		start = new GButton(new Point(20, 75), "Disable second layer", default2, true)
 		{
 			@Override
 			
@@ -70,7 +76,7 @@ public class Main
 		start.getLogic().setActionOnClick(true);
 		start.getLogic().setMultithreading(false); // This will run parallel (with threads) which is in some cases faster (of course unnecessary if you just want to print something to the console).
 
-		exit = new GButton(new Point(20, 150), "EXIT", 20, true)
+		exit = new GButton(new Point(20, 150), "EXIT", default1, true)
 		{
 			@Override
 			public void onHover()
@@ -89,7 +95,7 @@ public class Main
 		exit.getLogic().setActionOnHover(false);
 		exit.getLogic().setActionOnClick(true);
 
-		input1 = new GTextfield(new Point(20, 300), "GERMAN", 10, 20, true)
+		input1 = new GTextfield(new Point(20, 300), "GERMAN", 10, default2, true)
 		{
 			@Override
 			public void onHover()
@@ -101,7 +107,7 @@ public class Main
 		input1.getLogic().setInteractable(false);
 		input1.getLogic().setActionOnClick(false);
 
-		input2 = new GTextfield(new Point(20, 375), "DEUTSCH", 10, 20, true)
+		input2 = new GTextfield(new Point(20, 375), "DEUTSCH", 10, default2, true)
 		{
 			@Override
 			public void onHover()
@@ -110,7 +116,7 @@ public class Main
 			}
 		};
 
-		input3 = new GTextfield(new Point(20, 450), "ALEMAN", 10, 20, true)
+		input3 = new GTextfield(new Point(20, 450), "ALEMAN", 10, default2, true)
 		{
 			@Override
 			public void onHover()
@@ -119,7 +125,7 @@ public class Main
 			}
 		};
 
-		Image i = Loader.loadImage("C:\\Users\\Hameg\\Desktop\\4.jpg");
+		Image i = ImageToolkit.loadImage("C:\\Users\\Hameg\\Desktop\\4.jpg");
 
 		img0 = new GImage(new Point(0, 0), 600, false , i, true);
 		img0.getLogic().setActionOnHover(false);
@@ -127,7 +133,7 @@ public class Main
 
 	public void setupLayers()
 	{
-		description = new GDescription(new Point(20, 520), "Money here for nothing!", 25, true);
+		description = new GDescription(new Point(20, 520), "Money here for nothing!", default2, true);
 		
 		//layer0.add(new GPath(design, Path2DMaker.makeRectangle(0, 0, 200, 300), Color.RG, true, new Point(0, 300), true));
 		//layer0.add(new GPath(design, Path2DMaker.makeRectangle(0, 0, 800, 30), Color.PINK, true, new Point(100, 300), true));

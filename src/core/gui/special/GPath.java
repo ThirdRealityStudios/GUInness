@@ -17,7 +17,7 @@ public class GPath extends GComponent
 
 	public GPath(Path2D.Double path, Color drawColor, boolean fill, Point location, boolean visible)
 	{
-		super("path", location, null, 0, null, 0, visible);
+		super("path", location, null, 0, null, null, visible);
 		
 		Rectangle bounds = path.getBounds();
 		Rectangle rect = new Rectangle(location.x, location.y, bounds.width, bounds.height);
