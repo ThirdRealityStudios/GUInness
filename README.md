@@ -1,4 +1,4 @@
-A simple tool to draw graphical objects and create GUI environments.
+A simple tool to draw graphical objects and create custom GUI environments.
 
 If you want to test this API first, you can just download the binaries ("bin"-folder) and run the Main.class file.
 It will give you a look through all the features which are available currently.
