@@ -1,6 +1,6 @@
 A simple tool to draw graphical objects and create GUI environments.
 
-If you want to test this API first you can just download the binaries and run the Main.class file.
+If you want to test this API first, you can just download the binaries ("bin"-folder) and run the Main.class file.
 It will give you a look through all the features which are available currently.
 Don't get too frustrated by the old graphics as you can actually overwrite the whole design easily.
 Currently, the focus of the development goes on solidity and stability before anything else.
