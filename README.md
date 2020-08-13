@@ -65,3 +65,8 @@ If these points are also really guaranteed the next step would it be theoretical
 
 # Documentation
 Will follow at the final release.
+
+# Donations (via LiteCoin)
+If you maybe have some LiteCoins and want to send a little donation,
+you can do so with this wallet address:
+(will follow)
