@@ -20,7 +20,7 @@ GUInness already uses the "paintMethod(Graphics g)"-method in order to realize t
 As you probably know, that's not the approach for AAA-Games, nor you can expect high-resoluted graphics.
 Anyway, the limits of GUInness and Swing have not been reached yet in terms of rendering and quality.
 If you just want to build a simple GUI which is easy-to-use and fast-to-build then you are also defintely right here.
-GUInness is also an alternative to the yet largely-used Swing library.
+GUInness is also an alternative to the yet largely-used Swing library, meaning the components.
 Of course, there are still a lot of features to be added in order to be at least a little competetive.
 
 
