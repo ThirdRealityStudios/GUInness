@@ -6,18 +6,20 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 
 import core.Meta;
+import core.feature.Path;
+import core.feature.image.ImageToolkit;
 import core.gui.component.GComponent;
+import core.gui.font.Font;
 
 public class GCheckbox extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
-	
-	public GCheckbox(String type, Point location, Shape shape, int length, String val, int fontSize, boolean visible)
+
+	public GCheckbox(String type, Point location, Shape shape, int length, String val, Font font, boolean visible)
 	{
-		super("checkbox", location, new Rectangle(new Point(location), new Dimension(50,50)), 0, "", 0, visible);
+		super("checkbox", location, new Rectangle(new Point(location), new Dimension(50,50)), 0, "", null, visible);
 		
-		// The 'value' attribute is used as the marker, meaning if 'value' is null the checkbox is unchecked and otherwise true.
-		
+		getStyle().setImage(ImageToolkit.loadImage(Path.CORE_PATH));
 	}
 
 	@Override
@@ -34,10 +36,28 @@ public class GCheckbox extends GComponent
 		
 	}
 
+	@Deprecated
 	@Override
+	// This method is used to set the value (true (!= null) or false (null)) for the check-box.
+	// rather use the method below as it saves more memory with a boolean parameter and thus is more efficient.
 	public void setValue(String val)
 	{
-		// Implement later..
+		value = (val != null) ? "" : null;
 	}
-
+	
+	public boolean isUnchecked()
+	{
+		return getValue() == null;
+	}
+	
+	public boolean isChecked()
+	{
+		return !isUnchecked();
+	}
+	
+	// The 'value' attribute is changed here, meaning if 'value' is null then the checkbox is unchecked and otherwise true.
+	public void setChecked(boolean checked)
+	{
+		value = checked ? "" : null;
+	}
 }

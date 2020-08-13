@@ -14,7 +14,7 @@ public class GImage extends GComponent
 	
 	public GImage(Point location, Image content, boolean visible)
 	{
-		super("image", location, null, 0, null, 0, visible);
+		super("image", location, null, 0, null, null, visible);
 		
 		Rectangle rect = new Rectangle(location.x, location.y, content.getWidth(null), content.getHeight(null));
 		
@@ -24,7 +24,7 @@ public class GImage extends GComponent
 
 	public GImage(Point location, float scale, Image content, boolean visible)
 	{
-		super("image", location, null, 0, null, 0, visible);
+		super("image", location, null, 0, null, null, visible);
 		
 		Dimension scaled = new Dimension((int) (scale * content.getWidth(null)), (int) (scale * content.getHeight(null)));
 		
@@ -36,7 +36,7 @@ public class GImage extends GComponent
 
 	public GImage(Point location, Dimension size, Image content, boolean visible)
 	{
-		super("image", location, null, 0, null, 0, visible);
+		super("image", location, null, 0, null, null, visible);
 		
 		Rectangle rect = new Rectangle(location.x, location.y, size.width, size.height);
 		getStyle().setShape(rect);
@@ -46,7 +46,7 @@ public class GImage extends GComponent
 
 	public GImage(Point location, int length, boolean useAsWidth, Image content, boolean visible)
 	{
-		super("image", location, null, 0, null, 0, visible);
+		super("image", location, null, 0, null, null, visible);
 		
 		Dimension scaled = useAsWidth ? new Dimension(length, (int) (((float) length / content.getWidth(null)) * content.getHeight(null))) : new Dimension((int) (((float) length / content.getHeight(null)) * content.getWidth(null)), length);
 		

@@ -1,12 +1,21 @@
-package core.draw.image;
+package core.feature.image;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
-public class Manipulation
+import javax.swing.ImageIcon;
+
+public class ImageToolkit
 {
+	public static Image loadImage(String path)
+	{
+		return new ImageIcon(Toolkit.getDefaultToolkit().createImage(path)).getImage();
+	}
+	
 	public static BufferedImage colorize(BufferedImage image, Color color)
     {
         int w = image.getWidth();

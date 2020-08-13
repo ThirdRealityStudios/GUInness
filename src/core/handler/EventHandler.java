@@ -127,12 +127,12 @@ public class EventHandler
 		return registeredLayers;
 	}
 
-	public MouseAdapter getMouseDriver()
+	public MouseAdapter getMouseAdapter()
 	{
 		return mouseDriver;
 	}
 
-	public KeyAdapter getKeyboardDriver()
+	public KeyAdapter getKeyAdapter()
 	{
 		return keyboardDriver;
 	}

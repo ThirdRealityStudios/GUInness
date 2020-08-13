@@ -4,6 +4,7 @@ import java.awt.Point;
 
 import core.Meta;
 import core.gui.component.GComponent;
+import core.gui.font.Font;
 
 public class GDescription extends GComponent
 {
@@ -11,9 +12,9 @@ public class GDescription extends GComponent
 	
 	private boolean interaction = true;
 	
-	public GDescription(Point location, String title, int fontSize, boolean visible)
+	public GDescription(Point location, String title, Font font, boolean visible)
 	{
-		super("description", location, null, title.length(), title, fontSize, visible);
+		super("description", location, null, title.length(), title, font, visible);
 		
 		updateShape();
 	}

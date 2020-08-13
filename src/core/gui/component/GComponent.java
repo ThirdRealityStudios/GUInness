@@ -7,6 +7,7 @@ import java.io.Serializable;
 import core.Meta;
 import core.gui.Display;
 import core.gui.design.Sample;
+import core.gui.font.Font;
 
 public abstract class GComponent implements Serializable
 {
@@ -31,7 +32,7 @@ public abstract class GComponent implements Serializable
 	
 	private GLogic logic;
 
-	public GComponent(String type, Point location, Shape shape, int length, String val, int fontSize, boolean visible)
+	public GComponent(String type, Point location, Shape shape, int length, String val, Font font, boolean visible)
 	{
 		style = new GStyle();
 		
@@ -46,7 +47,7 @@ public abstract class GComponent implements Serializable
 		getStyle().setPrimaryColor(getStyle().getDesign().getBackgroundColor());
 		getStyle().setShape(shape);
 
-		getStyle().setFontSize(fontSize);
+		getStyle().setFont(font);
 
 		getStyle().setVisible(visible);
 
@@ -147,7 +148,7 @@ public abstract class GComponent implements Serializable
 	{
 		return getClass().hashCode() + " (class: " + this.getClass().getSimpleName() + ", type: \"" + getType()
 				+ "\"):\ndesign = " + getStyle().getDesign().getClass().getSimpleName() + "\nshape = " + getStyle().getShape() + "\nlength = "
-				+ getStyle().getLength() + "\nvalue = \"" + value + "\"\nfontSize = " + getStyle().getFontSize() + "\nvisible = " + getStyle().isVisible();
+				+ getStyle().getLength() + "\nvalue = \"" + value + "\"\nfontSize = " + getStyle().getFont().getFontSize() + "\nvisible = " + getStyle().isVisible();
 	}
 
 	public Display getDisplay()

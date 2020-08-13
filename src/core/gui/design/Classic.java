@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 
 import core.Meta;
+import core.draw.DrawToolkit;
 import core.gui.component.GComponent;
 import core.gui.special.GPath;
 
@@ -65,12 +66,12 @@ public class Classic extends Design
 				g.setColor(getBorderColor());
 				g.fillRect(bounds.getLocation().x, bounds.getLocation().y, bounds.getSize().width, bounds.getSize().height);
 				
-				int titleWidth = c.getStyle().getFontSize() * c.getValue().length();
+				int titleWidth = c.getStyle().getFont().getFontSize() * c.getValue().length();
 
 				g.setColor(getBackgroundColor());
-				g.fillRect(bounds.getLocation().x + getBorderThickness(), bounds.getLocation().y + getBorderThickness(), titleWidth + 2 * getInnerThickness(), c.getStyle().getFontSize() + 2 * getInnerThickness());
+				g.fillRect(bounds.getLocation().x + getBorderThickness(), bounds.getLocation().y + getBorderThickness(), titleWidth + 2 * getInnerThickness(), c.getStyle().getFont().getFontSize() + 2 * getInnerThickness());
 
-				getFontLoader().display(g, c.getValue(), bounds.getLocation().x + getInnerThickness() + getBorderThickness(), bounds.getLocation().y + getInnerThickness() + getBorderThickness(), c.getStyle().getFontSize(), getFontColor());
+				DrawToolkit.drawString(g, c.getValue(), bounds.getLocation().x + getInnerThickness() + getBorderThickness(), bounds.getLocation().y + getInnerThickness() + getBorderThickness(), c.getStyle().getFont());
 			
 				break;
 			}
@@ -90,19 +91,19 @@ public class Classic extends Design
 
 		g.fillRect(bounds.getLocation().x, bounds.getLocation().y, bounds.getSize().width, bounds.getSize().height);
 
-		int titleWidth = c.getStyle().getFontSize() * c.getValue().length();
+		int titleWidth = c.getStyle().getFont().getFontSize() * c.getValue().length();
 
 		g.setColor(c.getStyle().getPrimaryColor());
-		g.fillRect(bounds.getLocation().x + getBorderThickness(), bounds.getLocation().y + getBorderThickness(), titleWidth + 2 * getInnerThickness(), c.getStyle().getFontSize() + 2 * getInnerThickness());
+		g.fillRect(bounds.getLocation().x + getBorderThickness(), bounds.getLocation().y + getBorderThickness(), titleWidth + 2 * getInnerThickness(), c.getStyle().getFont().getFontSize() + 2 * getInnerThickness());
 
-		getFontLoader().display(g, c.getValue(), bounds.getLocation().x + getInnerThickness() + getBorderThickness(), bounds.getLocation().y + getInnerThickness() + getBorderThickness(), c.getStyle().getFontSize(), getFontColor());
+		DrawToolkit.drawString(g, c.getValue(), bounds.getLocation().x + getInnerThickness() + getBorderThickness(), bounds.getLocation().y + getInnerThickness() + getBorderThickness(), c.getStyle().getFont());
 	}
 
 	// Returns a determined shape which uses the design defined in this class.
 	public Rectangle generateDefaultShape(GComponent c)
 	{		
 		// Calculates the correct size of the rectangle for the text component.
-		Dimension backgroundSize = new Dimension(c.getStyle().getLength() * c.getStyle().getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness(), c.getStyle().getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness());
+		Dimension backgroundSize = new Dimension(c.getStyle().getLength() * c.getStyle().getFont().getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness(), c.getStyle().getFont().getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness());
 
 		Rectangle rect = new Rectangle(c.getStyle().getLocation(), backgroundSize);
 		

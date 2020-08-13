@@ -5,6 +5,7 @@ import java.awt.Point;
 
 import core.Meta;
 import core.gui.component.GComponent;
+import core.gui.font.Font;
 
 public abstract class GTextfield extends GComponent
 {
@@ -14,9 +15,9 @@ public abstract class GTextfield extends GComponent
 
 	private Color clicked;
 
-	public GTextfield(Point location, String title, int maxInput, int fontSize, boolean visible)
+	public GTextfield(Point location, String title, int maxInput, Font font, boolean visible)
 	{
-		super("textfield", location, null, -1, title, fontSize, visible);
+		super("textfield", location, null, -1, title, font, visible);
 		
 		if (maxInput > 0)
 			getStyle().setLength(maxInput);

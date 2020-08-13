@@ -164,7 +164,7 @@ public class ComponentHandler
 		if(textfield != null && !(keyStroke == KeyEvent.VK_UNDEFINED) && focused.getLogic().isInteractionAllowed()
 				&& focused.getLogic().isActingOnClick())
 		{
-			boolean isDeviceControlCode = textfield.getStyle().getDesign().getFontLoader().isDeviceControlCode(keyStroke);
+			boolean isDeviceControlCode = display.getEventHandler().getKeyAdapter().isDeviceControlCode(keyStroke);
 
 			if(isDeviceControlCode && !textfield.isCursorAtEnd())
 			{
@@ -314,7 +314,7 @@ public class ComponentHandler
 	// Anyway, keep in mind that a component can only be triggered if it is also enabled (see 'isEnabled()' at GComponent).
 	private void triggerComponent()
 	{
-		GComponent focused = display.getEventHandler().getMouseDriver().getFocusedComponent();
+		GComponent focused = display.getEventHandler().getMouseAdapter().getFocusedComponent();
 		
 		/*
 		 *  WARNING! The code below is executed only under certain circumstances ! ! !
@@ -336,7 +336,7 @@ public class ComponentHandler
 		
 		preEvaluateEvents(focused);
 
-		boolean clicking = display.getEventHandler().getMouseDriver().isClicking();
+		boolean clicking = display.getEventHandler().getMouseAdapter().isClicking();
 
 		// This line means if the KeyAdapter is active, then only read the currently
 		// pressed key from it.
@@ -350,7 +350,7 @@ public class ComponentHandler
 		{
 			display.getEventHandler().enableKeyboardDriver();
 
-			keyStroke = display.getEventHandler().getKeyboardDriver().getActiveKey();
+			keyStroke = display.getEventHandler().getKeyAdapter().getActiveKey();
 		}
 		else if(!display.getEventHandler().isNoKeylistenerActive())
 		{

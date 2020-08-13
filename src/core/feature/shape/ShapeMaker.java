@@ -1,4 +1,4 @@
-package core.draw.shape;
+package core.feature.shape;
 
 import java.awt.Rectangle;
 import java.awt.Shape;

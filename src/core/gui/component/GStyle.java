@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 import core.Meta;
 import core.gui.design.Design;
+import core.gui.font.Font;
 
 public class GStyle implements Serializable
 {
@@ -22,9 +23,8 @@ public class GStyle implements Serializable
 	private boolean visible = true;
 
 	private int length;
-
-	// This is the font size in pixels.
-	private int fontSize;
+	
+	private Font font;
 
 	private Color primaryColor = null, bufferedColor = null;
 
@@ -76,14 +76,14 @@ public class GStyle implements Serializable
 		this.length = length;
 	}
 
-	public int getFontSize()
+	public Font getFont()
 	{
-		return fontSize;
+		return font;
 	}
 
-	public void setFontSize(int fontSize)
+	public void setFont(Font font)
 	{
-		this.fontSize = fontSize;
+		this.font = font;
 	}
 
 	public Color getPrimaryColor()
