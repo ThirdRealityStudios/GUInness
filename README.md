@@ -69,7 +69,7 @@ Will follow at the final release.
 
 
 # Donations (via LiteCoin)
-If you maybe have some LiteCoins left and want to send a little donation,
+If you maybe have some LiteCoins left and you wouldn't mind to support this project,
 you can do so with this wallet address:
 
 MNh6pVYPHW21EtsAEgTfPBAYDXfQKEM2n6
