@@ -20,13 +20,15 @@ GUInness already uses the "paintMethod(Graphics g)"-method in order to realize t
 As you probably know, that's not the approach for AAA-Games, nor you can expect high-resoluted graphics.
 Anyway, the limits of GUInness and Swing have not been reached yet in terms of rendering and quality.
 If you just want to build a simple GUI which is easy-to-use and fast-to-build then you are also defintely right here.
-GUInness is also an alternative to the yet largely-used Swing library, meaning the components.
+GUInness is also an alternative to the yet largely-used Swing library, meaning the components it offers.
 Of course, there are still a lot of features to be added in order to be at least a little competetive.
+Last but not least GUInness is especially suitable for Java beginners due to the simple structure.
+You also do not need that much background knowledge like with Swing.
 
 
 # Features
 - GUI components organized in "layers" with priorities (kind of comparable to HTML).
-- all GUI components are very easy-to-use in terms of methods and attributes, especially suitable for Java beginners.
+- all GUI components are very easy-to-use in terms of methods and attributes.
 - dozens of very detailed error logs and comments, amongst them for better and quicker maintenance (even advices).
 - simple way to create you own design / look (by just using the classic design ("Classic.java") as a base).
 - capable of multi-threading.
