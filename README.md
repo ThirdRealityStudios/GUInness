@@ -63,10 +63,17 @@ If these points are also really guaranteed the next step would it be theoretical
 - add scalable content: components can be zoomed in/out with different levels of detail (especially for creating maps or games).
 - add hyperlinks to open links on the web.
 
+
 # Documentation
 Will follow at the final release.
+
 
 # Donations (via LiteCoin)
 If you maybe have some LiteCoins and want to send a little donation,
 you can do so with this wallet address:
-(will follow)
+
+MNh6pVYPHW21EtsAEgTfPBAYDXfQKEM2n6
+
+or
+
+litecoin:MNh6pVYPHW21EtsAEgTfPBAYDXfQKEM2n6?label=Donation
