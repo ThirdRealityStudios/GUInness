@@ -21,7 +21,7 @@ As you probably know, that's not the approach for AAA-Games, nor you can expect 
 Anyway, the limits of GUInness and Swing have not been reached yet in terms of rendering and quality.
 If you just want to build a simple GUI which is easy-to-use and fast-to-build then you are also defintely right here.
 GUInness is also an alternative to the yet largely-used Swing library, meaning the components it offers.
-Of course, there are still a lot of features to be added in order to be at least a little competetive.
+Of course, there are still a lot of features to be added in order to be at least a little "competetive".
 Last but not least GUInness is especially suitable for Java beginners due to the simple structure.
 You also do not need that much background knowledge like with Swing.
 
@@ -62,3 +62,6 @@ If these points are also really guaranteed the next step would it be theoretical
 - add complex buttons: a button which has a complex shape.
 - add scalable content: components can be zoomed in/out with different levels of detail (especially for creating maps or games).
 - add hyperlinks to open links on the web.
+
+# Documentation
+Will follow at the final release.
