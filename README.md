@@ -46,9 +46,9 @@ Of course, there are still a lot of features to be added in order to be at least
 
 # Stability and solidity first
 As already mentioned, the main goal is it to keep and improve the stability.
-For the solidity it is the case that the code is tried to be kept as small as possible.
+For the solidity it is the case that the code is tried to be kept as small and clean as possible.
 It is also important for me not to get messy with the code structure and to deliver enough comments and error messages for best maintenance.
-If these points are also really guaranteed the next step would it be to add a new feature.
+If these points are also really guaranteed the next step would it be theoretically to add a new feature.
 
 
 # Planed features
