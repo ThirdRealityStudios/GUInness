@@ -4,12 +4,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Shape;
 
 import core.Meta;
 import core.draw.DrawToolkit;
 import core.gui.component.GComponent;
+import core.gui.special.GCheckbox;
 import core.gui.special.GPath;
 
 // The classic design without which looks very retro-stylish or ugly.
@@ -73,6 +75,27 @@ public class Classic extends Design
 
 				DrawToolkit.drawString(g, c.getValue(), bounds.getLocation().x + getInnerThickness() + getBorderThickness(), bounds.getLocation().y + getInnerThickness() + getBorderThickness(), c.getStyle().getFont());
 			
+				break;
+			}
+			
+			case "checkbox":
+			{
+				// It wouldn't matter if you use 'height' or 'width' because both values are the same.
+				int size = bounds.width;
+				
+				GCheckbox checkbox = (GCheckbox) c;
+				
+				g.setColor(getBorderColor());
+				g.fillRect(bounds.getLocation().x, bounds.getLocation().y, size + getInnerThickness(), size + getInnerThickness());
+				
+				g.setColor(getBackgroundColor());
+				g.fillRect(bounds.getLocation().x + getBorderThickness(), bounds.getLocation().y + getBorderThickness(), size, size);
+
+				if(checkbox.isChecked())
+				{
+					g.drawImage(c.getStyle().getImage() , bounds.getLocation().x + 2*getBorderThickness(), bounds.getLocation().y + 2*getBorderThickness(), null);
+				}
+
 				break;
 			}
 			

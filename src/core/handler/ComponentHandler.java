@@ -10,6 +10,7 @@ import core.gui.Display;
 import core.gui.Viewport;
 import core.gui.component.GComponent;
 import core.gui.layer.GLayer;
+import core.gui.special.GCheckbox;
 
 public class ComponentHandler
 {
@@ -139,23 +140,26 @@ public class ComponentHandler
 	// Is responsible for firing the implemented functions by the component.
 	private void triggerGeneralLogic(GComponent focused, boolean clicking, int keyStroke)
 	{
-		if(clicking) // relates to text-fields only.
+		if(clicking)
 		{
-			boolean canTextfieldBeFocussed = focused != null && focused.getType().contentEquals("textfield")
-					&& focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnClick();
-
-			if(canTextfieldBeFocussed)
+			// relates to text-fields only.
 			{
-				textfield = focused;
-			}
+				boolean canTextfieldBeFocussed = focused != null && focused.getType().contentEquals("textfield")
+						&& focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnClick();
 
-			boolean shouldDefocusIt = focused != textfield;
+				if(canTextfieldBeFocussed)
+				{
+					textfield = focused;
+				}
 
-			if(shouldDefocusIt)
-			{
-				textfield = null;
+				boolean shouldDefocusIt = focused != textfield;
+
+				if(shouldDefocusIt)
+				{
+					textfield = null;
+				}
 			}
-		}
+		}		
 
 		// This is the actual part where text-fields are modified, meaning the value or
 		// text it contains gets changed.
@@ -209,6 +213,16 @@ public class ComponentHandler
 					// This will decide internally whether the component is being executed by
 					// threads or in sequence order.
 					executeClick(focused);
+					
+					// Additionally check-boxes are treated here.
+					// This will simply enable or disable the check-box this is about..
+					if(focused.getType().contentEquals("checkbox"))
+					{
+						GCheckbox checkbox = (GCheckbox) focused;
+						
+						// Just invert the current setting.
+						checkbox.setChecked(!checkbox.isChecked());
+					}
 				}
 			}
 		}
@@ -317,9 +331,9 @@ public class ComponentHandler
 		GComponent focused = display.getEventHandler().getMouseAdapter().getFocusedComponent();
 		
 		/*
-		 *  WARNING! The code below is executed only under certain circumstances ! ! !
+		 *  WARNING! The code below must be executed only under certain circumstances ! ! !
 		 *  
-		 *  Make sure the UI is only treated / handled when the component is also enabled.
+		 *  Make sure the UI is only treated / handled when the component is also enabled if you create your own component type (modification).
 		 */
 		if(focused != null && !focused.isEnabled())
 		{

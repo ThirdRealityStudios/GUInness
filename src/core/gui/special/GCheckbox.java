@@ -1,40 +1,49 @@
 package core.gui.special;
 
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Shape;
-
 import core.Meta;
 import core.feature.Path;
 import core.feature.image.ImageToolkit;
 import core.gui.component.GComponent;
-import core.gui.font.Font;
 
-public class GCheckbox extends GComponent
+public abstract class GCheckbox extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 
-	public GCheckbox(String type, Point location, Shape shape, int length, String val, Font font, boolean visible)
+	public GCheckbox(Point location, boolean checked, boolean visible)
 	{
-		super("checkbox", location, new Rectangle(new Point(location), new Dimension(50,50)), 0, "", null, visible);
+		super("checkbox", location, new Rectangle(new Point(location), new Dimension(20, 20)), 0, null, null, visible);
 		
-		getStyle().setImage(ImageToolkit.loadImage(Path.CORE_PATH));
+		init(checked);
 	}
 
-	@Override
-	public void onClick()
+	public GCheckbox(Point location, boolean checked, boolean visible, int sizePx)
 	{
-		// TODO Auto-generated method stub
+		super("checkbox", location, new Rectangle(new Point(location), new Dimension(sizePx, sizePx)), 0, null, null, visible);
 		
+		init(checked);
 	}
 
-	@Override
-	public void onHover()
+	// Just some values to be set which are equally set in both constructors.
+	private void init(boolean checked)
 	{
-		// TODO Auto-generated method stub
+		setChecked(checked);
 		
+		getStyle().setImage(ImageToolkit.loadImage(Path.GUI_PATH + "\\special\\image\\check_sign.png"));
+		
+		int size_scaled = getStyle().getShape().getBounds().width - 4*getStyle().getDesign().getBorderThickness();
+		
+		getStyle().setImage(getStyle().getImage().getScaledInstance(size_scaled, size_scaled, Image.SCALE_SMOOTH));
 	}
+	
+	@Override
+	public abstract void onClick();
+
+	@Override
+	public abstract void onHover();
 
 	@Deprecated
 	@Override
