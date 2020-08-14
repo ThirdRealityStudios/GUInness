@@ -4,11 +4,11 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
 
-import core.feature.Path;
 import core.feature.image.ImageToolkit;
 import core.gui.Display;
 import core.gui.Viewport;
 import core.gui.component.standard.GButton;
+import core.gui.special.GCheckbox;
 import core.gui.special.GImage;
 import core.gui.special.GTextfield;
 import core.gui.component.standard.GDescription;
@@ -28,6 +28,8 @@ public class Main
 	private GImage img0;
 	
 	private GDescription description;
+	
+	private GCheckbox checkbox1;
 
 	private GLayer layer0, layer1, layer2;
 	
@@ -44,21 +46,27 @@ public class Main
 		m.init();
 		m.run();
 	}
-
-	public void init()
+	
+	private void initComponents()
 	{
-		default1.setFontColor(Color.RED);
-		
-		design = new Classic(Color.BLACK, Color.LIGHT_GRAY, Color.DARK_GRAY, Color.GRAY, Color.BLACK, 5, 1);
+		checkbox1 = new GCheckbox(new Point(20, 200), false, true, 30)
+		{
+			@Override
+			public void onClick()
+			{
+				layer2.setEnabled(isChecked());
+			}
 
-		display = new Display();
-		
-		display.setViewport(new Viewport(display.getEventHandler()));
+			@Override
+			public void onHover()
+			{
+				
+			}
+		};
 		
 		start = new GButton(new Point(20, 75), "Disable second layer", default2, true)
 		{
 			@Override
-			
 			public void onHover()
 			{
 				System.out.println("Hover babe!");
@@ -69,6 +77,8 @@ public class Main
 			{
 				layer2.setEnabled(!layer2.isEnabled());
 				setValue((layer2.isEnabled() ? "Disable again " : "Enable ") + "second layer");
+				
+				checkbox1.setChecked(!layer2.isEnabled());
 			}
 		};
 
@@ -131,6 +141,19 @@ public class Main
 		img0.getLogic().setActionOnHover(false);
 	}
 
+	public void init()
+	{
+		default1.setFontColor(Color.RED);
+		
+		design = new Classic(Color.BLACK, Color.LIGHT_GRAY, Color.DARK_GRAY, Color.GRAY, Color.BLACK, 5, 1);
+
+		display = new Display();
+		
+		display.setViewport(new Viewport(display.getEventHandler()));
+		
+		initComponents();
+	}
+
 	public void setupLayers()
 	{
 		description = new GDescription(new Point(20, 520), "Money here for nothing!", default2, true);
@@ -141,6 +164,8 @@ public class Main
 		layer0.add(img0);
 		
 		layer1.add(start);
+		
+		layer1.add(checkbox1);
 		
 		layer2.add(description);
 		layer2.add(exit);
