@@ -25,6 +25,8 @@ public class GStyle implements Serializable
 	private int length;
 	
 	private Font font;
+	
+	private int paddingTop, paddingBottom;
 
 	private Color primaryColor = null, bufferedColor = null;
 
@@ -124,5 +126,25 @@ public class GStyle implements Serializable
 	public void setImage(Image img)
 	{
 		this.img = img;
+	}
+
+	public int getPaddingTop()
+	{
+		return paddingTop;
+	}
+
+	public void setPaddingTop(int paddingTop)
+	{
+		this.paddingTop = paddingTop;
+	}
+
+	public int getPaddingBottom()
+	{
+		return paddingBottom;
+	}
+
+	public void setPaddingBottom(int paddingBottom)
+	{
+		this.paddingBottom = paddingBottom;
 	}
 }

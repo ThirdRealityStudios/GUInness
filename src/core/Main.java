@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
 
+import core.feature.Path;
 import core.feature.image.ImageToolkit;
 import core.gui.Display;
 import core.gui.Viewport;
@@ -135,7 +136,7 @@ public class Main
 			}
 		};
 
-		Image i = ImageToolkit.loadImage("C:\\Users\\Hameg\\Desktop\\4.jpg");
+		Image i = ImageToolkit.loadImage(Path.CORE_PATH + "\\media\\samples\\MountainLake.jpg");
 
 		img0 = new GImage(new Point(0, 0), 600, false , i, true);
 		img0.getLogic().setActionOnHover(false);
