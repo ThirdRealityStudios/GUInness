@@ -27,6 +27,10 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	// The variable is used to calculate the mouse speed below.
 	private Point cursorLast = null;
 	
+	// Keeps the current relative location of the Viewport from the cursor.
+	// Assumed to be at (0|0) in the beginning but is refreshed afterwards.
+	private Point cursorLocation = new Point(0, 0);
+	
 	// Self-explaining: the mouse speed related to pixels per cycle.
 	private volatile double mouseSpeed = 0f;
 	
@@ -114,6 +118,10 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	{
 		// The cursor was generally just moved somewhere on the frame (false).
 		action = false;
+		
+		// Update the current cursor location relative to the Viewport.
+		// The boundaries of the Display (JFrame) are included in this retrieved location.
+		cursorLocation = mouseEvent.getPoint();
 	}
 
 	@Override
@@ -168,7 +176,7 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	// Returns the absolute current cursor location.
 	public Point getCursorLocation()
 	{
-		return MouseInfo.getPointerInfo().getLocation();
+		return cursorLocation;
 	}
 	
 	// Tests if the cursor is on the position of a component.

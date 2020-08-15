@@ -19,10 +19,10 @@ public class EventHandler
 	private ComponentHandler componentHandler = null;
 
 	// Used to receive detailed information about the mouse movement.
-	private MouseAdapter mouseDriver = null;
+	private MouseAdapter mouseAdapter = null;
 
-	// Used to receive detailed information about the keyboard activity.
-	private KeyAdapter keyboardDriver = null;
+	// Used to receive detailed information about the key interaction activity.
+	private KeyAdapter keyAdapter = null;
 
 	public EventHandler(Display display)
 	{
@@ -33,14 +33,14 @@ public class EventHandler
 
 		// Initialize the MouseAdapter with the Display context.
 		// The Display context is needed for calculating front-end-window-related mouse data.
-		mouseDriver = new MouseAdapter(display);
+		mouseAdapter = new MouseAdapter(display);
 
 		// After starting the driver (thread) you can receive movement data in real-time.
-		mouseDriver.getThread().start();
+		mouseAdapter.getThread().start();
 
 		// Initialize the KeyAdapter with the Display context.
 		// The Display context is needed for getting front-end-window-related keyboard data.
-		keyboardDriver = new KeyAdapter(display);
+		keyAdapter = new KeyAdapter(display);
 
 		registeredLayers = new CopyOnWriteArrayList<GLayer>();
 
@@ -99,10 +99,10 @@ public class EventHandler
 		System.out.println("[EventHandler]: Stopping MouseAdapter");
 
 		// Tell the MouseAdapter to stop (does not stop it directly).
-		mouseDriver.breakLoop();
+		mouseAdapter.breakLoop();
 
 		// Wait until the MouseAdapter has finished and stopped.
-		while(mouseDriver.getThread().isAlive())
+		while(mouseAdapter.getThread().isAlive())
 		{
 			System.out.println("[EventHandler]: MouseAdapter not responding..");
 			Timer.pauseSecond(1);
@@ -129,12 +129,12 @@ public class EventHandler
 
 	public MouseAdapter getMouseAdapter()
 	{
-		return mouseDriver;
+		return mouseAdapter;
 	}
 
 	public KeyAdapter getKeyAdapter()
 	{
-		return keyboardDriver;
+		return keyAdapter;
 	}
 	
 	public boolean isNoKeylistenerActive()
@@ -146,7 +146,7 @@ public class EventHandler
 	{
 		if(!isNoKeylistenerActive())
 		{
-			display.removeKeyListener(keyboardDriver);
+			display.removeKeyListener(keyAdapter);
 		}
 	}
 
@@ -154,7 +154,7 @@ public class EventHandler
 	{
 		if(isNoKeylistenerActive())
 		{
-			display.addKeyListener(keyboardDriver);
+			display.addKeyListener(keyAdapter);
 		}
 	}
 

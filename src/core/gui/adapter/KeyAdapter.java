@@ -1,5 +1,6 @@
 package core.gui.adapter;
 
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -9,7 +10,7 @@ public class KeyAdapter implements KeyListener
 {
 	private int keyActive = KeyEvent.VK_UNDEFINED, keyTyped = KeyEvent.VK_UNDEFINED;
 	
-	boolean duplicate = false;
+	private boolean duplicate = false;
 	
 	public KeyAdapter(Display context)
 	{
