@@ -36,7 +36,7 @@ public abstract class GCheckbox extends GComponent
 		
 		int size_scaled = getStyle().getShape().getBounds().width - 4*getStyle().getDesign().getBorderThickness();
 		
-		getStyle().setImage(getStyle().getImage().getScaledInstance(size_scaled, size_scaled, Image.SCALE_FAST));
+		getStyle().setImage(getStyle().getImage().getScaledInstance(size_scaled, size_scaled, Image.SCALE_SMOOTH));
 	}
 	
 	@Override
@@ -51,7 +51,7 @@ public abstract class GCheckbox extends GComponent
 	// rather use the method below as it saves more memory with a boolean parameter and thus is more efficient.
 	public void setValue(String val)
 	{
-		value = (val != null) ? "" : null;
+		setChecked((val != null));
 	}
 	
 	public boolean isUnchecked()
