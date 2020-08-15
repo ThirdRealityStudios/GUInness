@@ -17,7 +17,7 @@ public class Font
 	
 	private File file;
 	
-	private final static String defaultFilepath = Path.FONTS + "\\StandardFont.png";
+	private final static String defaultFilepath = Path.FONTS + File.separator + "StandardFont.png";
 	
 	private Color fontColor = Color.BLACK;
 	
@@ -54,6 +54,7 @@ public class Font
 			}
 			else
 			{
+				System.out.println(filepath);
 				throw new IllegalArgumentException("The constructor parameter 'filepath' is invalid.\nMake sure you have specified a valid directory and file for the path of the Font!");
 			}
 		}

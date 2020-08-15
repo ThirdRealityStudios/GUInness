@@ -3,6 +3,7 @@ package core;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
+import java.io.File;
 
 import core.feature.Path;
 import core.feature.image.ImageToolkit;
@@ -136,7 +137,7 @@ public class Main
 			}
 		};
 
-		Image i = ImageToolkit.loadImage(Path.CORE_PATH + "\\media\\samples\\MountainLake.jpg");
+		Image i = ImageToolkit.loadImage(Path.CORE_PATH + File.separator + "media" + File.separator + "samples" + File.separator + "MountainLake.jpg");
 
 		img0 = new GImage(new Point(0, 0), 600, false , i, true);
 		img0.getLogic().setActionOnHover(false);
