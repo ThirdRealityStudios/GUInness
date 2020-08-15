@@ -56,12 +56,6 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 		 *  To do so,
 		 *  you can use the given methods below.
 		 */
-		
-		// Add this MouseAdapter as a MouseListener to in order to work with the context.
-		context.addMouseListener(this);
-		
-		// Add this MouseAdapter as a MouseListener to in order to work with the context.
-		context.addMouseMotionListener(this);
 	}
 	
 	// Calculates the mouse speed with a delay of 10ms to have a difference.
@@ -189,17 +183,8 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 		// so the cursor is not over a component.
 		if(target == null)
 			return false;
-
-		// The current absolute mouse position on screen.
-		Point desktopCursor = getCursorLocation();
 		
-		// Frame offset for the relative cursor position.
-		Point viewportOffset = new Point(-8, -31);
-		
-		// The current mouse position relative to the JFrame.
-		Point viewportCursor = new Point(desktopCursor.x - context.getLocation().x + viewportOffset.x, desktopCursor.y - context.getLocation().y + viewportOffset.y);
-		
-		return target.getStyle().getShape().contains(viewportCursor);
+		return target.getStyle().getShape().contains(getCursorLocation());
 	}
 	
 	// Tests if the user is clicking a component.

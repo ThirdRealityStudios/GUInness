@@ -25,6 +25,8 @@ public class Viewport extends JPanel
 	{
 		this.eventHandler = eventHandler;
 		
+		addMouseDetection();
+		
 		compBuffer = new CopyOnWriteArrayList<GComponent>();
 		compOutput = new CopyOnWriteArrayList<GComponent>();
 		
@@ -63,6 +65,14 @@ public class Viewport extends JPanel
 				edC.getStyle().getDesign().drawContext(g, edC);
 			}
 		}
+	}
+	
+	// Adds the MouseAdapter as a Mouse(Motion)Listener in order to work with the Viewport when mouse actions have to be evaluated.
+	private void addMouseDetection()
+	{
+		addMouseListener(eventHandler.getMouseAdapter());
+		
+		addMouseMotionListener(eventHandler.getMouseAdapter());
 	}
 	
 	private CopyOnWriteArrayList<GComponent> copyComponents()
