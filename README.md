@@ -14,7 +14,7 @@ I could have used available game engines from the web but my plan was it to buil
 so that's the challenge for me.
 
 
-# Who is this API for?
+# Who Is This API For?
 As you read above the API is mainly being developed for simple 2D games which do not require such an efficient rendering API.
 GUInness already uses the "paintMethod(Graphics g)"-method in order to realize the displaying of components, graphics and more.
 As you probably know, that's not the approach for AAA-Games, nor you can expect high-resoluted graphics.
@@ -46,14 +46,14 @@ You also do not need that much background knowledge like with Swing.
 - Components tasks / actions can be executed by enabling "multi-threading" per object method.
 
 
-# Stability and solidity first
+# Stability And Solidity First
 As already mentioned, the main goal is it to keep and improve the stability.
 For the solidity it is the case that the code is tried to be kept as small and clean as possible.
 It is also important for me not to get messy with the code structure and to deliver enough comments and error messages for best maintenance.
 If these points are also really guaranteed the next step would it be theoretically to add a new feature.
 
 
-# Planed features
+# Planed Features
 - add paths
 - add checkboxes
 - add combo boxes
@@ -68,7 +68,13 @@ If these points are also really guaranteed the next step would it be theoretical
 Will follow at the final release.
 
 
-# Donations (via LiteCoin)
+# Stats / Nice To Know (as of Aug 15 2020)
+- Total lines of code: 2515
+- Code size: ~85 kB
+- Rating of code by Codacy: B (https://app.codacy.com/manual/SucukiFarmer/GUInness/dashboard)
+
+
+# Donations (Via LiteCoin)
 If you maybe have some LiteCoins left and you wouldn't mind to support this project,
 you can do so with this wallet address:
 
