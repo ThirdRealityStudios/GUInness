@@ -34,9 +34,7 @@ public class Main
 	private GCheckbox checkbox1;
 
 	private GLayer layer0, layer1, layer2;
-	
-	private final Color brightGray = new Color(0.7f, 0.7f, 0.7f);
-	
+
 	private Design design;
 	
 	private Font default1 = new Font("default1", Font.getDefaultFilepath(), 25), default2 = new Font("default2", Font.getDefaultFilepath());

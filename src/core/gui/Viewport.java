@@ -12,12 +12,19 @@ import core.gui.layer.GLayer;
 import core.handler.EventHandler;
 
 public class Viewport extends JPanel
-{	
+{
 	private static final long serialVersionUID = 1L;
 	
+	// This contains all (prioritized) layers added to this Viewport.
+	// The same priority can only exist once in a Viewport!
 	private CopyOnWriteArrayList<GLayer> layers;
 
-	private CopyOnWriteArrayList<GComponent> compBuffer, compOutput;
+	// This list contains all GComponents which are added by new layers but not yet recognized by the system.
+	private CopyOnWriteArrayList<GComponent> compBuffer;
+	
+	// After all components have been added all components are added from 'compBuffer' above.
+	// This ensures that no errors can appear while adding new layers and reduces "performance waste".
+	private CopyOnWriteArrayList<GComponent>compOutput;
 	
 	private EventHandler eventHandler;
 	
@@ -39,6 +46,8 @@ public class Viewport extends JPanel
 		}
 	}
 	
+	// The most important method for displaying all components and graphics.
+	// This is the main (recursive) loop for rendering.
 	@Override
 	public void paintComponent(Graphics g)
 	{
@@ -49,12 +58,19 @@ public class Viewport extends JPanel
 		repaint();
 	}
 	
+	// In the beginning this will just draw a background.
+	// In the sample program, a GImage is used as a background.
+	// This is why you can't see the applied background color below in the code because it is overwritten by the GImage.
 	private void drawBackground(Graphics g)
 	{
-		g.setColor(Color.BLUE);
+		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 	}
 	
+	// Draws all components from the output list 'compOutput'.
+	// When adding new layers, they are not yet added to the output directly.
+	// First, it is being waited until all (new and old) components have been read (again (for old components yet stored)).
+	// Only then the components are directly outputed by just changing the reference.
 	private void drawComponents(Graphics g)
 	{
 		// Render all GUInness components.
@@ -74,18 +90,6 @@ public class Viewport extends JPanel
 		
 		addMouseMotionListener(eventHandler.getMouseAdapter());
 	}
-	
-	private CopyOnWriteArrayList<GComponent> copyComponents()
-	{
-		CopyOnWriteArrayList<GComponent> mirror = new CopyOnWriteArrayList<GComponent>();
-
-		for (GComponent p : compBuffer)
-		{
-			mirror.add(p);
-		}
-
-		return mirror;
-	}
 
 	// Erases the internal buffer.
 	public synchronized void erase()
@@ -93,116 +97,115 @@ public class Viewport extends JPanel
 		compBuffer.clear();
 	}
 
-	// Copies the buffer immediately to the output, 
+	// Outputs all components of the buffer immediately to the output, 
 	// so all changes will be visible then first.
-	public synchronized void copy()
+	public void outputAllComponents()
 	{
-		compOutput = copyComponents();
+		compOutput = compBuffer;
 	}
 	
 	// Adds all components of a layer to the internal component buffer (which is used for drawing only).
-		private void apply(GLayer target)
+	private void apply(GLayer target)
+	{
+		// Add every component of the current layer.
+		for(GComponent comp : target.getComponentBuffer())
 		{
-			// Add every component of the current layer.
-			for(GComponent comp : target.getComponentBuffer())
-			{					
-				compBuffer.add(comp);
-			}
-
-			eventHandler.registerLayer(target);
+			compBuffer.add(comp);
 		}
 
-		// If a layer was changed, you can call this method to apply all changes.
-		// Is very inefficient if it's called frequently.
-		public synchronized void applyChanges()
+		eventHandler.registerLayer(target);
+	}
+
+	// If a layer was changed, you can call this method to apply all changes.
+	// Is very inefficient if it's called frequently.
+	public synchronized void applyChanges()
+	{
+		erase(); // If buggy, re-instantiate 
+
+		eventHandler.unregisterAllLayers();
+
+		Collections.sort(layers);
+
+		if(layers != null && layers.size() > 0)
 		{
-			erase(); // If buggy, re-instantiate 
-
-			eventHandler.unregisterAllLayers();
-
-			Collections.sort(layers);
-
-			if(layers != null && layers.size() > 0)
+			if(layers.size() > 1)
 			{
-				if(layers.size() > 1)
+				for(GLayer layer : layers)
 				{
-					for(GLayer layer : layers)
-					{
-						apply(layer);
-					}
+					apply(layer);
 				}
-				else
-				{
-					apply(layers.get(0));
-				}
-			}
-
-			copy();
-		}
-		
-		// This will check whether a given layer has the same priority as a layer which is added yet to the list.
-		private boolean isDoublePriority(GLayer layer)
-		{
-			for(GLayer current : layers)
-			{
-				if(current.getPriority() == layer.getPriority())
-				{
-					return true;
-				}
-			}
-			
-			return false;
-		}
-		
-		// The priority of a layer has to be at least zero or greater.
-		private boolean isValidPriority(GLayer layer)
-		{
-			return layer.getPriority() >= 0 && !isDoublePriority(layer);
-		}
-
-		public void addLayer(GLayer layer) throws IllegalArgumentException
-		{
-			if(isValidPriority(layer))
-			{
-				layers.add(layer);
 			}
 			else
 			{
-				throw new IllegalArgumentException("The given layers priority is invalid (< 0 or reason is \"double priority\")");
+				apply(layers.get(0));
 			}
-
-			applyChanges();
 		}
 
-		public void removeLayer(String uuid)
+		outputAllComponents();
+	}
+	
+	// This will check whether a given layer has the same priority as a layer which is added yet to the list.
+	private boolean isDoublePriority(GLayer layer)
+	{
+		for(GLayer current : layers)
 		{
-			erase();
-
-			int index = 0;
-
-			for (GLayer current : layers)
+			if(current.getPriority() == layer.getPriority())
 			{
-				if(current.getUUID().toString().equals(uuid))
-					break;
-
-				index++;
+				return true;
 			}
-
-			layers.remove(index);
-
-			eventHandler.unregisterLayer(uuid);
-
-			applyChanges();
 		}
+		
+		return false;
+	}
+	
+	// The priority of a layer has to be at least zero or greater.
+	private boolean isValidPriority(GLayer layer)
+	{
+		return layer.getPriority() >= 0 && !isDoublePriority(layer);
+	}
 
-		public CopyOnWriteArrayList<GLayer> getLayers()
+	public void addLayer(GLayer layer) throws IllegalArgumentException
+	{
+		if(isValidPriority(layer))
 		{
-			return layers;
+			layers.add(layer);
 		}
-
-		public GLayer getLayer(int index)
+		else
 		{
-			return layers.get(index);
+			throw new IllegalArgumentException("The given layers priority is invalid (< 0 or reason is \"double priority\")");
 		}
 
+		applyChanges();
+	}
+
+	public void removeLayer(String uuid)
+	{
+		erase();
+
+		int index = 0;
+
+		for (GLayer current : layers)
+		{
+			if(current.getUUID().toString().equals(uuid))
+				break;
+
+			index++;
+		}
+
+		layers.remove(index);
+
+		eventHandler.unregisterLayer(uuid);
+
+		applyChanges();
+	}
+
+	public CopyOnWriteArrayList<GLayer> getLayers()
+	{
+		return layers;
+	}
+
+	public GLayer getLayer(int index)
+	{
+		return layers.get(index);
+	}
 }
