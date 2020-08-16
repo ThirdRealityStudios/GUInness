@@ -71,7 +71,7 @@ Will follow at the final release.
 # Stats / Nice To Know (as of Aug 15 2020)
 - Total lines of code: 2515
 - Code size: ~85 kB
-- Rating of code by Codacy: B (https://app.codacy.com/manual/SucukiFarmer/GUInness/dashboard)
+- Rating of code by Codacy: [![Codacy Badge](https://app.codacy.com/project/badge/Grade/ce99cd3f8f5242e0944f216bf975edb8)](https://www.codacy.com/manual/SucukiFarmer/GUInness?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=SucukiFarmer/GUInness&amp;utm_campaign=Badge_Grade)
 
 
 # Donations (Via LiteCoin)
