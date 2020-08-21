@@ -6,6 +6,10 @@ Don't get too frustrated by the old graphics as you can actually overwrite the w
 Currently, the focus of the development goes on solidity and stability before anything else.
 
 
+# First Impression
+![Application sample](https://i.ibb.co/wYDhDDP/Screenshot-from-2020-08-21-16-22-50.jpg)
+
+
 # History
 This API was originally written first because I wanted to build a solid structure in order
 to build 2D games more easily.
@@ -37,7 +41,8 @@ You also do not need that much background knowledge like with Swing.
 # Component Features
 - Texts
 - Buttons
-- Text-fields
+- Textfields
+- Checkboxes
 - Images/pictures
 - Rectangles
 
@@ -55,7 +60,6 @@ If these points are also really guaranteed the next step would it be theoretical
 
 # Planed Features
 - add paths
-- add checkboxes
 - add combo boxes
 - add video components
 - add simple background sound tracks.
