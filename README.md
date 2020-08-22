@@ -69,7 +69,10 @@ If these points are also really guaranteed the next step would it be theoretical
 
 
 # Documentation
-Will follow at the final release.
+Will follow at the final release because several things / features can still change "fundamentally".
+This means, it isn't the effort worth until now to note every single change.
+Anyway, there are of course dozens of comments and a sample application (Main.java) for better understanding.
+It really shouldn't lack of brief comments in the code actually..👍
 
 
 # Stats / Nice To Know (as of Aug 15 2020)
