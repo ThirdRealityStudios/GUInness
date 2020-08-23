@@ -1,6 +1,5 @@
 package core.gui.adapter;
 
-import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -200,18 +199,21 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	{
 		GComponent firstMatch = null;
 		
-		for(GLayer layer : context.getEventHandler().getRegisteredLayers())
+		if(context.getViewport() != null)
 		{
-			for(GComponent selected : layer.getComponentBuffer())
+			for(GLayer layer : context.getViewport().getLayers())
 			{
-				boolean insideComponent = isFocusing(selected);
-				
-				// Returns the first component which is focused by the mouse cursor.
-				if(insideComponent)
+				for(GComponent selected : layer.getComponentBuffer())
 				{
-					firstMatch = selected;
+					boolean insideComponent = isFocusing(selected);
 					
-					break;
+					// Returns the first component which is focused by the mouse cursor.
+					if(insideComponent)
+					{
+						firstMatch = selected;
+						
+						break;
+					}
 				}
 			}
 		}

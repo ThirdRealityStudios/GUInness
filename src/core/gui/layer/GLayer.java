@@ -118,10 +118,10 @@ public class GLayer implements Comparable<GLayer>, Serializable
 		if(isPositionValid(comp))
 		{
 			updateDesign(comp);
-			
-			// Make sure all components are "synchronized" with the same settings as the layer.
-			comp.setEnabled(isEnabled());
-			comp.getStyle().setVisible(isVisible());
+
+			// Make sure all components are "synchronized" with the same important settings as the layer (if not initialized yet).
+			comp.setEnabled((comp.isEnabled() == null) ? isEnabled() : comp.isEnabled());
+			comp.getStyle().setVisible((comp.getStyle().isVisible() == null) ? isVisible() : comp.getStyle().isVisible());
 			
 			compBuffer.add(comp);
 		}

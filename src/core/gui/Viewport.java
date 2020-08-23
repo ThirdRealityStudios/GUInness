@@ -2,11 +2,14 @@ package core.gui;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JPanel;
 
+import core.feature.Timer;
 import core.gui.component.GComponent;
 import core.gui.layer.GLayer;
 import core.handler.EventHandler;
@@ -14,20 +17,22 @@ import core.handler.EventHandler;
 public class Viewport extends JPanel
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	// This contains all (prioritized) layers added to this Viewport.
 	// The same priority can only exist once in a Viewport!
 	private CopyOnWriteArrayList<GLayer> layers;
 
 	// This list contains all GComponents which are added by new layers but not yet recognized by the system.
 	private CopyOnWriteArrayList<GComponent> compBuffer;
-	
+
 	// After all components have been added all components are added from 'compBuffer' above.
 	// This ensures that no errors can appear while adding new layers and reduces "performance waste".
-	private CopyOnWriteArrayList<GComponent>compOutput;
-	
+	private GComponent[] compOutput;
+
 	private EventHandler eventHandler;
 	
+	private int layerModifications = 0;
+
 	public Viewport(EventHandler eventHandler)
 	{
 		this.eventHandler = eventHandler;
@@ -35,15 +40,9 @@ public class Viewport extends JPanel
 		addMouseDetection();
 		
 		compBuffer = new CopyOnWriteArrayList<GComponent>();
-		compOutput = new CopyOnWriteArrayList<GComponent>();
+		compOutput = new GComponent[0];
 		
 		layers = new CopyOnWriteArrayList<GLayer>();
-		
-		// Add all new components..
-		for(GLayer edL : layers)
-		{
-			eventHandler.registerLayer(edL);
-		}
 	}
 	
 	// The most important method for displaying all components and graphics.
@@ -54,7 +53,7 @@ public class Viewport extends JPanel
 		drawBackground(g);
 
 		drawComponents(g);
-		
+
 		repaint();
 	}
 	
@@ -101,9 +100,9 @@ public class Viewport extends JPanel
 	// so all changes will be visible then first.
 	public void outputAllComponents()
 	{
-		compOutput = compBuffer;
+		compOutput = compBuffer.toArray(compOutput);
 	}
-	
+
 	// Adds all components of a layer to the internal component buffer (which is used for drawing only).
 	private void apply(GLayer target)
 	{
@@ -112,17 +111,13 @@ public class Viewport extends JPanel
 		{
 			compBuffer.add(comp);
 		}
-
-		eventHandler.registerLayer(target);
 	}
 
 	// If a layer was changed, you can call this method to apply all changes.
 	// Is very inefficient if it's called frequently.
 	public synchronized void applyChanges()
 	{
-		erase(); // If buggy, re-instantiate 
-
-		eventHandler.unregisterAllLayers();
+		erase(); // If buggy, re-instantiate
 
 		Collections.sort(layers);
 
@@ -140,8 +135,8 @@ public class Viewport extends JPanel
 				apply(layers.get(0));
 			}
 		}
-
-		outputAllComponents();
+		
+		layerModifications = 0;
 	}
 	
 	// This will check whether a given layer has the same priority as a layer which is added yet to the list.
@@ -169,13 +164,13 @@ public class Viewport extends JPanel
 		if(isValidPriority(layer))
 		{
 			layers.add(layer);
+			
+			layerModifications++;
 		}
 		else
 		{
 			throw new IllegalArgumentException("The given layers priority is invalid (< 0 or reason is \"double priority\")");
 		}
-
-		applyChanges();
 	}
 
 	public void removeLayer(String uuid)
@@ -193,10 +188,8 @@ public class Viewport extends JPanel
 		}
 
 		layers.remove(index);
-
-		eventHandler.unregisterLayer(uuid);
-
-		applyChanges();
+		
+		layerModifications++;
 	}
 
 	public CopyOnWriteArrayList<GLayer> getLayers()
@@ -207,5 +200,10 @@ public class Viewport extends JPanel
 	public GLayer getLayer(int index)
 	{
 		return layers.get(index);
+	}
+	
+	public int getLayerModifications()
+	{
+		return layerModifications;
 	}
 }

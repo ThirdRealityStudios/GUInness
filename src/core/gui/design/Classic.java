@@ -66,7 +66,7 @@ public class Classic extends Design
 			{
 				g.setColor(getBorderColor());
 				g.fillRect(bounds.getLocation().x, bounds.getLocation().y, bounds.getSize().width, bounds.getSize().height);
-				
+
 				int titleWidth = c.getStyle().getFont().getFontSize() * c.getValue().length();
 
 				g.setColor(getBackgroundColor());

@@ -15,16 +15,16 @@ public abstract class GCheckbox extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 
-	public GCheckbox(Point location, boolean checked, boolean visible)
+	public GCheckbox(Point location, boolean checked)
 	{
-		super("checkbox", location, new Rectangle(new Point(location), new Dimension(20, 20)), 0, null, null, visible);
+		super("checkbox", location, new Rectangle(new Point(location), new Dimension(20, 20)), 0, null, null);
 		
 		init(checked);
 	}
 
-	public GCheckbox(Point location, boolean checked, boolean visible, int sizePx)
+	public GCheckbox(Point location, boolean checked, int sizePx)
 	{
-		super("checkbox", location, new Rectangle(new Point(location), new Dimension(sizePx, sizePx)), 0, null, null, visible);
+		super("checkbox", location, new Rectangle(new Point(location), new Dimension(sizePx, sizePx)), 0, null, null);
 		
 		init(checked);
 	}

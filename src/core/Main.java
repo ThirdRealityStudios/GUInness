@@ -49,7 +49,7 @@ public class Main
 	
 	private void initComponents()
 	{
-		checkbox1 = new GCheckbox(new Point(20, 200), false, true, 30)
+		checkbox1 = new GCheckbox(new Point(20, 200), false, 30)
 		{
 			@Override
 			public void onClick()
@@ -64,7 +64,7 @@ public class Main
 			}
 		};
 		
-		start = new GButton(new Point(20, 75), "Disable second layer", default2, true)
+		start = new GButton(new Point(20, 75), "Disable second layer", default2)
 		{
 			@Override
 			public void onHover()
@@ -86,7 +86,7 @@ public class Main
 		start.getLogic().setActionOnClick(true);
 		start.getLogic().setMultithreading(false); // This will run parallel (with threads) which is in some cases faster (of course unnecessary if you just want to print something to the console).
 
-		exit = new GButton(new Point(20, 150), "EXIT", default1, true)
+		exit = new GButton(new Point(20, 150), "EXIT", default1)
 		{
 			@Override
 			public void onHover()
@@ -105,7 +105,7 @@ public class Main
 		exit.getLogic().setActionOnHover(false);
 		exit.getLogic().setActionOnClick(true);
 
-		input1 = new GTextfield(new Point(20, 300), "GERMAN", 10, default2, true)
+		input1 = new GTextfield(new Point(20, 300), "GERMAN", 10, default2)
 		{
 			@Override
 			public void onHover()
@@ -117,7 +117,7 @@ public class Main
 		input1.getLogic().setInteractable(false);
 		input1.getLogic().setActionOnClick(false);
 
-		input2 = new GTextfield(new Point(20, 375), "DEUTSCH", 10, default2, true)
+		input2 = new GTextfield(new Point(20, 375), "DEUTSCH", 10, default2)
 		{
 			@Override
 			public void onHover()
@@ -126,7 +126,7 @@ public class Main
 			}
 		};
 
-		input3 = new GTextfield(new Point(20, 450), "ALEMAN", 10, default2, true)
+		input3 = new GTextfield(new Point(20, 450), "ALEMAN", 10, default2)
 		{
 			@Override
 			public void onHover()
@@ -137,7 +137,7 @@ public class Main
 
 		Image i = ImageToolkit.loadImage(Path.CORE_PATH + File.separator + "media" + File.separator + "samples" + File.separator + "MountainLake.jpg");
 
-		img0 = new GImage(new Point(0, 0), 600, false , i, true);
+		img0 = new GImage(new Point(0, 0), 600, false , i);
 		img0.getLogic().setActionOnHover(false);
 	}
 
@@ -156,20 +156,20 @@ public class Main
 
 	public void setupLayers()
 	{
-		description = new GDescription(new Point(20, 520), "Money here for nothing!", default2, true);
+		description = new GDescription(new Point(20, 520), "Money here for nothing!", default2);
 		
 		//layer0.add(new GPath(design, Path2DMaker.makeRectangle(0, 0, 200, 300), Color.RG, true, new Point(0, 300), true));
 		//layer0.add(new GPath(design, Path2DMaker.makeRectangle(0, 0, 800, 30), Color.PINK, true, new Point(100, 300), true));
 		
 		layer0.add(img0);
-		
+
 		layer1.add(start);
-		
+
 		layer1.add(checkbox1);
-		
+
 		layer2.add(description);
 		layer2.add(exit);
-		
+
 		layer2.add(input3);
 		layer2.add(input2);
 		layer2.add(input1);

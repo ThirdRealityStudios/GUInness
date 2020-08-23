@@ -10,9 +10,9 @@ public abstract class GButton extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 	
-	public GButton(Point location, String title, Font font, boolean visible)
+	public GButton(Point location, String title, Font font)
 	{
-		super("button", location, null, title.length(), title, font, visible);
+		super("button", location, null, title.length(), title, font);
 		
 		// This method is always called after the base values have been set, e.g. font size.
 		updateShape();

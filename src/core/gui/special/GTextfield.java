@@ -15,9 +15,9 @@ public abstract class GTextfield extends GComponent
 
 	private Color clicked;
 
-	public GTextfield(Point location, String title, int maxInput, Font font, boolean visible)
+	public GTextfield(Point location, String title, int maxInput, Font font)
 	{
-		super("textfield", location, null, -1, title, font, visible);
+		super("textfield", location, null, -1, title, font);
 		
 		if (maxInput > 0)
 			getStyle().setLength(maxInput);

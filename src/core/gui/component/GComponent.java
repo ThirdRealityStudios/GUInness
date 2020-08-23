@@ -17,9 +17,16 @@ public abstract class GComponent implements Serializable
 	// This will determine the render method later.
 	private String type;
 	
-	// Determine whether the component should be enabled or not.
-	// If it's disabled, it is not just invisible but also you cannot interact with it anymore.
-	private boolean enabled = true;
+	/* Determines whether the component should be enabled or not.
+	 * If it's disabled, it is not just invisible but also you cannot interact with it anymore.
+	 * If 'null', a value will be automatically assigned later.
+	 * Having 'null' in the beginning only helps the program to know
+	 * if a value was assigned already.
+	 * Having this possibility, it prevents already set values to be overwritten when
+	 * adding new components to a layer.
+	 * A layer would otherwise just overwrite the already set value with default values.
+	 */
+	private Boolean enabled = null;
 
 	protected volatile String value = "";
 
@@ -32,7 +39,7 @@ public abstract class GComponent implements Serializable
 	
 	private GLogic logic;
 
-	public GComponent(String type, Point location, Shape shape, int length, String val, Font font, boolean visible)
+	public GComponent(String type, Point location, Shape shape, int length, String val, Font font)
 	{
 		style = new GStyle();
 		
@@ -48,8 +55,6 @@ public abstract class GComponent implements Serializable
 		getStyle().setShape(shape);
 
 		getStyle().setFont(font);
-
-		getStyle().setVisible(visible);
 
 		// Set all important attributes below:
 		getStyle().setLength(length);
@@ -162,7 +167,7 @@ public abstract class GComponent implements Serializable
 	}
 	
 	
-	public boolean isEnabled()
+	public Boolean isEnabled()
 	{
 		return enabled;
 	}

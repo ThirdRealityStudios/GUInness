@@ -20,7 +20,14 @@ public class GStyle implements Serializable
 	// Contains the shape of the component.
 	private Shape shape;
 
-	private boolean visible = true;
+	// Tells whether the context or component is visible or not.
+	// If 'null', a value will be automatically assigned later.
+	// Having 'null' in the beginning only helps the program to know
+	// if a value was assigned already.
+	// Having this possibility, it prevents already set values to be overwritten when
+	// adding new components to a layer.
+	// A layer would otherwise just overwrite the already set value with default values.
+	private Boolean visible = null;
 
 	private int length;
 	
@@ -58,7 +65,7 @@ public class GStyle implements Serializable
 		this.shape = shape;
 	}
 
-	public boolean isVisible()
+	public Boolean isVisible()
 	{
 		return visible;
 	}

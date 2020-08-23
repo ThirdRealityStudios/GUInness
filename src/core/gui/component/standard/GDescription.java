@@ -12,9 +12,9 @@ public class GDescription extends GComponent
 	
 	private boolean interaction = true;
 	
-	public GDescription(Point location, String title, Font font, boolean visible)
+	public GDescription(Point location, String title, Font font)
 	{
-		super("description", location, null, title.length(), title, font, visible);
+		super("description", location, null, title.length(), title, font);
 		
 		updateShape();
 	}

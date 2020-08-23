@@ -12,9 +12,9 @@ public class GImage extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 	
-	public GImage(Point location, Image content, boolean visible)
+	public GImage(Point location, Image content)
 	{
-		super("image", location, null, 0, null, null, visible);
+		super("image", location, null, 0, null, null);
 		
 		Rectangle rect = new Rectangle(location.x, location.y, content.getWidth(null), content.getHeight(null));
 		
@@ -22,9 +22,9 @@ public class GImage extends GComponent
 		getStyle().setImage(content);
 	}
 
-	public GImage(Point location, float scale, Image content, boolean visible)
+	public GImage(Point location, float scale, Image content)
 	{
-		super("image", location, null, 0, null, null, visible);
+		super("image", location, null, 0, null, null);
 		
 		Dimension scaled = new Dimension((int) (scale * content.getWidth(null)), (int) (scale * content.getHeight(null)));
 		
@@ -34,9 +34,9 @@ public class GImage extends GComponent
 		getStyle().setImage(content);
 	}
 
-	public GImage(Point location, Dimension size, Image content, boolean visible)
+	public GImage(Point location, Dimension size, Image content)
 	{
-		super("image", location, null, 0, null, null, visible);
+		super("image", location, null, 0, null, null);
 		
 		Rectangle rect = new Rectangle(location.x, location.y, size.width, size.height);
 		getStyle().setShape(rect);
@@ -44,9 +44,9 @@ public class GImage extends GComponent
 		getStyle().setImage(content);
 	}
 
-	public GImage(Point location, int length, boolean useAsWidth, Image content, boolean visible)
+	public GImage(Point location, int length, boolean useAsWidth, Image content)
 	{
-		super("image", location, null, 0, null, null, visible);
+		super("image", location, null, 0, null, null);
 		
 		Dimension scaled = useAsWidth ? new Dimension(length, (int) (((float) length / content.getWidth(null)) * content.getHeight(null))) : new Dimension((int) (((float) length / content.getHeight(null)) * content.getWidth(null)), length);
 		

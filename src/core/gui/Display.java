@@ -26,8 +26,6 @@ public class Display extends JFrame
 		eH = new EventHandler(this);
 
 		eH.start();
-		
-		eH.enableKeyboardDriver();
 	}
 
 	public void center()

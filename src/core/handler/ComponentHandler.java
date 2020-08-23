@@ -9,7 +9,6 @@ import core.feature.Timer;
 import core.gui.Display;
 import core.gui.Viewport;
 import core.gui.component.GComponent;
-import core.gui.layer.GLayer;
 import core.gui.special.GCheckbox;
 
 public class ComponentHandler
@@ -63,7 +62,6 @@ public class ComponentHandler
 				triggerComponent();
 			}
 		};
-
 	}
 	
 	public void updateChangedLayers()
@@ -72,12 +70,10 @@ public class ComponentHandler
 		
 		if(viewport != null)
 		{
-			for(GLayer layer : viewport.getLayers())
+			if(display.getViewport().getLayerModifications() > 0)
 			{
-				if(!layer.isVisible() && layer.isEnabled())
-				{
-					display.getViewport().applyChanges();
-				}
+				display.getViewport().applyChanges();
+				display.getViewport().outputAllComponents();
 			}
 		}
 	}
@@ -358,18 +354,7 @@ public class ComponentHandler
 		// necessary to save resources on the CPU.
 		// Anyway, in Gaming Mode (see definition of it in LayeredDisplay.java for
 		// reference) the KeyAdapter is always initialized and available.
-		int keyStroke = KeyEvent.VK_UNDEFINED;
-
-		if(textfield != null)
-		{
-			display.getEventHandler().enableKeyboardDriver();
-
-			keyStroke = display.getEventHandler().getKeyAdapter().getActiveKey();
-		}
-		else if(!display.getEventHandler().isNoKeylistenerActive())
-		{
-			display.getEventHandler().disableKeyboardDriver();
-		}
+		int keyStroke = display.getEventHandler().getKeyAdapter().getActiveKey();
 		
 		triggerGeneralLogic(focused, clicking, keyStroke);
 		triggerAnimation(focused, clicking);
