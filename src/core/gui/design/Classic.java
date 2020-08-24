@@ -35,6 +35,13 @@ public class Classic extends Design
 		// a supplied image will not get in conflict with other settings.
 		switch(c.getType())
 		{
+			case "description":
+			{
+				DrawToolkit.drawString(g, c.getValue(), bounds.getLocation().x + getInnerThickness() + getBorderThickness(), bounds.getLocation().y + getInnerThickness() + getBorderThickness(), c.getStyle().getFont());
+		
+				break;
+			}
+		
 			case "image":
 			{				
 				g.drawImage(c.getStyle().getImage(), bounds.getLocation().x, bounds.getLocation().y, bounds.width, bounds.height, null);
@@ -67,9 +74,9 @@ public class Classic extends Design
 				g.setColor(getBorderColor());
 				g.fillRect(bounds.getLocation().x, bounds.getLocation().y, bounds.getSize().width, bounds.getSize().height);
 
-				int titleWidth = c.getStyle().getFont().getFontSize() * c.getValue().length();
+				int titleWidth = c.getStyle().getFont().getFontSize() * c.getStyle().getLength();
 
-				g.setColor(getBackgroundColor());
+				g.setColor(Color.WHITE);
 				g.fillRect(bounds.getLocation().x + getBorderThickness(), bounds.getLocation().y + getBorderThickness(), titleWidth + 2 * getInnerThickness(), c.getStyle().getFont().getFontSize() + 2 * getInnerThickness());
 
 				DrawToolkit.drawString(g, c.getValue(), bounds.getLocation().x + getInnerThickness() + getBorderThickness(), bounds.getLocation().y + getInnerThickness() + getBorderThickness(), c.getStyle().getFont());
@@ -87,7 +94,7 @@ public class Classic extends Design
 				g.setColor(getBorderColor());
 				g.fillRect(bounds.getLocation().x, bounds.getLocation().y, size + getInnerThickness(), size + getInnerThickness());
 				
-				g.setColor(getBackgroundColor());
+				g.setColor(Color.WHITE);
 				g.fillRect(bounds.getLocation().x + getBorderThickness(), bounds.getLocation().y + getBorderThickness(), size, size);
 
 				if(checkbox.isChecked())

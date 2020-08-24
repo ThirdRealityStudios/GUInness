@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
 import java.io.File;
+import java.util.ArrayList;
 
 import core.feature.Path;
 import core.feature.image.ImageToolkit;
@@ -13,6 +14,8 @@ import core.gui.component.standard.GButton;
 import core.gui.special.GCheckbox;
 import core.gui.special.GImage;
 import core.gui.special.GTextfield;
+import core.gui.special.selection.GRadioButton;
+import core.gui.special.selection.GSelectionBox;
 import core.gui.component.standard.GDescription;
 import core.gui.design.Classic;
 import core.gui.design.Design;
@@ -32,6 +35,11 @@ public class Main
 	private GDescription description;
 	
 	private GCheckbox checkbox1;
+	
+	// Some sample options for the selection box below.
+	private ArrayList<GRadioButton> radioButtons;
+	
+	private GSelectionBox gSB;
 
 	private GLayer layer0, layer1, layer2;
 
@@ -49,7 +57,11 @@ public class Main
 	
 	private void initComponents()
 	{
-		checkbox1 = new GCheckbox(new Point(20, 200), false, 30)
+		radioButtons = new ArrayList<GRadioButton>();
+		
+		
+		
+		checkbox1 = new GCheckbox(new Point(20, 200), true, 20)
 		{
 			@Override
 			public void onClick()

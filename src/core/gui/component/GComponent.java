@@ -39,7 +39,7 @@ public abstract class GComponent implements Serializable
 	
 	private GLogic logic;
 
-	public GComponent(String type, Point location, Shape shape, int length, String val, Font font)
+	public GComponent(String type, Point location, Shape shape)
 	{
 		style = new GStyle();
 		
@@ -53,11 +53,27 @@ public abstract class GComponent implements Serializable
  
 		getStyle().setPrimaryColor(getStyle().getDesign().getBackgroundColor());
 		getStyle().setShape(shape);
+	}
+	
+	public GComponent(String type, Point location, Shape shape, int length, String val, Font font)
+	{
+		this(type, location, shape);
 
 		getStyle().setFont(font);
 
 		// Set all important attributes below:
 		getStyle().setLength(length);
+		setValue(val);
+	}
+	
+	public GComponent(String type, Point location, Shape shape, String val, Font font)
+	{
+		this(type, location, shape);
+
+		getStyle().setFont(font);
+
+		// Set all important attributes below:
+		getStyle().setLength(val.length());
 		setValue(val);
 	}
 
