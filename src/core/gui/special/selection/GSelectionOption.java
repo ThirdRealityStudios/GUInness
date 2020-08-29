@@ -1,7 +1,12 @@
 package core.gui.special.selection;
 
+import java.io.File;
+
+import core.feature.Path;
 import core.gui.component.GLogic;
 import core.gui.component.GStyle;
+import core.gui.design.Classic;
+import core.gui.font.Font;
 
 // new Rectangle(new Dimension(font.getFontSize() + val.length() * font.getFontSize(), font.getFontSize()))
 
@@ -17,18 +22,22 @@ public class GSelectionOption
 	
 	private String value;
 	
-	public GSelectionOption(boolean isChecked, boolean isDefaultOption)
-	{		
-		this.isChecked = isChecked;
+	public GSelectionOption(String title, boolean isDefaultOption)
+	{
 		this.isDefaultOption = isDefaultOption;
 		
-		style = new GStyle();
-		logic = new GLogic();
+		setTitle(title);
+		
+		setStyle(new GStyle());
+		setLogic(new GLogic());
+		
+		// This line makes sure every GComponent also has a default font, no matter it is used or not or for other cases.
+		getStyle().setFont(new Font("default", Path.FONTS + File.separator + "StandardFont.png", 18));
 	}
 	
-	public GSelectionOption(GStyle style, GLogic logic, boolean isChecked, boolean isDefaultOption)
+	public GSelectionOption(GStyle style, GLogic logic, boolean isDefaultOption)
 	{
-		this(isChecked, isDefaultOption);
+		this("", isDefaultOption);
 		
 		this.style = style;
 		this.logic = logic;
@@ -74,7 +83,7 @@ public class GSelectionOption
 		this.isDefaultOption = isDefaultOption;
 	}
 	
-	public void setValue(String value)
+	public void setTitle(String value)
 	{
 		this.value = value;
 	}

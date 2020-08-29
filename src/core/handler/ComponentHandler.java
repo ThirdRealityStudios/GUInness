@@ -140,8 +140,7 @@ public class ComponentHandler
 		{
 			// relates to text-fields only.
 			{
-				boolean canTextfieldBeFocussed = focused != null && focused.getType().contentEquals("textfield")
-						&& focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnClick();
+				boolean canTextfieldBeFocussed = focused != null && focused.getType().contentEquals("textfield") && focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnClick();
 
 				if(canTextfieldBeFocussed)
 				{
@@ -155,14 +154,15 @@ public class ComponentHandler
 					textfield = null;
 				}
 			}
+			
+			
 		}		
 
 		// This is the actual part where text-fields are modified, meaning the value or
 		// text it contains gets changed.
 		// If there is no key delivered (KeyEvent.VK_UNDEFING), this part is ignored
 		// for faster execution.
-		if(textfield != null && !(keyStroke == KeyEvent.VK_UNDEFINED) && focused.getLogic().isInteractionAllowed()
-				&& focused.getLogic().isActingOnClick())
+		if(textfield != null && !(keyStroke == KeyEvent.VK_UNDEFINED) && focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnClick())
 		{
 			boolean isDeviceControlCode = display.getEventHandler().getKeyAdapter().isDeviceControlCode(keyStroke);
 
@@ -189,36 +189,36 @@ public class ComponentHandler
 
 		if(focused != null)
 		{
-			if(focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnHover()) // ask whether it should run the onHover()
-																		// method if wished by the components
-																		// configuration.
+			if(focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnHover()) // ask whether it should run the onHover() method if wished by the components configuration.
 			{
-				// This will decide internally whether the component is being executed by
-				// threads or in sequence order.
+				// This will decide internally whether the component is being executed by threads or in sequence order.
 				executeHover(focused);
 			}
 
-			if(clicking && focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnClick()) // ask whether it should run the
-																					// onClick() method if wished by the
-																					// components configuration.
+			if(clicking && focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnClick()) // ask whether it should run the onClick() method if wished by the components configuration.
 			{
-				// Make sure the user cannot double click the same component multiple times if
-				// it is unwanted.
+				// Make sure the user cannot double click the same component multiple times if it is unwanted.
 				if(!doubleClicked || focused.getLogic().isDoubleClickingAllowed())
-				{
-					// This will decide internally whether the component is being executed by
-					// threads or in sequence order.
-					executeClick(focused);
-					
-					// Additionally check-boxes are treated here.
-					// This will simply enable or disable the check-box this is about..
-					if(focused.getType().contentEquals("checkbox"))
+				{					
+					switch(focused.getType())
 					{
-						GCheckbox checkbox = (GCheckbox) focused;
-						
-						// Just invert the current setting.
-						checkbox.setChecked(!checkbox.isChecked());
+						// Additionally check-boxes are treated here.
+						// This will simply enable or disable the check-box this is about..
+						case "checkbox":
+						{
+							GCheckbox checkbox = (GCheckbox) focused;
+							
+							// Just invert the current setting.
+							checkbox.setChecked(!checkbox.isChecked());
+							
+							break;
+						}
 					}
+					
+					// This will decide internally whether the component is being executed by threads or in sequence order.
+					// It actually just runs the defined click action by the user.
+					// It is executed here at the end to make sure changes by interacting with the components are recognized by the user defined click action.
+					executeClick(focused);
 				}
 			}
 		}

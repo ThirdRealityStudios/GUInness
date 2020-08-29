@@ -29,15 +29,15 @@ public class GStyle implements Serializable
 	// A layer would otherwise just overwrite the already set value with default values.
 	private Boolean visible = null;
 
-	private int length;
+	private int length = 0;
 	
 	private Font font;
 	
-	private int paddingTop, paddingBottom;
+	private int paddingTop = 0, paddingBottom = 0;
 
 	private Color primaryColor = null, bufferedColor = null;
 
-	private Point location;
+	private Point location = new Point();
 
 	// Just contains an image in case it is wanted.
 	// If you want the GComponent to be rendered as an image,

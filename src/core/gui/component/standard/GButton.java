@@ -15,7 +15,7 @@ public abstract class GButton extends GComponent
 		super("button", location, null, title.length(), title, font);
 		
 		// This method is always called after the base values have been set, e.g. font size.
-		updateShape();
+		updateDefaultShape();
 	}
 
 	public String getTitle()
@@ -44,6 +44,6 @@ public abstract class GButton extends GComponent
 		
 		getStyle().setLength(getValue().length());
 
-		updateShape();
+		updateDefaultShape();
 	}
 }

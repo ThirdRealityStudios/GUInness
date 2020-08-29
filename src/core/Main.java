@@ -14,8 +14,8 @@ import core.gui.component.standard.GButton;
 import core.gui.special.GCheckbox;
 import core.gui.special.GImage;
 import core.gui.special.GTextfield;
-import core.gui.special.selection.GRadioButton;
 import core.gui.special.selection.GSelectionBox;
+import core.gui.special.selection.GSelectionOption;
 import core.gui.component.standard.GDescription;
 import core.gui.design.Classic;
 import core.gui.design.Design;
@@ -37,7 +37,7 @@ public class Main
 	private GCheckbox checkbox1;
 	
 	// Some sample options for the selection box below.
-	private ArrayList<GRadioButton> radioButtons;
+	private ArrayList<GSelectionOption> options;
 	
 	private GSelectionBox gSB;
 
@@ -57,9 +57,17 @@ public class Main
 	
 	private void initComponents()
 	{
-		radioButtons = new ArrayList<GRadioButton>();
+		options = new ArrayList<GSelectionOption>();
 		
+		GSelectionOption option0 = new GSelectionOption("Win a price", false), option1 = new GSelectionOption("Loose everything", true);
 		
+		option0.getStyle().setPaddingBottom(10);
+		option0.getStyle().setPaddingTop(0);
+		
+		options.add(option0);
+		options.add(option1);
+		
+		gSB = new GSelectionBox(new Point(200, 200), options);
 		
 		checkbox1 = new GCheckbox(new Point(20, 200), true, 20)
 		{
@@ -67,6 +75,8 @@ public class Main
 			public void onClick()
 			{
 				layer2.setEnabled(isChecked());
+				
+				start.setValue((layer2.isEnabled() ? "Disable again " : "Enable ") + "second layer");
 			}
 
 			@Override
@@ -90,7 +100,7 @@ public class Main
 				layer2.setEnabled(!layer2.isEnabled());
 				setValue((layer2.isEnabled() ? "Disable again " : "Enable ") + "second layer");
 				
-				checkbox1.setChecked(!layer2.isEnabled());
+				checkbox1.setChecked(layer2.isEnabled());
 			}
 		};
 
@@ -162,7 +172,7 @@ public class Main
 		display = new Display();
 		
 		display.setViewport(new Viewport(display.getEventHandler()));
-		
+
 		initComponents();
 	}
 
@@ -172,7 +182,7 @@ public class Main
 		
 		//layer0.add(new GPath(design, Path2DMaker.makeRectangle(0, 0, 200, 300), Color.RG, true, new Point(0, 300), true));
 		//layer0.add(new GPath(design, Path2DMaker.makeRectangle(0, 0, 800, 30), Color.PINK, true, new Point(100, 300), true));
-		
+
 		layer0.add(img0);
 
 		layer1.add(start);
@@ -185,6 +195,8 @@ public class Main
 		layer2.add(input3);
 		layer2.add(input2);
 		layer2.add(input1);
+		
+		layer2.add(gSB);
 	}
 
 	public void run()

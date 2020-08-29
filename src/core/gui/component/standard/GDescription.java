@@ -16,7 +16,7 @@ public class GDescription extends GComponent
 	{
 		super("description", location, null, title.length(), title, font);
 		
-		updateShape();
+		updateDefaultShape();
 	}
 
 	public String getTitle()
@@ -53,6 +53,6 @@ public class GDescription extends GComponent
 
 		this.value = title;
 		
-		updateShape();
+		updateDefaultShape();
 	}
 }

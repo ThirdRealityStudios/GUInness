@@ -1,10 +1,13 @@
 package core.gui.component;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Shape;
+import java.io.File;
 import java.io.Serializable;
 
 import core.Meta;
+import core.feature.Path;
 import core.gui.Display;
 import core.gui.design.Sample;
 import core.gui.font.Font;
@@ -39,7 +42,7 @@ public abstract class GComponent implements Serializable
 	
 	private GLogic logic;
 
-	public GComponent(String type, Point location, Shape shape)
+	public GComponent(String type, Point location)
 	{
 		style = new GStyle();
 		
@@ -47,18 +50,22 @@ public abstract class GComponent implements Serializable
 		
 		setType(type);
 		getStyle().setLocation(location);
+		
+		// This line makes sure every GComponent also has a default font, no matter it is used or not or for other cases.
+		getStyle().setFont(new Font("default", Path.FONTS + File.separator + "StandardFont.png", 18));
 
 		// When created apply the default design first.
 		this.getStyle().setDesign(Sample.classic);
  
 		getStyle().setPrimaryColor(getStyle().getDesign().getBackgroundColor());
-		getStyle().setShape(shape);
+		getStyle().setShape(new Rectangle(location));
 	}
 	
 	public GComponent(String type, Point location, Shape shape, int length, String val, Font font)
 	{
-		this(type, location, shape);
-
+		this(type, location);
+		
+		getStyle().setShape(shape);
 		getStyle().setFont(font);
 
 		// Set all important attributes below:
@@ -68,8 +75,9 @@ public abstract class GComponent implements Serializable
 	
 	public GComponent(String type, Point location, Shape shape, String val, Font font)
 	{
-		this(type, location, shape);
+		this(type, location);
 
+		getStyle().setShape(shape);
 		getStyle().setFont(font);
 
 		// Set all important attributes below:
@@ -216,7 +224,7 @@ public abstract class GComponent implements Serializable
 	// Updates the shape if possible,
 	// meaning if a design available already.
 	// Otherwise the component needs to be updated internally with one.
-	protected void updateShape()
+	protected void updateDefaultShape()
 	{
 		if(getStyle().getDesign() != null)
 		{

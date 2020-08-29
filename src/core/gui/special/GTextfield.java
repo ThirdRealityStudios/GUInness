@@ -30,7 +30,7 @@ public abstract class GTextfield extends GComponent
 			throw new IllegalArgumentException("Title length is bigger than the specified maximum length!");
 		
 		// This method is always called after the base values have been set, e.g. font size.
-		updateShape();
+		updateDefaultShape();
 	}
 
 	public void onClick(){}
@@ -90,6 +90,6 @@ public abstract class GTextfield extends GComponent
 
 		this.value = title;
 
-		updateShape();
+		updateDefaultShape();
 	}
 }

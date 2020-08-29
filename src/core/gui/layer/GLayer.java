@@ -105,7 +105,7 @@ public class GLayer implements Comparable<GLayer>, Serializable
 			comp.getStyle().setDesign(getDesign());
 		}
 
-		boolean updateForShapeNecessary = !(comp.getType().contentEquals("image") || comp.getType().contentEquals("checkbox"));
+		boolean updateForShapeNecessary = !(comp.getType().contentEquals("image") || comp.getType().contentEquals("checkbox") || comp.getType().contentEquals("selectionbox"));
 
 		if(updateForShapeNecessary)
 		{

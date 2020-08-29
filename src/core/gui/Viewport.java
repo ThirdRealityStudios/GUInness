@@ -2,14 +2,10 @@ package core.gui;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeUnit;
-
 import javax.swing.JPanel;
 
-import core.feature.Timer;
 import core.gui.component.GComponent;
 import core.gui.layer.GLayer;
 import core.handler.EventHandler;

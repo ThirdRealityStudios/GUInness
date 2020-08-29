@@ -4,14 +4,18 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.util.ArrayList;
 
 import core.Meta;
 import core.draw.DrawToolkit;
 import core.gui.component.GComponent;
 import core.gui.special.GCheckbox;
 import core.gui.special.GPath;
+import core.gui.special.selection.GSelectionBox;
+import core.gui.special.selection.GSelectionOption;
 
 // The classic design without which looks very retro-stylish or ugly.
 public class Classic extends Design
@@ -100,6 +104,37 @@ public class Classic extends Design
 				if(checkbox.isChecked())
 				{
 					g.drawImage(c.getStyle().getImage() , bounds.getLocation().x + 2*getBorderThickness(), bounds.getLocation().y + 2*getBorderThickness(), null);
+				}
+
+				break;
+			}
+			
+			case "selectionbox":
+			{
+				GSelectionBox selectionBox = (GSelectionBox) c;
+				
+				bounds = selectionBox.getStyle().getShape().getBounds();
+				
+				g.setColor(Color.GRAY);
+				g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+				
+				ArrayList<Rectangle[]> shapeTable = selectionBox.getShapeTable();
+				
+				// Draws every single option from the GSelectionBox.
+				for(int i = 0; i < shapeTable.size(); i++)
+				{
+					GSelectionOption option = selectionBox.getOptions().get(i);
+					
+					Rectangle optionShape = shapeTable.get(i)[0];
+					Rectangle titleShape = shapeTable.get(i)[1];
+					
+					g.setColor(option.isChecked() ? Color.GREEN : Color.RED);
+					g.fillRect(optionShape.x, optionShape.y, optionShape.width, optionShape.height);
+					
+					g.setColor(Color.YELLOW);
+					g.fillRect(titleShape.x, titleShape.y, titleShape.width, titleShape.height);
+					
+					DrawToolkit.drawString(g, option.getValue(), titleShape.x, titleShape.y, option.getStyle().getFont());
 				}
 
 				break;
