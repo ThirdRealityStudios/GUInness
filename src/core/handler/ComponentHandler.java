@@ -1,7 +1,11 @@
 package core.handler;
 
 import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 import core.exec.LoopedThread;
 import core.exec.ThreadManager;
@@ -10,6 +14,8 @@ import core.gui.Display;
 import core.gui.Viewport;
 import core.gui.component.GComponent;
 import core.gui.special.GCheckbox;
+import core.gui.special.selection.GSelectionBox;
+import core.gui.special.selection.GSelectionOption;
 
 public class ComponentHandler
 {
@@ -134,7 +140,7 @@ public class ComponentHandler
 	}
 
 	// Is responsible for firing the implemented functions by the component.
-	private void triggerGeneralLogic(GComponent focused, boolean clicking, int keyStroke)
+	private void triggerGeneralLogic(GComponent focused, boolean clicking, Point mouseLocation, int keyStroke)
 	{
 		if(clicking)
 		{
@@ -199,7 +205,7 @@ public class ComponentHandler
 			{
 				// Make sure the user cannot double click the same component multiple times if it is unwanted.
 				if(!doubleClicked || focused.getLogic().isDoubleClickingAllowed())
-				{					
+				{
 					switch(focused.getType())
 					{
 						// Additionally check-boxes are treated here.
@@ -210,6 +216,23 @@ public class ComponentHandler
 							
 							// Just invert the current setting.
 							checkbox.setChecked(!checkbox.isChecked());
+							
+							break;
+						}
+						
+						case "selectionbox":
+						{
+							GSelectionBox selectionbox = (GSelectionBox) focused;
+							
+							ArrayList<Rectangle[]> shapeTable = selectionbox.getShapeTable();
+							
+							for(int i = 0; i < shapeTable.size(); i++)
+							{
+								if(shapeTable.get(i)[0].createUnion(shapeTable.get(i)[1]).contains(mouseLocation))
+								{
+									selectionbox.selectOptionAt(i);
+								}
+							}
 							
 							break;
 						}
@@ -224,7 +247,7 @@ public class ComponentHandler
 		}
 	}
 
-	private void triggerAnimation(GComponent focused, boolean clicking)
+	private void triggerAnimation(GComponent focused, boolean clicking, Point mouseLocation)
 	{
 		boolean sameComponentFocused = lastlyFocused != focused && lastlyFocused != null;
 		
@@ -326,6 +349,8 @@ public class ComponentHandler
 	{
 		GComponent focused = display.getEventHandler().getMouseAdapter().getFocusedComponent();
 		
+		Point mouseLocation = display.getEventHandler().getMouseAdapter().getCursorLocation();
+		
 		/*
 		 *  WARNING! The code below must be executed only under certain circumstances ! ! !
 		 *  
@@ -356,8 +381,8 @@ public class ComponentHandler
 		// reference) the KeyAdapter is always initialized and available.
 		int keyStroke = display.getEventHandler().getKeyAdapter().getActiveKey();
 		
-		triggerGeneralLogic(focused, clicking, keyStroke);
-		triggerAnimation(focused, clicking);
+		triggerGeneralLogic(focused, clicking, mouseLocation, keyStroke);
+		triggerAnimation(focused, clicking, mouseLocation);
 
 		postEvaluateEvents(clicking, focused);
 

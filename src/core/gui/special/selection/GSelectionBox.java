@@ -233,6 +233,15 @@ public class GSelectionBox extends GComponent
 		updateSelectionBoxShape();
 	}
 	
+	private void unselectCompletelyAt(int index)
+	{
+		if(index < options.size())
+		{
+			options.get(index).setChecked(false);
+			options.get(index).setDefaultOption(false);
+		}
+	}
+	
 	public void selectOptionAt(int index)
 	{
 		if(index < options.size())
@@ -242,6 +251,9 @@ public class GSelectionBox extends GComponent
 			if(this.index != index)
 			{
 				defaultOptionActive = false;
+				
+				// Completely unselect the old one including the default status..
+				unselectCompletelyAt(this.index);
 				
 				// Simply sets the new index.
 				this.index = index;
