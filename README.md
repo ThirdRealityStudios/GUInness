@@ -43,6 +43,7 @@ You also do not need that much background knowledge like with Swing.
 - Buttons
 - Textfields
 - Checkboxes
+- Selection-boxes (with radio buttons)
 - Images/pictures
 - Rectangles
 
