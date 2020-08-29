@@ -76,10 +76,10 @@ Anyway, there are of course dozens of comments and a sample application (Main.ja
 It really shouldn't lack of brief comments in the code actually..👍
 
 
-# Stats / Nice To Know (as of Aug 15 2020)
-- Total lines of code: 2515
-- Code size: ~85 kB
-- Rating of code by Codacy: [![Codacy Badge](https://app.codacy.com/project/badge/Grade/ce99cd3f8f5242e0944f216bf975edb8)](https://www.codacy.com/manual/SucukiFarmer/GUInness?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=SucukiFarmer/GUInness&amp;utm_campaign=Badge_Grade)
+# Stats / Nice To Know (as of Aug 29 2020)
+- Total lines of code: 2640
+- Code size: ~94 kB
+- Rating of code by Codacy: [![Codacy Badge](https://app.codacy.com/project/badge/Grade/a142583660fa4e469a495e424cd0d155)](https://www.codacy.com/manual/ThirdRealityStudios/GUInness?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ThirdRealityStudios/GUInness&amp;utm_campaign=Badge_Grade)
 
 
 # Donations (Via LiteCoin)
@@ -91,3 +91,5 @@ MNh6pVYPHW21EtsAEgTfPBAYDXfQKEM2n6
 or
 
 litecoin:MNh6pVYPHW21EtsAEgTfPBAYDXfQKEM2n6?label=Donation
+
+The amount isn't important, it's just for some attention to me which encourages me for working harder if there are people who take this project / repo serious.

@@ -113,14 +113,14 @@ public class GSelectionBox extends GComponent
 		
 		getStyle().setShape(new Rectangle(originalLocation.x, originalLocation.y, maxWidth, sumHeight));
 	}
-	
+
 	// This will actually calculate a grid for every single option you add to this GSelectionBox.
 	// It will to simplify the rendering process by not having to calculate these values frequently.
 	// It can directly the draw method all necessary measurements of the symbol and title text of an option added.
 	// Because of this, the "shape table" steadily needs to be updated when it is changed or just at the beginning.
 	private void updateShapeTable()
 	{
-		int yCurrentOption = 0;
+		int lastHeights = 0;
 		
 		for(int i = 0; i < options.size(); i++)
 		{
@@ -132,27 +132,48 @@ public class GSelectionBox extends GComponent
 			Rectangle optionSymbolShape = null, optionTitleShape = null, optionPaddingTop = null, optionPaddingBottom = null;
 			
 			// The location of this GSelectionBox.
-			Point location = getStyle().getLocation();
+			Point location = new Point(getStyle().getLocation().x, getStyle().getLocation().y + lastHeights);
 			
 			// Pre-calculating all locations (only)..
 			// After having calculated all positions the measurements such as width and height will be determined.
 			{
-				optionPaddingBottom = new Rectangle(new Point(location.x, location.y + yCurrentOption));
+				// Sizes calculated here..
+				{
+					optionPaddingBottom = new Rectangle(fontSize + fontSize * option.getValue().length(), option.getStyle().getPaddingBottom());
+					
+					optionSymbolShape = new Rectangle(fontSize, fontSize);
+					
+					optionTitleShape = new Rectangle(fontSize * option.getValue().length(), fontSize);
+					
+					optionPaddingTop = new Rectangle(fontSize + fontSize * option.getValue().length(), option.getStyle().getPaddingTop());
+				}
 				
-				optionSymbolShape = new Rectangle(new Point(location.x, location.y + yCurrentOption));
-				optionTitleShape = new Rectangle(new Point(location.x + fontSize, location.y + yCurrentOption));
+				// Position applied here..
+				{
+					optionPaddingBottom.setLocation(location);
+					
+					optionSymbolShape.setLocation(location.x, optionPaddingBottom.y + optionPaddingBottom.height);
+					
+					optionTitleShape.setLocation(location.x + optionSymbolShape.width, optionPaddingBottom.y + optionPaddingBottom.height);
+					
+					optionPaddingTop.setLocation(location.x, optionTitleShape.y + optionTitleShape.height);
+				}
 				
-				optionPaddingTop = new Rectangle(new Point(location.x, optionSymbolShape.y + optionSymbolShape.height));
-			}
-			
-			// Calculates all measurements after having set the locations from before (look above).
-			{
+				/*
+				optionPaddingBottom = new Rectangle(new Point(location.x, location.y));
 				optionPaddingBottom.setSize(fontSize + option.getValue().length() * fontSize, option.getStyle().getPaddingBottom());
 				
+				System.out.println("Height on the bottom> " + option.getStyle().getPaddingBottom());
+				
+				optionSymbolShape = new Rectangle(new Point(location.x, optionPaddingBottom.y + optionPaddingBottom.height));
 				optionSymbolShape.setSize(fontSize, fontSize);
+				
+				optionTitleShape = new Rectangle(new Point(location.x + optionSymbolShape.width, optionSymbolShape.y + optionSymbolShape.height));
 				optionTitleShape.setSize(fontSize * option.getValue().length(), fontSize);
 				
+				optionPaddingTop = new Rectangle(new Point(location.x, optionTitleShape.y + optionTitleShape.height));
 				optionPaddingTop.setSize(fontSize + option.getValue().length() * fontSize, option.getStyle().getPaddingTop());
+				*/
 			}
 			
 			// Creates an array of shapes for each option and adds it to the list.
@@ -163,15 +184,15 @@ public class GSelectionBox extends GComponent
 				optionShapes[0] = optionSymbolShape;
 				optionShapes[1] = optionTitleShape;
 				
-				optionShapes[2] = optionPaddingTop;
-				optionShapes[3] = optionPaddingBottom;
+				optionShapes[2] = optionPaddingBottom;
+				optionShapes[3] = optionPaddingTop;
 				
 				updateShapeTable.add(optionShapes);
 			}
 			
 			// Make sure, the next options offset to the current option in this cycle is correctly.
 			// In this case, the height of "optionSymbolShape" is taken because it is identical to the height of "optionTitleShape" (it would make no difference which one).
-			yCurrentOption += (optionPaddingBottom.height + optionSymbolShape.height + optionPaddingTop.height);
+			lastHeights += (optionPaddingBottom.height + optionSymbolShape.height + optionPaddingTop.height);
 		}
 	}
 	

@@ -59,13 +59,19 @@ public class Main
 	{
 		options = new ArrayList<GSelectionOption>();
 		
-		GSelectionOption option0 = new GSelectionOption("Win a price", false), option1 = new GSelectionOption("Loose everything", true);
+		GSelectionOption option0 = new GSelectionOption("Win a price", false), option1 = new GSelectionOption("Loose everything", true), option2 = new GSelectionOption("Loose your vibes", false);
 		
-		option0.getStyle().setPaddingBottom(10);
-		option0.getStyle().setPaddingTop(0);
+		option0.getStyle().setPaddingBottom(10);		
+		option1.getStyle().setPaddingBottom(10);
+		option2.getStyle().setPaddingBottom(10);
+		
+		option0.getStyle().setPaddingTop(10);
+		option1.getStyle().setPaddingTop(10);
+		option2.getStyle().setPaddingTop(10);
 		
 		options.add(option0);
 		options.add(option1);
+		options.add(option2);
 		
 		gSB = new GSelectionBox(new Point(200, 200), options);
 		

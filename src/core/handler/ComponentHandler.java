@@ -162,7 +162,7 @@ public class ComponentHandler
 			}
 			
 			
-		}		
+		}
 
 		// This is the actual part where text-fields are modified, meaning the value or
 		// text it contains gets changed.
@@ -351,6 +351,8 @@ public class ComponentHandler
 		
 		Point mouseLocation = display.getEventHandler().getMouseAdapter().getCursorLocation();
 		
+		// System.out.println(mouseLocation);
+		
 		/*
 		 *  WARNING! The code below must be executed only under certain circumstances ! ! !
 		 *  
@@ -368,7 +370,7 @@ public class ComponentHandler
 		}
 
 		// If the execution goes until here, it will be triggered in the next steps.
-		
+
 		preEvaluateEvents(focused);
 
 		boolean clicking = display.getEventHandler().getMouseAdapter().isClicking();
