@@ -79,6 +79,7 @@ It really shouldn't lack of brief comments in the code actually..👍
 # Stats / Nice To Know (as of Aug 15 2020)
 - Total lines of code: 2515
 - Code size: ~85 kB
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/bdca864677bc462ab2d2f97a09de45fa)](https://app.codacy.com/manual/ThirdRealityStudios/GUInness?utm_source=github.com&utm_medium=referral&utm_content=ThirdRealityStudios/GUInness&utm_campaign=Badge_Grade_Dashboard)
 - Rating of code by Codacy: [![Codacy Badge](https://app.codacy.com/project/badge/Grade/ce99cd3f8f5242e0944f216bf975edb8)](https://www.codacy.com/manual/SucukiFarmer/GUInness?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=SucukiFarmer/GUInness&amp;utm_campaign=Badge_Grade)
 
 
