@@ -5,10 +5,7 @@ import java.io.File;
 import core.feature.Path;
 import core.gui.component.GLogic;
 import core.gui.component.GStyle;
-import core.gui.design.Classic;
 import core.gui.font.Font;
-
-// new Rectangle(new Dimension(font.getFontSize() + val.length() * font.getFontSize(), font.getFontSize()))
 
 public class GSelectionOption
 {

@@ -13,6 +13,7 @@ import core.Meta;
 import core.draw.DrawToolkit;
 import core.gui.component.GComponent;
 import core.gui.component.decoration.GPath;
+import core.gui.component.decoration.GRectangle;
 import core.gui.component.selection.GCheckbox;
 import core.gui.component.selection.list.GSelectionBox;
 import core.gui.component.selection.list.GSelectionOption;
@@ -79,11 +80,28 @@ public class Classic extends Design
 				break;
 			}
 			
+			case "rectangle":
+			{
+				drawRectangle(g, c);
+
+				break;
+			}
+			
 			default:
 			{
 				drawDefault(g, c);
 			}
 		}
+	}
+	
+	private void drawRectangle(Graphics g, GComponent c)
+	{
+		GRectangle rect = (GRectangle) c;
+		
+		Rectangle shape = rect.getStyle().getShape().getBounds();
+		
+		g.setColor(rect.getStyle().getPrimaryColor());
+		g.fillRect(shape.x, shape.y, shape.width, shape.height);
 	}
 	
 	private void drawDescription(Graphics g, GComponent c)

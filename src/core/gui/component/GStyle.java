@@ -162,10 +162,21 @@ public class GStyle implements Serializable
 		return opacity;
 	}
 
+	// Applies the given opacity to the primary color.
 	public void setOpacity(float opacity)
 	{
 		if(opacity <= 1 && opacity >= 0)
 		{
+			int maxRGB = 255;
+			
+			float r = (float) getPrimaryColor().getRed() / maxRGB;
+			float g = (float) getPrimaryColor().getGreen() / maxRGB;
+			float b = (float) getPrimaryColor().getBlue() / maxRGB;
+			
+			Color rgba = new Color(r, g, b, opacity);
+			
+			setPrimaryColor(rgba);
+			
 			this.opacity = opacity;
 		}
 	}

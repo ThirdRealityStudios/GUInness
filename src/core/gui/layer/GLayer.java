@@ -105,7 +105,7 @@ public class GLayer implements Comparable<GLayer>, Serializable
 			comp.getStyle().setDesign(getDesign());
 		}
 
-		boolean updateForShapeNecessary = !(comp.getType().contentEquals("image") || comp.getType().contentEquals("checkbox") || comp.getType().contentEquals("selectionbox"));
+		boolean updateForShapeNecessary = !(comp.getType().contentEquals("image") || comp.getType().contentEquals("checkbox") || comp.getType().contentEquals("selectionbox") || comp.getType().contentEquals("rectangle"));
 
 		if(updateForShapeNecessary)
 		{
@@ -122,13 +122,13 @@ public class GLayer implements Comparable<GLayer>, Serializable
 			// Make sure all components are "synchronized" with the same important settings as the layer (if not initialized yet).
 			comp.setEnabled((comp.isEnabled() == null) ? isEnabled() : comp.isEnabled());
 			comp.getStyle().setVisible((comp.getStyle().isVisible() == null) ? isVisible() : comp.getStyle().isVisible());
-			
+
 			compBuffer.add(comp);
 		}
 		else
 		{
 			// if the position is invalid, also no changes are applied to the component including design.
-			
+
 			throw new IllegalArgumentException("Tried to add a component to the position of another component (intersection).\nMore details:\n" + comp);
 		}
 	}

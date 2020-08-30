@@ -181,7 +181,9 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 		// this method assumes no component was found,
 		// so the cursor is not over a component.
 		if(target == null)
+		{
 			return false;
+		}
 		
 		return target.getStyle().getShape().contains(getCursorLocation());
 	}
@@ -210,7 +212,11 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 					// Returns the first component which is focused by the mouse cursor.
 					if(insideComponent)
 					{
-						firstMatch = selected;
+						// Make sure, if the component is ignored / unfocusable it is not recognized by its click or hover behavior.
+						if(selected.getLogic().isFocusable())
+						{
+							firstMatch = selected;
+						}
 						
 						break;
 					}

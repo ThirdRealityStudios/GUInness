@@ -1,6 +1,7 @@
 package core;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
 import java.io.File;
@@ -11,6 +12,7 @@ import core.feature.image.ImageToolkit;
 import core.gui.Display;
 import core.gui.Viewport;
 import core.gui.component.decoration.GImage;
+import core.gui.component.decoration.GRectangle;
 import core.gui.component.input.GTextfield;
 import core.gui.component.selection.GCheckbox;
 import core.gui.component.selection.list.GSelectionBox;
@@ -25,6 +27,8 @@ import core.gui.layer.GLayer;
 public class Main
 {
 	private Display display;
+	
+	private GRectangle rect;
 
 	private GButton start, exit;
 
@@ -57,6 +61,9 @@ public class Main
 	
 	private void initComponents()
 	{
+		rect = new GRectangle(0, 0, new Dimension(800, 86), Color.RED, 0.5f);
+		rect.getLogic().setFocusable(false);
+		
 		options = new ArrayList<GSelectionOption>();
 		
 		GSelectionOption option0 = new GSelectionOption("Win a price", false), option1 = new GSelectionOption("Loose everything", true), option2 = new GSelectionOption("Loose your vibes", false);
@@ -65,7 +72,6 @@ public class Main
 		option1.getStyle().setPaddingBottom(10);
 		option2.getStyle().setPaddingBottom(10);
 		
-		//option0.getStyle().setPaddingTop(10);
 		option1.getStyle().setPaddingTop(10);
 		option2.getStyle().setPaddingTop(10);
 		
@@ -185,14 +191,13 @@ public class Main
 	public void setupLayers()
 	{
 		description = new GDescription(new Point(20, 520), "Money here for nothing!", default2);
-		
+
 		//layer0.add(new GPath(design, Path2DMaker.makeRectangle(0, 0, 200, 300), Color.RG, true, new Point(0, 300), true));
 		//layer0.add(new GPath(design, Path2DMaker.makeRectangle(0, 0, 800, 30), Color.PINK, true, new Point(100, 300), true));
 
 		layer0.add(img0);
 
 		layer1.add(start);
-
 		layer1.add(checkbox1);
 
 		layer2.add(description);
@@ -203,6 +208,7 @@ public class Main
 		layer2.add(input1);
 		
 		layer2.add(gSB);
+		layer2.add(rect);
 	}
 
 	public void run()

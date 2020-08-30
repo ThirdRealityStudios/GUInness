@@ -73,6 +73,11 @@ public abstract class GComponent implements Serializable
 		setValue(val);
 	}
 	
+	public GComponent(String type, Shape shape, int length, String val, Font font)
+	{
+		this(type, shape.getBounds().getLocation(), shape, length, val, font);
+	}
+	
 	public GComponent(String type, Point location, Shape shape, String val, Font font)
 	{
 		this(type, location);

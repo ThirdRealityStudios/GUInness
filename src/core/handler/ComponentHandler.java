@@ -350,9 +350,7 @@ public class ComponentHandler
 		GComponent focused = display.getEventHandler().getMouseAdapter().getFocusedComponent();
 		
 		Point mouseLocation = display.getEventHandler().getMouseAdapter().getCursorLocation();
-		
-		// System.out.println(mouseLocation);
-		
+
 		/*
 		 *  WARNING! The code below must be executed only under certain circumstances ! ! !
 		 *  
