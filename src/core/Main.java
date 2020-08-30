@@ -65,7 +65,7 @@ public class Main
 		option1.getStyle().setPaddingBottom(10);
 		option2.getStyle().setPaddingBottom(10);
 		
-		option0.getStyle().setPaddingTop(10);
+		//option0.getStyle().setPaddingTop(10);
 		option1.getStyle().setPaddingTop(10);
 		option2.getStyle().setPaddingTop(10);
 		

@@ -10,7 +10,7 @@ import core.gui.component.GComponent;
 public class GSelectionBox extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
-	
+
 	private ArrayList<GSelectionOption> options;
 	
 	// This list contains all shapes related to an option.
@@ -107,11 +107,14 @@ public class GSelectionBox extends GComponent
 		
 		Point originalLocation = getStyle().getLocation();
 		
-		Rectangle lastShape = getShapeTable().get(getShapeTable().size()-1)[0];
+		Rectangle lastShape = getShapeTable().get(getShapeTable().size()-1)[3];
 		
 		sumHeight = (lastShape.y + lastShape.height) - originalLocation.y;
 		
 		getStyle().setShape(new Rectangle(originalLocation.x, originalLocation.y, maxWidth, sumHeight));
+		
+		System.out.println("Selection box shape y: " + (getStyle().getLocation().y + getStyle().getShape().getBounds().height));
+		System.out.println("Last shape y: " + (updateShapeTable.get(updateShapeTable.size()-1)[3].y + updateShapeTable.get(updateShapeTable.size()-1)[3].height));
 	}
 
 	// This will actually calculate a grid for every single option you add to this GSelectionBox.
@@ -138,14 +141,14 @@ public class GSelectionBox extends GComponent
 			// After having calculated all positions the measurements such as width and height will be determined.
 			{
 				// Sizes calculated here..
-				{
-					optionPaddingBottom = new Rectangle(fontSize + fontSize * option.getValue().length(), option.getStyle().getPaddingBottom());
-					
+				{					
 					optionSymbolShape = new Rectangle(fontSize, fontSize);
 					
 					optionTitleShape = new Rectangle(fontSize * option.getValue().length(), fontSize);
 					
-					optionPaddingTop = new Rectangle(fontSize + fontSize * option.getValue().length(), option.getStyle().getPaddingTop());
+					optionPaddingBottom = new Rectangle(optionSymbolShape.width + optionTitleShape.width, option.getStyle().getPaddingBottom());
+					
+					optionPaddingTop = new Rectangle(optionPaddingBottom.width, option.getStyle().getPaddingTop());
 				}
 				
 				// Position applied here..
