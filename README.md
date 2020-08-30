@@ -7,7 +7,7 @@ Currently, the focus of the development goes on solidity and stability before an
 
 
 # First Impression
-![Application sample](https://i.ibb.co/wYDhDDP/Screenshot-from-2020-08-21-16-22-50.jpg)
+![Application sample](https://i.imgur.com/Y9zXnee.png)
 
 
 # History
@@ -76,9 +76,9 @@ Anyway, there are of course dozens of comments and a sample application (Main.ja
 It really shouldn't lack of brief comments in the code actually..👍
 
 
-# Stats / Nice To Know (as of Aug 29 2020)
-- Total lines of code: 2640
-- Code size: ~94 kB
+# Stats / Nice To Know (as of Aug 30 2020)
+- Total lines of code: ~2700
+- Code size: ~98,6 kB
 - Rating of code by Codacy: [![Codacy Badge](https://app.codacy.com/project/badge/Grade/a142583660fa4e469a495e424cd0d155)](https://www.codacy.com/manual/ThirdRealityStudios/GUInness?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ThirdRealityStudios/GUInness&amp;utm_campaign=Badge_Grade)
 
 
