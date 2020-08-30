@@ -62,6 +62,8 @@ public class Main
 	private void initComponents()
 	{
 		rect = new GRectangle(0, 0, new Dimension(800, 86), Color.RED, 0.5f);
+		
+		// The button ("start" variable) is focused later during runtime instead.
 		rect.getLogic().setFocusable(false);
 		
 		options = new ArrayList<GSelectionOption>();
