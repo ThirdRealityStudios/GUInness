@@ -102,19 +102,18 @@ public class GSelectionBox extends GComponent
 		
 		for(int i = 0; i < getShapeTable().size(); i++)
 		{
-			maxWidth = Math.max(maxWidth, (getShapeTable().get(i)[0].width + getShapeTable().get(i)[1].width));
+			maxWidth = Math.max(maxWidth, (getShapeTable().get(i)[0].width + getShapeTable().get(i)[1].width + getShapeTable().get(i)[2].width));
 		}
 		
 		Point originalLocation = getStyle().getLocation();
 		
-		Rectangle lastShape = getShapeTable().get(getShapeTable().size()-1)[3];
+		Rectangle lastShape = getShapeTable().get(getShapeTable().size()-1)[4];
 		
 		sumHeight = (lastShape.y + lastShape.height) - originalLocation.y;
 		
 		getStyle().setShape(new Rectangle(originalLocation.x, originalLocation.y, maxWidth, sumHeight));
 		
-		System.out.println("Selection box shape y: " + (getStyle().getLocation().y + getStyle().getShape().getBounds().height));
-		System.out.println("Last shape y: " + (updateShapeTable.get(updateShapeTable.size()-1)[3].y + updateShapeTable.get(updateShapeTable.size()-1)[3].height));
+		System.out.println(getStyle().getShape());
 	}
 
 	// This will actually calculate a grid for every single option you add to this GSelectionBox.
@@ -132,63 +131,50 @@ public class GSelectionBox extends GComponent
 			
 			int fontSize = option.getStyle().getFont().getFontSize();
 			
-			Rectangle optionSymbolShape = null, optionTitleShape = null, optionPaddingTop = null, optionPaddingBottom = null;
+			Rectangle optionSymbolShape = null, optionSeparationWidth = null, optionTitleShape = null, optionPaddingTop = null, optionPaddingBottom = null;
 			
 			// The location of this GSelectionBox.
 			Point location = new Point(getStyle().getLocation().x, getStyle().getLocation().y + lastHeights);
+
+			// Sizes calculated here..
+			{					
+				optionSymbolShape = new Rectangle(fontSize, fontSize);
+				
+				optionSeparationWidth = new Rectangle(fontSize / 2, fontSize);
+				
+				optionTitleShape = new Rectangle(fontSize * option.getValue().length(), fontSize);
+				
+				optionPaddingBottom = new Rectangle(optionSymbolShape.width + optionSeparationWidth.width + optionTitleShape.width, option.getStyle().getPaddingBottom());
+				
+				optionPaddingTop = new Rectangle(optionPaddingBottom.width, option.getStyle().getPaddingTop());
+			}
 			
-			// Pre-calculating all locations (only)..
-			// After having calculated all positions the measurements such as width and height will be determined.
+			// Positions applied here..
 			{
-				// Sizes calculated here..
-				{					
-					optionSymbolShape = new Rectangle(fontSize, fontSize);
-					
-					optionTitleShape = new Rectangle(fontSize * option.getValue().length(), fontSize);
-					
-					optionPaddingBottom = new Rectangle(optionSymbolShape.width + optionTitleShape.width, option.getStyle().getPaddingBottom());
-					
-					optionPaddingTop = new Rectangle(optionPaddingBottom.width, option.getStyle().getPaddingTop());
-				}
+				optionPaddingBottom.setLocation(location);
 				
-				// Position applied here..
-				{
-					optionPaddingBottom.setLocation(location);
-					
-					optionSymbolShape.setLocation(location.x, optionPaddingBottom.y + optionPaddingBottom.height);
-					
-					optionTitleShape.setLocation(location.x + optionSymbolShape.width, optionPaddingBottom.y + optionPaddingBottom.height);
-					
-					optionPaddingTop.setLocation(location.x, optionTitleShape.y + optionTitleShape.height);
-				}
+				optionSymbolShape.setLocation(location.x, optionPaddingBottom.y + optionPaddingBottom.height);
 				
-				/*
-				optionPaddingBottom = new Rectangle(new Point(location.x, location.y));
-				optionPaddingBottom.setSize(fontSize + option.getValue().length() * fontSize, option.getStyle().getPaddingBottom());
+				optionSeparationWidth.setLocation(optionSymbolShape.x + optionSymbolShape.width, optionSymbolShape.y);
 				
-				System.out.println("Height on the bottom> " + option.getStyle().getPaddingBottom());
+				optionTitleShape.setLocation(optionSeparationWidth.x + optionSeparationWidth.width, optionSeparationWidth.y);
 				
-				optionSymbolShape = new Rectangle(new Point(location.x, optionPaddingBottom.y + optionPaddingBottom.height));
-				optionSymbolShape.setSize(fontSize, fontSize);
-				
-				optionTitleShape = new Rectangle(new Point(location.x + optionSymbolShape.width, optionSymbolShape.y + optionSymbolShape.height));
-				optionTitleShape.setSize(fontSize * option.getValue().length(), fontSize);
-				
-				optionPaddingTop = new Rectangle(new Point(location.x, optionTitleShape.y + optionTitleShape.height));
-				optionPaddingTop.setSize(fontSize + option.getValue().length() * fontSize, option.getStyle().getPaddingTop());
-				*/
+				optionPaddingTop.setLocation(location.x, optionTitleShape.y + optionTitleShape.height);
 			}
 			
 			// Creates an array of shapes for each option and adds it to the list.
 			// This will give every option a set of shapes.
 			{
-				Rectangle[] optionShapes = new Rectangle[4];
+				Rectangle[] optionShapes = new Rectangle[5];
 				
 				optionShapes[0] = optionSymbolShape;
-				optionShapes[1] = optionTitleShape;
 				
-				optionShapes[2] = optionPaddingBottom;
-				optionShapes[3] = optionPaddingTop;
+				optionShapes[1] = optionSeparationWidth;
+				
+				optionShapes[2] = optionTitleShape;
+				
+				optionShapes[3] = optionPaddingBottom;
+				optionShapes[4] = optionPaddingTop;
 				
 				updateShapeTable.add(optionShapes);
 			}

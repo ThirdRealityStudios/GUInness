@@ -126,7 +126,7 @@ public class Classic extends Design
 					GSelectionOption option = selectionBox.getOptions().get(i);
 					
 					Rectangle optionShape = shapeTable.get(i)[0];
-					Rectangle titleShape = shapeTable.get(i)[1];
+					Rectangle titleShape = shapeTable.get(i)[2];
 					
 					g.setColor(option.isChecked() ? Color.GREEN : Color.RED);
 					g.fillRect(optionShape.x, optionShape.y, optionShape.width, optionShape.height);

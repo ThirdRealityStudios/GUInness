@@ -228,7 +228,7 @@ public class ComponentHandler
 							
 							for(int i = 0; i < shapeTable.size(); i++)
 							{
-								if(shapeTable.get(i)[0].createUnion(shapeTable.get(i)[1]).contains(mouseLocation))
+								if(shapeTable.get(i)[0].contains(mouseLocation) || shapeTable.get(i)[2].contains(mouseLocation))
 								{
 									selectionbox.selectOptionAt(i);
 								}
