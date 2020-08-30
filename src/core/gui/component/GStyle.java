@@ -34,6 +34,8 @@ public class GStyle implements Serializable
 	private Font font;
 	
 	private int paddingTop = 0, paddingBottom = 0;
+	
+	private float opacity = 1f;
 
 	private Color primaryColor = null, bufferedColor = null;
 
@@ -153,5 +155,18 @@ public class GStyle implements Serializable
 	public void setPaddingBottom(int paddingBottom)
 	{
 		this.paddingBottom = paddingBottom;
+	}
+
+	public float getOpacity()
+	{
+		return opacity;
+	}
+
+	public void setOpacity(float opacity)
+	{
+		if(opacity <= 1 && opacity >= 0)
+		{
+			this.opacity = opacity;
+		}
 	}
 }

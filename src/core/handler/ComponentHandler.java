@@ -13,9 +13,9 @@ import core.feature.Timer;
 import core.gui.Display;
 import core.gui.Viewport;
 import core.gui.component.GComponent;
-import core.gui.special.GCheckbox;
-import core.gui.special.selection.GSelectionBox;
-import core.gui.special.selection.GSelectionOption;
+import core.gui.component.selection.GCheckbox;
+import core.gui.component.selection.list.GSelectionBox;
+import core.gui.component.selection.list.GSelectionOption;
 
 public class ComponentHandler
 {

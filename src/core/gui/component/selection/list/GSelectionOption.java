@@ -1,4 +1,4 @@
-package core.gui.special.selection;
+package core.gui.component.selection.list;
 
 import java.io.File;
 

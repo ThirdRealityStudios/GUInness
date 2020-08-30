@@ -1,4 +1,4 @@
-package core.gui.special;
+package core.gui.component.input;
 
 import java.awt.Color;
 import java.awt.Point;

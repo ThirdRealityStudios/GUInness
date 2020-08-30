@@ -1,4 +1,4 @@
-package core.gui.special;
+package core.gui.component.selection;
 
 import java.awt.Dimension;
 import java.awt.Image;
