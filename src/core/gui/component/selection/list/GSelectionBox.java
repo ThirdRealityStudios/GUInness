@@ -1,10 +1,14 @@
 package core.gui.component.selection.list;
 
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.File;
 import java.util.ArrayList;
 
 import core.Meta;
+import core.feature.Path;
+import core.feature.image.ImageToolkit;
 import core.gui.component.GComponent;
 
 public class GSelectionBox extends GComponent
@@ -21,6 +25,9 @@ public class GSelectionBox extends GComponent
 	private int index = -1;
 	
 	private boolean defaultOptionActive = false;
+	
+	// Keeps two different icons which illustrate two possible states of an option (selected / unselected).
+	private Image[] icon;
 
 	public GSelectionBox(Point location)
 	{
@@ -29,6 +36,8 @@ public class GSelectionBox extends GComponent
 		updateShapeTable = new ArrayList<Rectangle[]>();
 		
 		options = new ArrayList<GSelectionOption>();
+		
+		initIcon();
 	}
 	
 	public GSelectionBox(Point location, ArrayList<GSelectionOption> options)
@@ -36,6 +45,8 @@ public class GSelectionBox extends GComponent
 		super("selectionbox", location);
 		
 		updateShapeTable = new ArrayList<Rectangle[]>();
+		
+		initIcon();
 		
 		if(areValidOptions(options))
 		{
@@ -55,6 +66,15 @@ public class GSelectionBox extends GComponent
 		
 		// Make sure, the current shape is updated with the correct size with the new options added.
 		updateSelectionBoxShape();
+	}
+	
+	// Only there to load the images for the icons..
+	public void initIcon()
+	{
+		icon = new Image[2];
+		
+		icon[0] = ImageToolkit.loadImage(Path.ICON + File.separator + "radio_unselected.png");
+		icon[1] = ImageToolkit.loadImage(Path.ICON + File.separator + "radio_selected.png");
 	}
 	
 	public ArrayList<GSelectionOption> getOptions()
@@ -112,8 +132,6 @@ public class GSelectionBox extends GComponent
 		sumHeight = (lastShape.y + lastShape.height) - originalLocation.y;
 		
 		getStyle().setShape(new Rectangle(originalLocation.x, originalLocation.y, maxWidth, sumHeight));
-		
-		System.out.println(getStyle().getShape());
 	}
 
 	// This will actually calculate a grid for every single option you add to this GSelectionBox.
@@ -136,8 +154,8 @@ public class GSelectionBox extends GComponent
 			// The location of this GSelectionBox.
 			Point location = new Point(getStyle().getLocation().x, getStyle().getLocation().y + lastHeights);
 
-			// Sizes calculated here..
-			{					
+			// Sizes (just dimensions) calculated here..
+			{
 				optionSymbolShape = new Rectangle(fontSize, fontSize);
 				
 				optionSeparationWidth = new Rectangle(fontSize / 2, fontSize);
@@ -149,7 +167,7 @@ public class GSelectionBox extends GComponent
 				optionPaddingTop = new Rectangle(optionPaddingBottom.width, option.getStyle().getPaddingTop());
 			}
 			
-			// Positions applied here..
+			// Positions additionally applied here..
 			{
 				optionPaddingBottom.setLocation(location);
 				
@@ -169,6 +187,11 @@ public class GSelectionBox extends GComponent
 				
 				optionShapes[0] = optionSymbolShape;
 				
+				// Apply the symbol size (reference "optionSymbolShape") to the icons (which will be the corresponding symbol for the "unselected" and "selected" state).
+				// This way, it is guaranteed the icons are displayed correctly later depending on the font size.
+				icon[0] = icon[0].getScaledInstance(optionSymbolShape.width, optionSymbolShape.height, Image.SCALE_SMOOTH);
+				icon[1] = icon[1].getScaledInstance(optionSymbolShape.width, optionSymbolShape.height, Image.SCALE_SMOOTH);
+				
 				optionShapes[1] = optionSeparationWidth;
 				
 				optionShapes[2] = optionTitleShape;
@@ -183,6 +206,11 @@ public class GSelectionBox extends GComponent
 			// In this case, the height of "optionSymbolShape" is taken because it is identical to the height of "optionTitleShape" (it would make no difference which one).
 			lastHeights += (optionPaddingBottom.height + optionSymbolShape.height + optionPaddingTop.height);
 		}
+	}
+	
+	public Image[] getIcons()
+	{
+		return icon;
 	}
 	
 	public boolean isDefaultOptionActive()

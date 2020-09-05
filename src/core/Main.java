@@ -81,6 +81,9 @@ public class Main
 		options.add(option1);
 		options.add(option2);
 		
+		// The first option should have a different background color.
+		option0.getStyle().setPrimaryColor(Color.WHITE);
+		
 		gSB = new GSelectionBox(new Point(200, 200), options);
 		
 		checkbox1 = new GCheckbox(new Point(20, 200), true, 20)
@@ -171,7 +174,7 @@ public class Main
 			}
 		};
 
-		Image i = ImageToolkit.loadImage(Path.CORE_PATH + File.separator + "media" + File.separator + "samples" + File.separator + "MountainLake.jpg");
+		Image i = ImageToolkit.loadImage(Path.ROOT + File.separator + "media" + File.separator + "samples" + File.separator + "MountainLake.jpg");
 
 		img0 = new GImage(new Point(0, 0), 600, false , i);
 		img0.getLogic().setActionOnHover(false);

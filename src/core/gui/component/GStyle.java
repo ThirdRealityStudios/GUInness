@@ -18,7 +18,7 @@ public class GStyle implements Serializable
 	private Design design;
 	
 	// Contains the shape of the component.
-	private Shape shape;
+	protected Shape shape;
 
 	// Tells whether the context or component is visible or not.
 	// If 'null', a value will be automatically assigned later.
@@ -36,6 +36,9 @@ public class GStyle implements Serializable
 	private int paddingTop = 0, paddingBottom = 0;
 	
 	private float opacity = 1f;
+	
+	// For specific component types, such as GRectangle, you can define a border-radius (just like in CSS for HTML).
+	private int borderRadiusPx = 0;
 
 	private Color primaryColor = null, bufferedColor = null;
 
@@ -179,5 +182,15 @@ public class GStyle implements Serializable
 			
 			this.opacity = opacity;
 		}
+	}
+
+	public int getBorderRadiusPx()
+	{
+		return borderRadiusPx;
+	}
+
+	public void setBorderRadiusPx(int borderRadiusPx)
+	{
+		this.borderRadiusPx = borderRadiusPx;
 	}
 }

@@ -96,12 +96,33 @@ public class Classic extends Design
 	
 	private void drawRectangle(Graphics g, GComponent c)
 	{
-		GRectangle rect = (GRectangle) c;
-		
-		Rectangle shape = rect.getStyle().getShape().getBounds();
-		
-		g.setColor(rect.getStyle().getPrimaryColor());
-		g.fillRect(shape.x, shape.y, shape.width, shape.height);
+		// A GRectangle can do more than a usual GComponent.
+		// You can define border-radiuses and more.
+		if(c.getType().contentEquals("rectangle"))
+		{
+			GRectangle rect = (GRectangle) c;
+			
+			Rectangle shape = rect.getStyle().getShape().getBounds();
+			
+			g.setColor(rect.getStyle().getPrimaryColor() == null ? Color.BLACK : rect.getStyle().getPrimaryColor());
+			
+			if(shape != null)
+			{
+				g.fillRect(shape.x, shape.y, shape.width, shape.height);
+			}
+		}
+		// If it's not a GRectangle just draw the shape if there is one. Anyway, you can do less things here..
+		else if(c.getStyle().getShape() != null)
+		{
+			Rectangle shape = c.getStyle().getShape().getBounds();
+			
+			g.setColor(c.getStyle().getPrimaryColor() == null ? Color.BLACK : c.getStyle().getPrimaryColor());
+			
+			if(shape != null)
+			{
+				g.fillRect(shape.x, shape.y, shape.width, shape.height);
+			}
+		}
 	}
 	
 	private void drawDescription(Graphics g, GComponent c)
@@ -164,16 +185,60 @@ public class Classic extends Design
 		int size = bounds.width;
 		
 		GCheckbox checkbox = (GCheckbox) c;
-		
+
 		g.setColor(getBorderColor());
 		g.fillRect(bounds.getLocation().x, bounds.getLocation().y, size + getInnerThickness(), size + getInnerThickness());
-		
+
 		g.setColor(Color.WHITE);
 		g.fillRect(bounds.getLocation().x + getBorderThickness(), bounds.getLocation().y + getBorderThickness(), size, size);
 
 		if(checkbox.isChecked())
 		{
 			g.drawImage(c.getStyle().getImage() , bounds.getLocation().x + 2*getBorderThickness(), bounds.getLocation().y + 2*getBorderThickness(), null);
+		}
+	}
+	
+	private void drawSelectionBox(Graphics g, GComponent c)
+	{
+		// Represents simply the outer bounds of the component.
+		Rectangle bounds = c.getStyle().getShape().getBounds();
+		
+		GSelectionBox selectionBox = (GSelectionBox) c;
+		
+		bounds = selectionBox.getStyle().getShape().getBounds();
+		
+		drawRectangle(g, selectionBox);
+		
+		ArrayList<Rectangle[]> shapeTable = selectionBox.getShapeTable();
+		
+		// Draws every single option from the GSelectionBox.
+		for(int i = 0; i < shapeTable.size(); i++)
+		{
+			GSelectionOption option = selectionBox.getOptions().get(i);
+			
+			Rectangle optionShape = shapeTable.get(i)[0];
+			Rectangle titleShape = shapeTable.get(i)[2];
+			
+			if(option.isChecked())
+			{
+				g.drawImage(selectionBox.getIcons()[1], optionShape.x, optionShape.y, optionShape.width, optionShape.height, null);
+			}
+			else
+			{
+				g.drawImage(selectionBox.getIcons()[0], optionShape.x, optionShape.y, optionShape.width, optionShape.height, null);
+			}
+			
+			// Every option can have a background color..
+			Color optionColor = option.getStyle().getPrimaryColor();
+			
+			// But if there is no background color, then no background will be drawn just..
+			if(optionColor != null)
+			{
+				g.setColor(optionColor);
+				g.fillRect(titleShape.x, titleShape.y, titleShape.width, titleShape.height);
+			}
+			
+			DrawToolkit.drawString(g, option.getValue(), titleShape.x, titleShape.y, option.getStyle().getFont());
 		}
 	}
 
@@ -192,38 +257,6 @@ public class Classic extends Design
 		g.fillRect(bounds.getLocation().x + getBorderThickness(), bounds.getLocation().y + getBorderThickness(), titleWidth + 2 * getInnerThickness(), c.getStyle().getFont().getFontSize() + 2 * getInnerThickness());
 
 		DrawToolkit.drawString(g, c.getValue(), bounds.getLocation().x + getInnerThickness() + getBorderThickness(), bounds.getLocation().y + getInnerThickness() + getBorderThickness(), c.getStyle().getFont());
-	}
-	
-	private void drawSelectionBox(Graphics g, GComponent c)
-	{
-		// Represents simply the outer bounds of the component.
-		Rectangle bounds = c.getStyle().getShape().getBounds();
-		
-		GSelectionBox selectionBox = (GSelectionBox) c;
-		
-		bounds = selectionBox.getStyle().getShape().getBounds();
-		
-		g.setColor(Color.GRAY);
-		g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-		
-		ArrayList<Rectangle[]> shapeTable = selectionBox.getShapeTable();
-		
-		// Draws every single option from the GSelectionBox.
-		for(int i = 0; i < shapeTable.size(); i++)
-		{
-			GSelectionOption option = selectionBox.getOptions().get(i);
-			
-			Rectangle optionShape = shapeTable.get(i)[0];
-			Rectangle titleShape = shapeTable.get(i)[2];
-			
-			g.setColor(option.isChecked() ? Color.GREEN : Color.RED);
-			g.fillRect(optionShape.x, optionShape.y, optionShape.width, optionShape.height);
-			
-			g.setColor(Color.YELLOW);
-			g.fillRect(titleShape.x, titleShape.y, titleShape.width, titleShape.height);
-			
-			DrawToolkit.drawString(g, option.getValue(), titleShape.x, titleShape.y, option.getStyle().getFont());
-		}
 	}
 
 	// Returns a determined shape which uses the design defined in this class.

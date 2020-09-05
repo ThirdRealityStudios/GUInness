@@ -52,7 +52,7 @@ public abstract class GComponent implements Serializable
 		getStyle().setLocation(location);
 		
 		// This line makes sure every GComponent also has a default font, no matter it is used or not or for other cases.
-		getStyle().setFont(new Font("default", Path.FONTS + File.separator + "StandardFont.png", 18));
+		getStyle().setFont(new Font("default", Path.FONT + File.separator + "StandardFont.png", 18));
 
 		// When created apply the default design first.
 		this.getStyle().setDesign(Sample.classic);

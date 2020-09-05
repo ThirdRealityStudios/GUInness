@@ -1,5 +1,6 @@
 package core.gui.component.selection.list;
 
+import java.awt.Image;
 import java.io.File;
 
 import core.feature.Path;
@@ -19,17 +20,20 @@ public class GSelectionOption
 	
 	private String value;
 	
+	private Image[] icon;
+	
 	public GSelectionOption(String title, boolean isDefaultOption)
 	{
 		this.isDefaultOption = isDefaultOption;
-		
+
 		setTitle(title);
 		
 		setStyle(new GStyle());
+		
 		setLogic(new GLogic());
 		
 		// This line makes sure every GComponent also has a default font, no matter it is used or not or for other cases.
-		getStyle().setFont(new Font("default", Path.FONTS + File.separator + "StandardFont.png", 18));
+		getStyle().setFont(new Font("default", Path.FONT + File.separator + "StandardFont.png", 18));
 	}
 	
 	public GSelectionOption(GStyle style, GLogic logic, boolean isDefaultOption)
@@ -38,6 +42,20 @@ public class GSelectionOption
 		
 		this.style = style;
 		this.logic = logic;
+	}
+	
+	// The option is being updated with new icons from the GSelectionBox or similar instances.
+	// This way, abstractness is being kept by handling all scaling and other stuff by outer instances.
+	// Doing so, you don't have to take care about applying an icon for each option (including scaling manually).
+	public void setIcon(Image[] icons, int width, int height)
+	{
+		icon[0] = icons[0].getScaledInstance(width, height, Image.SCALE_SMOOTH); // "Unselected" state
+		icon[1] = icons[1].getScaledInstance(width, height, Image.SCALE_SMOOTH); // "Selected" state
+	}
+	
+	public Image[] getIcon()
+	{
+		return icon;
 	}
 
 	public GStyle getStyle()

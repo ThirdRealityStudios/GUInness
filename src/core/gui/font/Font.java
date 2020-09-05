@@ -17,7 +17,7 @@ public class Font
 	
 	private File file;
 	
-	private final static String defaultFilepath = Path.FONTS + File.separator + "StandardFont.png";
+	private final static String defaultFilepath = Path.FONT + File.separator + "StandardFont.png";
 	
 	private Color fontColor = Color.BLACK;
 	
