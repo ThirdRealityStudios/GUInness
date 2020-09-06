@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.ArrayList;
@@ -38,6 +39,13 @@ public class Classic extends Design
 		// a supplied image will not get in conflict with other settings.
 		switch(c.getType())
 		{
+			case "polybutton":
+			{
+				drawPolyButton(g, c);
+	
+				break;
+			}
+		
 			case "description":
 			{
 				drawDescription(g, c);
@@ -241,6 +249,31 @@ public class Classic extends Design
 			DrawToolkit.drawString(g, option.getValue(), titleShape.x, titleShape.y, option.getStyle().getFont());
 		}
 	}
+	
+	protected void drawPolyButton(Graphics g, GComponent c)
+	{
+		// Represents simply the outer bounds of the component.
+		Rectangle bounds = c.getStyle().getShape().getBounds();
+
+		g.setColor(c.getStyle().getPrimaryColor());
+
+		g.fillPolygon((Polygon) c.getStyle().getShape());
+
+		// If text should be displayed in the center of the component.
+		if(c.getStyle().getTextAlign() == 1)
+		{
+			int textLength = c.getStyle().getFont().getFontSize() * c.getValue().length();
+			
+			int centerX = bounds.getLocation().x + bounds.width / 2 - textLength / 2;
+			int centerY = bounds.getLocation().y + bounds.height / 2 - c.getStyle().getFont().getFontSize() / 2;
+			
+			DrawToolkit.drawString(g, c.getValue(), centerX + c.getStyle().getTextAlignTransition().x, centerY + c.getStyle().getTextAlignTransition().y, c.getStyle().getFont());
+		}
+		else // If text should be displayed normally (upper-left corner of the component).
+		{
+			DrawToolkit.drawString(g, c.getValue(), bounds.getLocation().x + c.getStyle().getTextAlignTransition().x, bounds.getLocation().y + c.getStyle().getTextAlignTransition().y, c.getStyle().getFont());
+		}
+	}
 
 	protected void drawDefault(Graphics g, GComponent c)
 	{
@@ -261,7 +294,7 @@ public class Classic extends Design
 
 	// Returns a determined shape which uses the design defined in this class.
 	public Rectangle generateDefaultShape(GComponent c)
-	{		
+	{
 		// Calculates the correct size of the rectangle for the text component.
 		Dimension backgroundSize = new Dimension(c.getStyle().getLength() * c.getStyle().getFont().getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness(), c.getStyle().getFont().getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness());
 

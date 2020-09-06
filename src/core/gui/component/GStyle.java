@@ -28,6 +28,21 @@ public class GStyle implements Serializable
 	// adding new components to a layer.
 	// A layer would otherwise just overwrite the already set value with default values.
 	private Boolean visible = null;
+	
+	/*
+	 * WARNING! This property might not be supported for all components.
+	 * If not supported, it is anyway mostly the case that the upper-left corner is taken by default..
+	 * 
+	 * 0 = normal (text or title will  appear at the upper-left corner of the component).
+	 * 1 = center (appears in the center of the component.
+	 */
+	private int textAlign = 0;
+	
+	// If you want the actual text to appear somewhere else than in the center or upper-left corner,
+	// you can tell the program to translate or reposition the text by any x and y value.
+	// The translated text is then not recognized later as a component itself.
+	// Translating your text is because of that just for pure decoration purposes.
+	private Point textTransition = new Point();
 
 	private int length = 0;
 	
@@ -192,5 +207,25 @@ public class GStyle implements Serializable
 	public void setBorderRadiusPx(int borderRadiusPx)
 	{
 		this.borderRadiusPx = borderRadiusPx;
+	}
+
+	public int getTextAlign()
+	{
+		return textAlign;
+	}
+
+	public void setTextAlign(int textAlign)
+	{
+		this.textAlign = textAlign;
+	}
+
+	public Point getTextAlignTransition()
+	{
+		return textTransition;
+	}
+
+	public void setTextTransition(Point textAlignTransition)
+	{
+		this.textTransition = textAlignTransition;
 	}
 }

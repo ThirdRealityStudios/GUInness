@@ -4,7 +4,6 @@ import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import core.exec.LoopedThread;
@@ -15,7 +14,6 @@ import core.gui.Viewport;
 import core.gui.component.GComponent;
 import core.gui.component.selection.GCheckbox;
 import core.gui.component.selection.list.GSelectionBox;
-import core.gui.component.selection.list.GSelectionOption;
 
 public class ComponentHandler
 {
@@ -246,6 +244,20 @@ public class ComponentHandler
 			}
 		}
 	}
+	
+	private void resetLastFocus()
+	{
+		// When hovering over something else the cursor is set to default.
+		display.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		
+		switch(lastlyFocused.getType())
+		{
+			case "button":
+			{
+				lastlyFocused.getStyle().setPrimaryColor(lastlyFocused.getStyle().getDesign().getBackgroundColor());
+			}
+		}
+	}
 
 	private void triggerAnimation(GComponent focused, boolean clicking, Point mouseLocation)
 	{
@@ -295,18 +307,16 @@ public class ComponentHandler
 					// Make sure the 'default' branch is executed only once.
 					if(sameComponentFocused)
 					{						
-						// When hovering over something else the cursor is set to default.
-						display.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-						
-						switch(lastlyFocused.getType())
-						{
-							case "button":
-							{
-								lastlyFocused.getStyle().setPrimaryColor(lastlyFocused.getStyle().getDesign().getBackgroundColor());
-							}
-						}
+						resetLastFocus();
 					}
 				}
+			}
+		}
+		else
+		{
+			if(lastlyFocused != null)
+			{
+				resetLastFocus();
 			}
 		}
 	}

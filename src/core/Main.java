@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -19,6 +20,7 @@ import core.gui.component.selection.list.GSelectionBox;
 import core.gui.component.selection.list.GSelectionOption;
 import core.gui.component.standard.GButton;
 import core.gui.component.standard.GDescription;
+import core.gui.component.standard.GPolyButton;
 import core.gui.design.Classic;
 import core.gui.design.Design;
 import core.gui.font.Font;
@@ -58,6 +60,71 @@ public class Main
 		m.init();
 		m.run();
 	}
+
+	private GPolyButton getPolyButton0()
+	{
+		Polygon poly = new Polygon();
+		
+		poly.addPoint(0, 0);
+		poly.addPoint(100, 0);
+		poly.addPoint(150, 50);
+		poly.addPoint(150, 100);
+		poly.addPoint(75, 125);
+		poly.addPoint(0, 125);
+		
+		GPolyButton gPolyButton = new GPolyButton(new Point(450, 370), "CLICK ME", default2, poly)
+		{
+			@Override
+			public void onHover()
+			{
+				// System.out.println("Fuckin hovered a GPolyButton!");
+			}
+			
+			@Override
+			public void onClick()
+			{
+				System.out.println("Clicked GPolyButton!");
+			}
+		};
+		
+		gPolyButton.getStyle().setOpacity(0.7f);
+		gPolyButton.getStyle().setTextAlign(1);
+		
+		return gPolyButton;
+	}
+	
+	private GPolyButton getPolyButton1()
+	{
+		Polygon poly = new Polygon();
+		
+		poly.addPoint(0, 0);
+		poly.addPoint(100, 0);
+		poly.addPoint(150, 50);
+		poly.addPoint(150, 100);
+		poly.addPoint(125, 125);
+		poly.addPoint(0, 250);
+		
+		GPolyButton gPolyButton = new GPolyButton(new Point(250, 310), "Button", default2, poly)
+		{
+			@Override
+			public void onHover()
+			{
+				// System.out.println("Fuckin hovered a GPolyButton!");
+			}
+			
+			@Override
+			public void onClick()
+			{
+				System.out.println("Clicked GPolyButton!");
+			}
+		};
+		
+		gPolyButton.getStyle().setPrimaryColor(Color.RED);
+		gPolyButton.getStyle().setTextAlign(1);
+		gPolyButton.getStyle().setTextTransition(new Point(0, -40));
+		
+		return gPolyButton;
+	}
 	
 	private void initComponents()
 	{
@@ -84,7 +151,7 @@ public class Main
 		// The first option should have a different background color.
 		option0.getStyle().setPrimaryColor(Color.WHITE);
 		
-		gSB = new GSelectionBox(new Point(200, 200), options);
+		gSB = new GSelectionBox(new Point(200, 150), options);
 		
 		checkbox1 = new GCheckbox(new Point(20, 200), true, 20)
 		{
@@ -201,7 +268,9 @@ public class Main
 		//layer0.add(new GPath(design, Path2DMaker.makeRectangle(0, 0, 800, 30), Color.PINK, true, new Point(100, 300), true));
 
 		layer0.add(img0);
-
+		
+		layer1.add(getPolyButton0());
+		layer1.add(getPolyButton1());
 		layer1.add(start);
 		layer1.add(checkbox1);
 

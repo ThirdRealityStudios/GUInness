@@ -58,7 +58,6 @@ public abstract class GComponent implements Serializable
 		this.getStyle().setDesign(Sample.classic);
  
 		getStyle().setPrimaryColor(getStyle().getDesign().getBackgroundColor());
-		getStyle().setShape(new Rectangle(location));
 	}
 	
 	public GComponent(String type, Point location, Shape shape, int length, String val, Font font)

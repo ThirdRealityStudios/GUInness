@@ -58,7 +58,7 @@ public class Viewport extends JPanel
 	// This is why you can't see the applied background color below in the code because it is overwritten by the GImage.
 	private void drawBackground(Graphics g)
 	{
-		g.setColor(Color.BLACK);
+		g.setColor(Color.BLUE);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 	}
 	
