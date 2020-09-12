@@ -85,11 +85,11 @@ It really shouldn't lack of brief comments in the code actually..👍
 If you maybe have some LiteCoins left and you wouldn't mind to support this project,
 you can do so with this wallet address:
 
-MNh6pVYPHW21EtsAEgTfPBAYDXfQKEM2n6
+MEE93XavWVjebG5H3iGTfPyKajkfxx2ZPz
 
 or
 
-litecoin:MNh6pVYPHW21EtsAEgTfPBAYDXfQKEM2n6?label=Donation
+litecoin:MEE93XavWVjebG5H3iGTfPyKajkfxx2ZPz?label=Donation
 
 The amount isn't important; I do this in my freetime so any donation would be purely for some attention.
 Always think, you can better support mutliple developers and/or repositories;
