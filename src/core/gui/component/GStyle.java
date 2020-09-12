@@ -64,6 +64,9 @@ public class GStyle implements Serializable
 	// you need to clarify it in the variable "type" above (String value needs to be
 	// "image" then).
 	private Image img;
+	
+	// The same as above but can be used as a buffer to things in between when needed..
+	private Image imgBuffered;
 
 	public Design getDesign()
 	{
@@ -153,6 +156,16 @@ public class GStyle implements Serializable
 	public void setImage(Image img)
 	{
 		this.img = img;
+	}
+	
+	public Image getBufferedImage()
+	{
+		return imgBuffered;
+	}
+
+	public void setBufferedImage(Image imgBuffered)
+	{
+		this.imgBuffered = imgBuffered;
 	}
 
 	public int getPaddingTop()

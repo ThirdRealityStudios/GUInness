@@ -32,7 +32,7 @@ public class Main
 	
 	private GRectangle rect;
 
-	private GButton moveButton, exit;
+	private GButton moveButton, increaseScale, exit;
 
 	private GTextfield input1, input2, input3;
 	
@@ -193,6 +193,21 @@ public class Main
 		moveButton.getLogic().setActionOnClick(true);
 		moveButton.getLogic().setMultithreading(false); // This will run parallel (with threads) which is in some cases faster (of course unnecessary if you just want to print something to the console).
 
+		increaseScale = new GButton(new Point(150, 100), "increase scale", default2)
+		{
+			@Override
+			public void onHover()
+			{
+				
+			}
+
+			@Override
+			public void onClick()
+			{
+				viewport.setScale(viewport.getScale() + 0.1f);
+			}
+		};
+		
 		exit = new GButton(new Point(20, 150), "EXIT", default1)
 		{
 			@Override
@@ -257,7 +272,8 @@ public class Main
 		display = new Display();
 
 		viewport = new Viewport(display.getEventHandler());
-		viewport.setOffset(new Point(-35, 125));
+		viewport.setOffset(new Point(50, 50));
+		viewport.setScale(0.81f);
 
 		display.setViewport(viewport);
 
@@ -276,6 +292,7 @@ public class Main
 		layer1.add(getPolyButton0());
 		layer1.add(getPolyButton1());
 		layer1.add(moveButton);
+		layer1.add(increaseScale);
 		layer1.add(checkbox1);
 
 		layer2.add(description);

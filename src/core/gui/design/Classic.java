@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
@@ -19,6 +20,7 @@ import core.gui.component.decoration.GRectangle;
 import core.gui.component.selection.GCheckbox;
 import core.gui.component.selection.list.GSelectionBox;
 import core.gui.component.selection.list.GSelectionOption;
+import core.gui.font.Font;
 
 // The classic design without which looks very retro-stylish or ugly.
 public class Classic extends Design
@@ -122,9 +124,12 @@ public class Classic extends Design
 			
 			g.setColor(rect.getStyle().getPrimaryColor() == null ? Color.BLACK : rect.getStyle().getPrimaryColor());
 			
+			int x = (int) ((c.isMovable() ? shape.x + getOffset().x : shape.x) * scale);
+			int y = (int) ((c.isMovable() ? shape.y + getOffset().y : shape.y) * scale);
+			
 			if(shape != null)
 			{
-				g.fillRect(c.isMovable() ? shape.x + getOffset().x : shape.x, c.isMovable() ? shape.y + getOffset().y : shape.y, shape.width, shape.height);
+				g.fillRect(x, y, (int) (shape.width * scale), (int) (shape.height * scale));
 			}
 		}
 		// If it's not a GRectangle just draw the shape if there is one. Anyway, you can do less things here..
@@ -134,9 +139,12 @@ public class Classic extends Design
 			
 			g.setColor(c.getStyle().getPrimaryColor() == null ? Color.BLACK : c.getStyle().getPrimaryColor());
 			
+			int x = (int) ((c.isMovable() ? shape.x + getOffset().x : shape.x) * scale);
+			int y = (int) ((c.isMovable() ? shape.y + getOffset().y : shape.y) * scale);
+			
 			if(shape != null)
 			{
-				g.fillRect(c.isMovable() ? shape.x + getOffset().x : shape.x, c.isMovable() ? shape.y + getOffset().y : shape.y, shape.width, shape.height);
+				g.fillRect(x, y, (int) (shape.width * scale), (int) (shape.height * scale));
 			}
 		}
 	}
@@ -146,10 +154,13 @@ public class Classic extends Design
 		// Represents simply the outer bounds of the component.
 		Rectangle bounds = c.getStyle().getLook().getBounds();
 		
-		int x = bounds.getLocation().x + getInnerThickness() + getBorderThickness();
-		int y = bounds.getLocation().y + getInnerThickness() + getBorderThickness();
+		int x = (int) ((bounds.getLocation().x + getInnerThickness() + getBorderThickness() + (c.isMovable() ? getOffset().x : 0)) * scale);
+		int y = (int) ((bounds.getLocation().y + getInnerThickness() + getBorderThickness() + (c.isMovable() ? getOffset().y : 0)) * scale);
 		
-		DrawToolkit.drawString(g, c.getValue(), c.isMovable() ? x + getOffset().x : x, c.isMovable() ? y + getOffset().y : y, c.getStyle().getFont());
+		Font original = c.getStyle().getFont();
+		Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
+		
+		DrawToolkit.drawString(g, c.getValue(), x, y, scaledFont);
 	}
 	
 	private void drawImage(Graphics g, GComponent c)
@@ -157,10 +168,10 @@ public class Classic extends Design
 		// Represents simply the outer bounds of the component.
 		Rectangle bounds = c.getStyle().getLook().getBounds();
 		
-		int x = bounds.getLocation().x;
-		int y = bounds.getLocation().y;
+		int x = (int) ((bounds.getLocation().x + (c.isMovable() ? getOffset().x : 0)) * scale);
+		int y = (int) ((bounds.getLocation().y + (c.isMovable() ? getOffset().y : 0)) * scale);
 		
-		g.drawImage(c.getStyle().getImage(), c.isMovable() ? x + getOffset().x : x, c.isMovable() ? y + getOffset().y : y, bounds.width, bounds.height, null);
+		g.drawImage(c.getStyle().getImage(), x, y, (int) (bounds.width * scale), (int) (bounds.height * scale), null);
 	}
 	
 	// Needs to be updated with offset and scale ability from the Viewports settings.
@@ -168,7 +179,7 @@ public class Classic extends Design
 	private void drawPath(Graphics g, GComponent c)
 	{
 		GPath path = (GPath) c;
-		
+
 		Graphics2D g2d = (Graphics2D) g;
 
 		g2d.setColor(path.getStyle().getPrimaryColor());
@@ -190,24 +201,36 @@ public class Classic extends Design
 
 		g.setColor(getBorderColor());
 		
-		int x = bounds.getLocation().x;
-		int y = bounds.getLocation().y;
-		
-		g.fillRect(c.isMovable() ? x + getOffset().x : x, c.isMovable() ? y + getOffset().y : y, bounds.getSize().width, bounds.getSize().height);
+		int x = (int) ((bounds.getLocation().x + (c.isMovable() ? getOffset().x : 0)) * scale);
 
-		int titleWidth = c.getStyle().getFont().getFontSize() * c.getStyle().getLength();
+		int y = (int) ((bounds.getLocation().y + (c.isMovable() ? getOffset().y : 0)) * scale);
+		
+		int width = (int) (bounds.getSize().width * scale);
+		int height = (int) (bounds.getSize().height * scale);
+		
+		g.fillRect(x, y, width, height);
+
+		int fontSize = c.getStyle().getFont().getFontSize();
+		
+		int titleWidth = fontSize * c.getStyle().getLength();
 
 		g.setColor(Color.WHITE);
 		
-		int xBorder = x + getBorderThickness();
-		int yBorder = y + getBorderThickness();
-		
-		g.fillRect(c.isMovable() ? xBorder + getOffset().x : xBorder, c.isMovable() ? yBorder + getOffset().y : yBorder, titleWidth + 2 * getInnerThickness(), c.getStyle().getFont().getFontSize() + 2 * getInnerThickness());
+		int xBorder = x + (int) (getBorderThickness() * scale);
+		int yBorder = y + (int) (getBorderThickness() * scale);
 
-		int xInner = xBorder + getInnerThickness();
-		int yInner = yBorder + getInnerThickness();
+		int widthBorder = (int) ((titleWidth + 2 * getInnerThickness()) * scale);
+		int heightBorder = (int) ((fontSize + 2 * getInnerThickness()) * scale);
 		
-		DrawToolkit.drawString(g, c.getValue(), c.isMovable() ? xInner + getOffset().x : xInner, c.isMovable() ? yInner + getOffset().y : yInner, c.getStyle().getFont());
+		g.fillRect(xBorder, yBorder, widthBorder, heightBorder);
+
+		int xInner = (int) (xBorder + getInnerThickness() * scale);
+		int yInner = (int) (yBorder + getInnerThickness() * scale);
+		
+		Font original = c.getStyle().getFont();
+		Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
+		
+		DrawToolkit.drawString(g, c.getValue(), xInner, yInner, scaledFont);
 	}
 	
 	private void drawCheckbox(Graphics g, GComponent c)
@@ -222,33 +245,42 @@ public class Classic extends Design
 
 		g.setColor(getBorderColor());
 		
-		int x = c.isMovable() ? bounds.getLocation().x + getOffset().x : bounds.getLocation().x;
-		int y = c.isMovable() ? bounds.getLocation().y + getOffset().y : bounds.getLocation().y;
+		int x = (int) (((c.isMovable() ? getOffset().x : 0) + bounds.getLocation().x) * scale);
+		int y = (int) (((c.isMovable() ? getOffset().y : 0) + bounds.getLocation().y) * scale);
 		
-		g.fillRect(x, y, size + getInnerThickness(), size + getInnerThickness());
+		int outerSize = (int) ((size + getInnerThickness()) * scale);
+		
+		g.fillRect(x, y, outerSize, outerSize);
 
 		g.setColor(Color.WHITE);
 		
-		int xBorder = x + getBorderThickness();
-		int yBorder = y + getBorderThickness();
-		
-		g.fillRect(xBorder, yBorder, size, size);
+		int rectX = x + (int) (getBorderThickness() * scale);
+		int rectY = y + (int) (getBorderThickness() * scale);
 
+		int innerSize = (int) (size * scale);
+		
+		g.fillRect(rectX, rectY, innerSize, innerSize);
+
+		int imgX = x + (int) (2 * getBorderThickness() * scale);
+		int imgY = y + (int) (2 * getBorderThickness() * scale);
+		
 		if(checkbox.isChecked())
 		{
-			g.drawImage(c.getStyle().getImage() , xBorder + getBorderThickness(), yBorder + getBorderThickness(), null);
+			Image checkSymbol = c.getStyle().getImage();
+
+			// Simply the square size of the image.
+			// The image is saved with square dimensions,
+			// so it doesn't matter if you take the width or height (see package core.gui.image.icon for "check_sign.png").
+			int sizePx = (int) (checkSymbol.getWidth(null) * scale);
+			
+			g.drawImage(checkSymbol, imgX, imgY, sizePx, sizePx, null);
 		}
 	}
 	
 	private void drawSelectionBox(Graphics g, GComponent c)
 	{
-		// Represents simply the outer bounds of the component.
-		Rectangle bounds = c.getStyle().getLook().getBounds();
-		
 		GSelectionBox selectionBox = (GSelectionBox) c;
-		
-		bounds = selectionBox.getStyle().getLook().getBounds();
-		
+
 		drawRectangle(g, selectionBox);
 		
 		ArrayList<Polygon[]> shapeTable = selectionBox.getShapeTable();
@@ -258,35 +290,44 @@ public class Classic extends Design
 		{
 			GSelectionOption option = selectionBox.getOptions().get(i);
 			
-			Polygon optionShape = shapeTable.get(i)[0];
-			Polygon titleShape = shapeTable.get(i)[2];
+			Polygon optionShape = ShapeTransform.scalePolygon(shapeTable.get(i)[0], scale);
+			Polygon titleShape = ShapeTransform.scalePolygon(shapeTable.get(i)[2], scale);
 			
-			int xOption = c.isMovable() ? optionShape.getBounds().x + getOffset().x : optionShape.getBounds().x;
-			int yOption = c.isMovable() ? optionShape.getBounds().y + getOffset().y : optionShape.getBounds().y;
+			int xOption = c.isMovable() ? optionShape.getBounds().x + (int) (getOffset().x  * scale) : optionShape.getBounds().x;
+			int yOption = c.isMovable() ? optionShape.getBounds().y + (int) (getOffset().y * scale) : optionShape.getBounds().y;
+			
+			int optionShapeWidth = optionShape.getBounds().width;
+			int optionShapeHeight = optionShape.getBounds().height;
 			
 			if(option.isChecked())
 			{
-				g.drawImage(selectionBox.getIcons()[1], xOption, yOption, optionShape.getBounds().width, optionShape.getBounds().height, null);
+				g.drawImage(selectionBox.getIcons()[1], xOption, yOption, optionShapeWidth, optionShapeHeight, null);
 			}
 			else
 			{
-				g.drawImage(selectionBox.getIcons()[0], xOption, yOption, optionShape.getBounds().width, optionShape.getBounds().height, null);
+				g.drawImage(selectionBox.getIcons()[0], xOption, yOption, optionShapeWidth, optionShapeHeight, null);
 			}
 			
 			// Every option can have a background color..
 			Color optionColor = option.getStyle().getPrimaryColor();
 			
-			int xTitle = c.isMovable() ? titleShape.getBounds().x + getOffset().x : titleShape.getBounds().x;
-			int yTitle = c.isMovable() ? titleShape.getBounds().y + getOffset().y : titleShape.getBounds().y;
+			int xTitle = c.isMovable() ? titleShape.getBounds().x + (int) (getOffset().x * scale) : titleShape.getBounds().x;
+			int yTitle = c.isMovable() ? titleShape.getBounds().y + (int) (getOffset().y * scale) : titleShape.getBounds().y;
+			
+			int titleShapeWidth = titleShape.getBounds().width;
+			int titleShapeHeight = titleShape.getBounds().height;
 			
 			// But if there is no background color, then no background will just be drawn..
 			if(optionColor != null)
 			{
 				g.setColor(optionColor);
-				g.fillRect(xTitle, yTitle, titleShape.getBounds().width, titleShape.getBounds().height);
+				g.fillRect(xTitle, yTitle, titleShapeWidth, titleShapeHeight);
 			}
 			
-			DrawToolkit.drawString(g, option.getValue(), xTitle, yTitle, option.getStyle().getFont());
+			Font original = c.getStyle().getFont();
+			Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
+			
+			DrawToolkit.drawString(g, option.getValue(), xTitle, yTitle, scaledFont);
 		}
 	}
 	
@@ -294,13 +335,16 @@ public class Classic extends Design
 	{
 		// Represents simply the outer bounds of the component.
 		Rectangle bounds = c.getStyle().getLook().getBounds();
-		
+
 		Polygon look = c.getStyle().getLook();
 
 		g.setColor(c.getStyle().getPrimaryColor());
 
+		int xButton = (int) (look.getBounds().x + (c.isMovable() ? getOffset().x : 0));
+		int yButton = (int) (look.getBounds().y + (c.isMovable() ? getOffset().y : 0));
+
 		// Here it is only working with a copy in order not to modify the original object (polygon and Polybutton).
-		Polygon transformedCopy = ShapeTransform.movePolygonTo(look, look.getBounds().x + getOffset().x, look.getBounds().y + getOffset().y);
+		Polygon transformedCopy = ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(look, xButton, yButton), scale);
 		g.fillPolygon(transformedCopy);
 
 		// If text should be displayed in the center of the component.
@@ -310,18 +354,21 @@ public class Classic extends Design
 
 			int centerX = bounds.getLocation().x + bounds.width / 2 - textLength / 2;
 			int centerY = bounds.getLocation().y + bounds.height / 2 - c.getStyle().getFont().getFontSize() / 2;
-			
+
 			int x = c.isMovable() ? centerX + c.getStyle().getTextAlignTransition().x + getOffset().x : centerX + c.getStyle().getTextAlignTransition().x;
 			int y = c.isMovable() ? centerY + c.getStyle().getTextAlignTransition().y + getOffset().y : centerY + c.getStyle().getTextAlignTransition().y;
 
-			DrawToolkit.drawString(g, c.getValue(), x, y, c.getStyle().getFont());
+			Font original = c.getStyle().getFont();
+			Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
+			
+			DrawToolkit.drawString(g, c.getValue(), (int) (x * scale), (int) (y * scale), scaledFont);
 		}
 		else // If text should be displayed normally (upper-left corner of the component).
 		{
 			int x = c.isMovable() ? bounds.x + c.getStyle().getTextAlignTransition().x + getOffset().x : bounds.x + c.getStyle().getTextAlignTransition().x;
 			int y = c.isMovable() ? bounds.y + c.getStyle().getTextAlignTransition().y + getOffset().y : bounds.y + c.getStyle().getTextAlignTransition().y;
 			
-			DrawToolkit.drawString(g, c.getValue(), x, y, c.getStyle().getFont());
+			DrawToolkit.drawString(g, c.getValue(), (int) (x * scale), (int) (y * scale), c.getStyle().getFont());
 		}
 	}
 
@@ -332,17 +379,33 @@ public class Classic extends Design
 
 		g.setColor(getBorderColor());
 
-		int x = c.isMovable() ? bounds.getLocation().x + getOffset().x : bounds.getLocation().x;
-		int y = c.isMovable() ? bounds.getLocation().y + getOffset().y : bounds.getLocation().y;
+		int x = (int) ((c.isMovable() ? bounds.getLocation().x + getOffset().x : bounds.getLocation().x) * scale);
+		int y = (int) ((c.isMovable() ? bounds.getLocation().y + getOffset().y : bounds.getLocation().y) * scale);
+		
+		int width = (int) (bounds.getSize().width * scale);
+		int height = (int) (bounds.getSize().height * scale);
+		
+		g.fillRect(x, y, width, height);
 
-		g.fillRect(x, y, bounds.getSize().width, bounds.getSize().height);
+		g.setColor(c.getStyle().getPrimaryColor());
+
+		int innerX = x + (int) (getBorderThickness() * scale);
+		int innerY = y + (int) (getBorderThickness() * scale);
 
 		int titleWidth = c.getStyle().getFont().getFontSize() * c.getValue().length();
 
-		g.setColor(c.getStyle().getPrimaryColor());
-		g.fillRect(x + getBorderThickness(), y + getBorderThickness(), titleWidth + 2 * getInnerThickness(), c.getStyle().getFont().getFontSize() + 2 * getInnerThickness());
+		int innerWidth = (int) ((titleWidth + 2 * getInnerThickness()) * scale);
+		int innerHeight = (int) ((c.getStyle().getFont().getFontSize() + 2 * getInnerThickness()) * scale);
 
-		DrawToolkit.drawString(g, c.getValue(), x + getInnerThickness() + getBorderThickness(), y + getInnerThickness() + getBorderThickness(), c.getStyle().getFont());
+		g.fillRect(innerX, innerY, innerWidth, innerHeight);
+
+		int textX = x + (int) ((getInnerThickness() + getBorderThickness()) * scale);
+		int textY = y + (int) (getInnerThickness() + getBorderThickness() * scale);
+		
+		Font original = c.getStyle().getFont();
+		Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
+		
+		DrawToolkit.drawString(g, c.getValue(), textX, textY, scaledFont);
 	}
 
 	// Returns a determined shape which uses the design defined in this class.
@@ -366,9 +429,11 @@ public class Classic extends Design
 		c.getStyle().setLook(recalculated);
 	}
 
+	// Will return the offset of the Viewport.
+	// If no offset was defined or assigned, it will return an empty point (0|0).
 	private Point getOffset()
 	{
-		return offset;
+		return offset != null ? offset : new Point();
 	}
 
 	private float getScale()

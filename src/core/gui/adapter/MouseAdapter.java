@@ -188,8 +188,12 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 			return false;
 		}
 		
+		boolean isViewportAvailable = context.getViewport() != null;
+		
 		// Loads the viewports offset if a Viewport is actually given by the Display yet.
-		Point viewportOffset = context.getViewport() != null ? context.getViewport().getOffset() : new Point();
+		Point viewportOffset = isViewportAvailable ? context.getViewport().getOffset() : new Point();
+		
+		float scale = isViewportAvailable ? context.getViewport().getScale() : 1f;
 		
 		/*
 		 *  This is just the relative component position in the JPanel (Viewport) which also regards the offset.
@@ -198,10 +202,12 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 		 * 	If you wouldn't regard / include the offset,
 		 *  there would be a difference between the real components position and what is displayed graphically with a transition on screen.
 		 */
-		Point relativeComponentLocation = target.getStyle().getLook().getBounds().getLocation();
-		relativeComponentLocation.translate(viewportOffset.x, viewportOffset.y);
 		
-		return ShapeTransform.movePolygonTo(target.getStyle().getLook(), relativeComponentLocation).contains(getCursorLocation());
+		Point absoluteComponentLocation = target.getStyle().getLook().getBounds().getLocation();
+		
+		Point relativeComponentLocation = new Point(absoluteComponentLocation.x + viewportOffset.x, absoluteComponentLocation.y + viewportOffset.y);		
+		
+		return ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(target.getStyle().getLook(), relativeComponentLocation), scale).contains(getCursorLocation());
 	}
 	
 	// Tests if the user is clicking a component.

@@ -168,7 +168,7 @@ public class ComponentHandler
 		// text it contains gets changed.
 		// If there is no key delivered (KeyEvent.VK_UNDEFING), this part is ignored
 		// for faster execution.
-		if(textfield != null && !(keyStroke == KeyEvent.VK_UNDEFINED) && focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnClick())
+		if(textfield != null && !(keyStroke == KeyEvent.VK_UNDEFINED) && focused != null && focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnClick())
 		{
 			boolean isDeviceControlCode = display.getEventHandler().getKeyAdapter().isDeviceControlCode(keyStroke);
 
@@ -235,15 +235,19 @@ public class ComponentHandler
 								
 								Point pos0 = new Point(rect0.getBounds().getLocation());
 								pos0.translate(offset.x, offset.y);
-								
+
 								Point pos2 = new Point(rect2.getBounds().getLocation());
 								pos2.translate(offset.x, offset.y);
-
-								// Creates two moved copies (by the global offset).
-								Polygon moved0 = ShapeTransform.movePolygonTo(rect0, pos0);
-								Polygon moved2 = ShapeTransform.movePolygonTo(rect2, pos2);
 								
-								if(moved0.contains(mouseLocation) || moved2.contains(mouseLocation))
+								boolean isViewportAvailable = display.getViewport() != null;
+								
+								float scale = isViewportAvailable ? display.getViewport().getScale() : 1f;
+
+								// Creates two moved and scaled copies (by the global offset and scale factor).
+								Polygon transformed0 = ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(rect0, pos0), scale);
+								Polygon transformed2 = ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(rect2, pos2), scale);
+								
+								if(transformed0.contains(mouseLocation) || transformed2.contains(mouseLocation))
 								{
 									selectionbox.selectOptionAt(i);
 								}

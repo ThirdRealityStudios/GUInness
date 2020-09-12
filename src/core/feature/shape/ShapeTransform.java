@@ -32,4 +32,24 @@ public class ShapeTransform
 	{
 		return movePolygonTo(p, point.x, point.y);
 	}
+	
+	public static Polygon scalePolygon(Polygon p, float k)
+	{
+		int[] xpoints = new int[p.npoints];
+		int[] ypoints = new int[p.npoints];
+		
+		for(int iX = 0; iX < p.npoints; iX++)
+		{
+			xpoints[iX] = (int) (p.xpoints[iX] * k);
+		}
+		
+		for(int iY = 0; iY < p.npoints; iY++)
+		{
+			ypoints[iY] = (int) (p.ypoints[iY] * k);
+		}
+		
+		Polygon returnable = new Polygon(xpoints, ypoints, p.npoints);
+		
+		return returnable;
+	}
 }

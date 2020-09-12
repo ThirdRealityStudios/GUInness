@@ -4,8 +4,6 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.Rectangle;
-
 import core.Meta;
 import core.feature.shape.ShapeMaker;
 import core.gui.component.GComponent;
