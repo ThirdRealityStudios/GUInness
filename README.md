@@ -36,8 +36,7 @@ You also do not need that much background knowledge like with Swing.
 - dozens of very detailed error logs and comments, amongst them for better and quicker maintenance (even advices).
 - simple way to create you own design / look (by just using the classic design ("Classic.java") as a base).
 - capable of multi-threading.
-- Viewport movement / transition
-- Viewport scaling (planed in future)
+- Viewport movement & scaling (especially for creating games or maps).
 
 
 # Component Features
@@ -66,7 +65,7 @@ If these points are also really guaranteed the next step would it be theoretical
 - add paths
 - add video components
 - add simple background sound tracks.
-- add scalable content: components can be zoomed in/out with different levels of detail (especially for creating maps or games).
+- add ability for LOD levels depending on current the Viewport scale (especially for creating maps or games).
 - add hyperlinks to open links on the web.
 
 
@@ -78,7 +77,7 @@ It really shouldn't lack of brief comments in the code actually..👍
 
 
 # Stats / Nice To Know (as of Sep 12 2020)
-- Total lines of code: 3041 (counted them with "[cloc](https://github.com/AlDanial/cloc)")
+- Total lines of code: 3121 (counted them with "[cloc](https://github.com/AlDanial/cloc)")
 - Code size: ~113,2 kB
 
 
