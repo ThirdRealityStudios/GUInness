@@ -32,7 +32,7 @@ public class Main
 	
 	private GRectangle rect;
 
-	private GButton start, exit;
+	private GButton moveButton, exit;
 
 	private GTextfield input1, input2, input3;
 	
@@ -130,7 +130,7 @@ public class Main
 	
 	private void initComponents()
 	{
-		rect = new GRectangle(0, 0, new Dimension(800, 86), Color.RED, 0.5f);
+		rect = new GRectangle(0, -50, new Dimension(800, 136), Color.RED, 0.5f);
 		
 		// The button ("start" variable) is focused later during runtime instead.
 		rect.getLogic().setFocusable(false);
@@ -151,7 +151,7 @@ public class Main
 		options.add(option2);
 		
 		// The first option should have a different background color.
-		option0.getStyle().setPrimaryColor(Color.WHITE);
+		option0.getStyle().setPrimaryColor(new Color(0, 255, 0));
 		
 		gSB = new GSelectionBox(new Point(200, 150), options);
 		
@@ -162,7 +162,7 @@ public class Main
 			{
 				layer2.setEnabled(isChecked());
 				
-				start.setValue((layer2.isEnabled() ? "Disable again " : "Enable ") + "second layer");
+				moveButton.setValue((layer2.isEnabled() ? "Disable again " : "Enable ") + "second layer");
 			}
 
 			@Override
@@ -172,7 +172,7 @@ public class Main
 			}
 		};
 		
-		start = new GButton(new Point(20, 75), "Disable second layer", default2)
+		moveButton = new GButton(new Point(150, 75), "Move Viewport to the right", default2)
 		{
 			@Override
 			public void onHover()
@@ -183,16 +183,15 @@ public class Main
 			@Override
 			public void onClick()
 			{
-				layer2.setEnabled(!layer2.isEnabled());
-				setValue((layer2.isEnabled() ? "Disable again " : "Enable ") + "second layer");
-				
-				checkbox1.setChecked(layer2.isEnabled());
+				viewport.getOffset().translate(1, 0);
 			}
 		};
 
-		start.getLogic().setActionOnHover(false);
-		start.getLogic().setActionOnClick(true);
-		start.getLogic().setMultithreading(false); // This will run parallel (with threads) which is in some cases faster (of course unnecessary if you just want to print something to the console).
+		moveButton.getLogic().setDoubleClickingAllowed(true);
+		moveButton.getLogic().setDelayMs(50);
+		moveButton.getLogic().setActionOnHover(false);
+		moveButton.getLogic().setActionOnClick(true);
+		moveButton.getLogic().setMultithreading(false); // This will run parallel (with threads) which is in some cases faster (of course unnecessary if you just want to print something to the console).
 
 		exit = new GButton(new Point(20, 150), "EXIT", default1)
 		{
@@ -258,7 +257,7 @@ public class Main
 		display = new Display();
 
 		viewport = new Viewport(display.getEventHandler());
-		viewport.setOffset(new Point(50, 50));
+		viewport.setOffset(new Point(-35, 125));
 
 		display.setViewport(viewport);
 
@@ -276,7 +275,7 @@ public class Main
 		
 		layer1.add(getPolyButton0());
 		layer1.add(getPolyButton1());
-		layer1.add(start);
+		layer1.add(moveButton);
 		layer1.add(checkbox1);
 
 		layer2.add(description);

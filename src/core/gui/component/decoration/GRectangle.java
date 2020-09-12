@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import core.Meta;
+import core.feature.shape.ShapeMaker;
 import core.gui.component.GComponent;
 
 public class GRectangle extends GComponent
@@ -12,7 +13,7 @@ public class GRectangle extends GComponent
 	
 	public GRectangle(int x, int y, Dimension size, Color color, float opacity)
 	{
-		super("rectangle", new Rectangle(x, y, size.width, size.height), 0, null, null);
+		super("rectangle", ShapeMaker.createRectangle(x, y, size.width, size.height), 0, null, null);
 		
 		if(opacity != 0)
 		{

@@ -3,9 +3,11 @@ package core.gui.component.decoration;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.Rectangle;
 
 import core.Meta;
+import core.feature.shape.ShapeMaker;
 import core.gui.component.GComponent;
 
 public class GImage extends GComponent
@@ -15,22 +17,26 @@ public class GImage extends GComponent
 	public GImage(Point location, Image content)
 	{
 		super("image", location, null, 0, null, null);
+
+		int width = content.getWidth(null);
+		int height = content.getHeight(null);
 		
-		Rectangle rect = new Rectangle(location.x, location.y, content.getWidth(null), content.getHeight(null));
+		Polygon rectangle = ShapeMaker.createRectangle(location.x, location.y, width, height);
+		getStyle().setLook(rectangle);
 		
-		getStyle().setShape(rect);
 		getStyle().setImage(content);
 	}
 
 	public GImage(Point location, float scale, Image content)
 	{
 		super("image", location, null, 0, null, null);
+
+		int scaledWidth = (int) (scale * content.getWidth(null));
+		int scaledHeight = (int) (scale * content.getHeight(null));
 		
-		Dimension scaled = new Dimension((int) (scale * content.getWidth(null)), (int) (scale * content.getHeight(null)));
+		Polygon rectangle = ShapeMaker.createRectangle(location.x, location.y, scaledWidth, scaledHeight);
+		getStyle().setLook(rectangle);
 		
-		Rectangle rect = new Rectangle(location.x, location.y, scaled.width, scaled.height);
-		
-		getStyle().setShape(rect);
 		getStyle().setImage(content);
 	}
 
@@ -38,21 +44,22 @@ public class GImage extends GComponent
 	{
 		super("image", location, null, 0, null, null);
 		
-		Rectangle rect = new Rectangle(location.x, location.y, size.width, size.height);
-		getStyle().setShape(rect);
+		Polygon rectangle = ShapeMaker.createRectangle(location.x, location.y, size.width, size.height);
+		getStyle().setLook(rectangle);
 		
 		getStyle().setImage(content);
 	}
 
-	public GImage(Point location, int length, boolean useAsWidth, Image content)
+	public GImage(Point location, int size, boolean useAsWidth, Image content)
 	{
 		super("image", location, null, 0, null, null);
+
+		int scaledWidth = useAsWidth ? size : (int) (((float) size / content.getHeight(null)) * content.getWidth(null));
+		int scaledHeight = useAsWidth ? (int) (((float) size / content.getWidth(null)) * content.getHeight(null)) : size;
 		
-		Dimension scaled = useAsWidth ? new Dimension(length, (int) (((float) length / content.getWidth(null)) * content.getHeight(null))) : new Dimension((int) (((float) length / content.getHeight(null)) * content.getWidth(null)), length);
+		Polygon rectangle = ShapeMaker.createRectangle(location.x, location.y, scaledWidth, scaledHeight);
+		getStyle().setLook(rectangle);
 		
-		Rectangle rect = new Rectangle(location.x, location.y, scaled.width, scaled.height);
-		
-		getStyle().setShape(rect);
 		getStyle().setImage(content);
 	}
 

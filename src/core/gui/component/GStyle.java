@@ -3,7 +3,7 @@ package core.gui.component;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Shape;
+import java.awt.Polygon;
 import java.io.Serializable;
 
 import core.Meta;
@@ -17,8 +17,8 @@ public class GStyle implements Serializable
 	// Will tell the render method how to render this component.
 	private Design design;
 	
-	// Contains the shape of the component.
-	protected Shape shape;
+	// Contains the look of the component.
+	protected Polygon look;
 
 	// Tells whether the context or component is visible or not.
 	// If 'null', a value will be automatically assigned later.
@@ -75,14 +75,14 @@ public class GStyle implements Serializable
 		this.design = d;
 	}
 
-	public Shape getShape()
+	public Polygon getLook()
 	{
-		return shape;
+		return look;
 	}
 
-	public void setShape(Shape shape)
+	public void setLook(Polygon look)
 	{
-		this.shape = shape;
+		this.look = look;
 	}
 
 	public Boolean isVisible()

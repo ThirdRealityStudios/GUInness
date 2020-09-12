@@ -3,6 +3,7 @@ package core.gui.design;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.io.Serializable;
 
@@ -109,7 +110,7 @@ public abstract class Design implements Serializable
 	
 	abstract void drawDefault(Graphics g, GComponent c);
 	
-	public abstract Rectangle generateDefaultShape(GComponent c);
+	public abstract Polygon generateDefaultShape(GComponent c);
 	
 	public abstract void updateDefaultShape(GComponent c);
 }

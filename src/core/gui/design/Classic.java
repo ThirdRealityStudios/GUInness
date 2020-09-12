@@ -7,11 +7,11 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.util.ArrayList;
 
 import core.Meta;
 import core.draw.DrawToolkit;
+import core.feature.shape.ShapeMaker;
 import core.feature.shape.ShapeTransform;
 import core.gui.component.GComponent;
 import core.gui.component.decoration.GPath;
@@ -118,7 +118,7 @@ public class Classic extends Design
 		{
 			GRectangle rect = (GRectangle) c;
 			
-			Rectangle shape = rect.getStyle().getShape().getBounds();
+			Rectangle shape = rect.getStyle().getLook().getBounds();
 			
 			g.setColor(rect.getStyle().getPrimaryColor() == null ? Color.BLACK : rect.getStyle().getPrimaryColor());
 			
@@ -128,9 +128,9 @@ public class Classic extends Design
 			}
 		}
 		// If it's not a GRectangle just draw the shape if there is one. Anyway, you can do less things here..
-		else if(c.getStyle().getShape() != null)
+		else if(c.getStyle().getLook() != null)
 		{
-			Rectangle shape = c.getStyle().getShape().getBounds();
+			Rectangle shape = c.getStyle().getLook().getBounds();
 			
 			g.setColor(c.getStyle().getPrimaryColor() == null ? Color.BLACK : c.getStyle().getPrimaryColor());
 			
@@ -144,7 +144,7 @@ public class Classic extends Design
 	private void drawDescription(Graphics g, GComponent c)
 	{
 		// Represents simply the outer bounds of the component.
-		Rectangle bounds = c.getStyle().getShape().getBounds();
+		Rectangle bounds = c.getStyle().getLook().getBounds();
 		
 		int x = bounds.getLocation().x + getInnerThickness() + getBorderThickness();
 		int y = bounds.getLocation().y + getInnerThickness() + getBorderThickness();
@@ -155,7 +155,7 @@ public class Classic extends Design
 	private void drawImage(Graphics g, GComponent c)
 	{
 		// Represents simply the outer bounds of the component.
-		Rectangle bounds = c.getStyle().getShape().getBounds();
+		Rectangle bounds = c.getStyle().getLook().getBounds();
 		
 		int x = bounds.getLocation().x;
 		int y = bounds.getLocation().y;
@@ -186,7 +186,7 @@ public class Classic extends Design
 	private void drawTextfield(Graphics g, GComponent c)
 	{
 		// Represents simply the outer bounds of the component.
-		Rectangle bounds = c.getStyle().getShape().getBounds();
+		Rectangle bounds = c.getStyle().getLook().getBounds();
 
 		g.setColor(getBorderColor());
 		
@@ -213,7 +213,7 @@ public class Classic extends Design
 	private void drawCheckbox(Graphics g, GComponent c)
 	{
 		// Represents simply the outer bounds of the component.
-		Rectangle bounds = c.getStyle().getShape().getBounds();
+		Rectangle bounds = c.getStyle().getLook().getBounds();
 		
 		// It wouldn't matter if you use 'height' or 'width' because both values are the same.
 		int size = bounds.width;
@@ -243,47 +243,47 @@ public class Classic extends Design
 	private void drawSelectionBox(Graphics g, GComponent c)
 	{
 		// Represents simply the outer bounds of the component.
-		Rectangle bounds = c.getStyle().getShape().getBounds();
+		Rectangle bounds = c.getStyle().getLook().getBounds();
 		
 		GSelectionBox selectionBox = (GSelectionBox) c;
 		
-		bounds = selectionBox.getStyle().getShape().getBounds();
+		bounds = selectionBox.getStyle().getLook().getBounds();
 		
 		drawRectangle(g, selectionBox);
 		
-		ArrayList<Rectangle[]> shapeTable = selectionBox.getShapeTable();
+		ArrayList<Polygon[]> shapeTable = selectionBox.getShapeTable();
 		
 		// Draws every single option from the GSelectionBox.
 		for(int i = 0; i < shapeTable.size(); i++)
 		{
 			GSelectionOption option = selectionBox.getOptions().get(i);
 			
-			Rectangle optionShape = shapeTable.get(i)[0];
-			Rectangle titleShape = shapeTable.get(i)[2];
+			Polygon optionShape = shapeTable.get(i)[0];
+			Polygon titleShape = shapeTable.get(i)[2];
 			
-			int xOption = c.isMovable() ? optionShape.x + getOffset().x : optionShape.x;
-			int yOption = c.isMovable() ? optionShape.y + getOffset().y : optionShape.y;
+			int xOption = c.isMovable() ? optionShape.getBounds().x + getOffset().x : optionShape.getBounds().x;
+			int yOption = c.isMovable() ? optionShape.getBounds().y + getOffset().y : optionShape.getBounds().y;
 			
 			if(option.isChecked())
 			{
-				g.drawImage(selectionBox.getIcons()[1], xOption, yOption, optionShape.width, optionShape.height, null);
+				g.drawImage(selectionBox.getIcons()[1], xOption, yOption, optionShape.getBounds().width, optionShape.getBounds().height, null);
 			}
 			else
 			{
-				g.drawImage(selectionBox.getIcons()[0], xOption, yOption, optionShape.width, optionShape.height, null);
+				g.drawImage(selectionBox.getIcons()[0], xOption, yOption, optionShape.getBounds().width, optionShape.getBounds().height, null);
 			}
 			
 			// Every option can have a background color..
 			Color optionColor = option.getStyle().getPrimaryColor();
 			
-			int xTitle = c.isMovable() ? titleShape.x + getOffset().x : titleShape.x;
-			int yTitle = c.isMovable() ? titleShape.y + getOffset().y : titleShape.y;
+			int xTitle = c.isMovable() ? titleShape.getBounds().x + getOffset().x : titleShape.getBounds().x;
+			int yTitle = c.isMovable() ? titleShape.getBounds().y + getOffset().y : titleShape.getBounds().y;
 			
 			// But if there is no background color, then no background will just be drawn..
 			if(optionColor != null)
 			{
 				g.setColor(optionColor);
-				g.fillRect(xTitle, yTitle, titleShape.width, titleShape.height);
+				g.fillRect(xTitle, yTitle, titleShape.getBounds().width, titleShape.getBounds().height);
 			}
 			
 			DrawToolkit.drawString(g, option.getValue(), xTitle, yTitle, option.getStyle().getFont());
@@ -293,14 +293,14 @@ public class Classic extends Design
 	protected void drawPolyButton(Graphics g, GComponent c)
 	{
 		// Represents simply the outer bounds of the component.
-		Rectangle bounds = c.getStyle().getShape().getBounds();
+		Rectangle bounds = c.getStyle().getLook().getBounds();
 		
-		Polygon p = (Polygon) c.getStyle().getShape();
+		Polygon look = c.getStyle().getLook();
 
 		g.setColor(c.getStyle().getPrimaryColor());
 
 		// Here it is only working with a copy in order not to modify the original object (polygon and Polybutton).
-		Polygon transformedCopy = ShapeTransform.movePolygonTo(p, p.getBounds().x + getOffset().x, p.getBounds().y + getOffset().y);
+		Polygon transformedCopy = ShapeTransform.movePolygonTo(look, look.getBounds().x + getOffset().x, look.getBounds().y + getOffset().y);
 		g.fillPolygon(transformedCopy);
 
 		// If text should be displayed in the center of the component.
@@ -328,7 +328,7 @@ public class Classic extends Design
 	protected void drawDefault(Graphics g, GComponent c)
 	{
 		// Represents simply the outer bounds of the component.
-		Rectangle bounds = c.getStyle().getShape().getBounds();
+		Rectangle bounds = c.getStyle().getLook().getBounds();
 
 		g.setColor(getBorderColor());
 
@@ -346,23 +346,24 @@ public class Classic extends Design
 	}
 
 	// Returns a determined shape which uses the design defined in this class.
-	public Rectangle generateDefaultShape(GComponent c)
+	public Polygon generateDefaultShape(GComponent c)
 	{
 		// Calculates the correct size of the rectangle for the text component.
 		Dimension backgroundSize = new Dimension(c.getStyle().getLength() * c.getStyle().getFont().getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness(), c.getStyle().getFont().getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness());
 
-		Rectangle rect = new Rectangle(c.getStyle().getLocation(), backgroundSize);
-		
-		return rect;
+		// Creates a rectangle actually.
+		Polygon polygon = ShapeMaker.createRectangle(c.getStyle().getLocation(), backgroundSize);
+
+		return polygon;
 	}
 
 	// Updates the context component with its corresponding values.
 	// This is a post-method.
 	public void updateDefaultShape(GComponent c)
 	{
-		Shape recalculated = generateDefaultShape(c);
+		Polygon recalculated = generateDefaultShape(c);
 		
-		c.getStyle().setShape(recalculated);
+		c.getStyle().setLook(recalculated);
 	}
 
 	private Point getOffset()

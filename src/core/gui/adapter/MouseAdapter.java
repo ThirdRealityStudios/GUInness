@@ -8,7 +8,10 @@ import java.util.ArrayList;
 
 import core.exec.LoopedThread;
 import core.feature.Timer;
+import core.feature.shape.ShapeMaker;
+import core.feature.shape.ShapeTransform;
 import core.gui.Display;
+import core.gui.Viewport;
 import core.gui.component.GComponent;
 import core.gui.layer.GLayer;
 
@@ -111,9 +114,9 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	{
 		// The cursor was generally just moved somewhere on the frame (false).
 		action = false;
-		
+
 		// Update the current cursor location relative to the Viewport.
-		// The boundaries of the Display (JFrame) are included in this retrieved location.
+		// The boundaries of the Display (JFrame) are disregarded in this retrieved location.
 		cursorLocation = mouseEvent.getPoint();
 	}
 
@@ -169,7 +172,7 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	// Returns the absolute current cursor location.
 	public Point getCursorLocation()
 	{
-		return cursorLocation;
+		return new Point(cursorLocation);
 	}
 	
 	// Tests if the cursor is on the position of a component.
@@ -185,7 +188,20 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 			return false;
 		}
 		
-		return target.getStyle().getShape().contains(getCursorLocation());
+		// Loads the viewports offset if a Viewport is actually given by the Display yet.
+		Point viewportOffset = context.getViewport() != null ? context.getViewport().getOffset() : new Point();
+		
+		/*
+		 *  This is just the relative component position in the JPanel (Viewport) which also regards the offset.
+		 * 	Thus, this has a large effect on the component detection in the ComponentHander.
+		 * 
+		 * 	If you wouldn't regard / include the offset,
+		 *  there would be a difference between the real components position and what is displayed graphically with a transition on screen.
+		 */
+		Point relativeComponentLocation = target.getStyle().getLook().getBounds().getLocation();
+		relativeComponentLocation.translate(viewportOffset.x, viewportOffset.y);
+		
+		return ShapeTransform.movePolygonTo(target.getStyle().getLook(), relativeComponentLocation).contains(getCursorLocation());
 	}
 	
 	// Tests if the user is clicking a component.

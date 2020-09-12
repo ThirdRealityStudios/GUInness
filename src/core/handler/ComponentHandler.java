@@ -2,6 +2,7 @@ package core.handler;
 
 import java.awt.Cursor;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import core.exec.LoopedThread;
 import core.exec.ThreadManager;
 import core.feature.Timer;
+import core.feature.shape.ShapeTransform;
 import core.gui.Display;
 import core.gui.Viewport;
 import core.gui.component.GComponent;
@@ -222,11 +224,26 @@ public class ComponentHandler
 						{
 							GSelectionBox selectionbox = (GSelectionBox) focused;
 							
-							ArrayList<Rectangle[]> shapeTable = selectionbox.getShapeTable();
+							ArrayList<Polygon[]> shapeTable = selectionbox.getShapeTable();
 							
 							for(int i = 0; i < shapeTable.size(); i++)
 							{
-								if(shapeTable.get(i)[0].contains(mouseLocation) || shapeTable.get(i)[2].contains(mouseLocation))
+								Point offset = display.getViewport() != null ? display.getViewport().getOffset() : new Point();
+								
+								Polygon rect0 = shapeTable.get(i)[0];
+								Polygon rect2 = shapeTable.get(i)[2];
+								
+								Point pos0 = new Point(rect0.getBounds().getLocation());
+								pos0.translate(offset.x, offset.y);
+								
+								Point pos2 = new Point(rect2.getBounds().getLocation());
+								pos2.translate(offset.x, offset.y);
+
+								// Creates two moved copies (by the global offset).
+								Polygon moved0 = ShapeTransform.movePolygonTo(rect0, pos0);
+								Polygon moved2 = ShapeTransform.movePolygonTo(rect2, pos2);
+								
+								if(moved0.contains(mouseLocation) || moved2.contains(mouseLocation))
 								{
 									selectionbox.selectOptionAt(i);
 								}

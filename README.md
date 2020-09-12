@@ -7,7 +7,7 @@ Currently, the focus of the development goes on solidity and stability before an
 
 
 # First Impression
-![Application sample](https://i.imgur.com/Y9zXnee.png)
+![Application sample](https://i.ibb.co/hLt7dQp/newest.png)
 
 
 # History
@@ -36,11 +36,14 @@ You also do not need that much background knowledge like with Swing.
 - dozens of very detailed error logs and comments, amongst them for better and quicker maintenance (even advices).
 - simple way to create you own design / look (by just using the classic design ("Classic.java") as a base).
 - capable of multi-threading.
+- Viewport movement / transition
+- Viewport scaling (planed in future)
 
 
 # Component Features
 - Texts
-- Buttons
+- Buttons (rectangle button / default)
+- Polygon buttons (a special and dynamic shape button)
 - Textfields
 - Checkboxes
 - Selection-boxes (with radio buttons)
@@ -61,10 +64,8 @@ If these points are also really guaranteed the next step would it be theoretical
 
 # Planed Features
 - add paths
-- add combo boxes
 - add video components
 - add simple background sound tracks.
-- add complex buttons: a button which has a complex shape.
 - add scalable content: components can be zoomed in/out with different levels of detail (especially for creating maps or games).
 - add hyperlinks to open links on the web.
 
@@ -76,10 +77,9 @@ Anyway, there are of course dozens of comments and a sample application (Main.ja
 It really shouldn't lack of brief comments in the code actually..👍
 
 
-# Stats / Nice To Know (as of Aug 30 2020)
-- Total lines of code: ~2700
-- Code size: ~98,6 kB
-- Rating of code by Codacy: [![Codacy Badge](https://app.codacy.com/project/badge/Grade/a142583660fa4e469a495e424cd0d155)](https://www.codacy.com/manual/ThirdRealityStudios/GUInness?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ThirdRealityStudios/GUInness&amp;utm_campaign=Badge_Grade)
+# Stats / Nice To Know (as of Sep 12 2020)
+- Total lines of code: 3041 (counted them with "[cloc](https://github.com/AlDanial/cloc)")
+- Code size: ~113,2 kB
 
 
 # Donations (Via LiteCoin)
@@ -92,4 +92,6 @@ or
 
 litecoin:MNh6pVYPHW21EtsAEgTfPBAYDXfQKEM2n6?label=Donation
 
-The amount isn't important, it's just for some attention to me which encourages me for working harder if there are people who take this project / repo serious.
+The amount isn't important; I do this in my freetime so any donation would be purely for some attention.
+Always think, you can better support mutliple developers and/or repositories;
+this will just make more people happy and encouraged, especially in the mind of open-source.

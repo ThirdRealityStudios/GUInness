@@ -1,14 +1,12 @@
 package core.gui.component;
 
 import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Shape;
+import java.awt.Polygon;
 import java.io.File;
 import java.io.Serializable;
 
 import core.Meta;
 import core.feature.Path;
-import core.feature.shape.ShapeTransform;
 import core.gui.Display;
 import core.gui.design.Sample;
 import core.gui.font.Font;
@@ -66,11 +64,11 @@ public abstract class GComponent implements Serializable
 		getStyle().setPrimaryColor(getStyle().getDesign().getBackgroundColor());
 	}
 	
-	public GComponent(String type, Point location, Shape shape, int length, String val, Font font)
+	public GComponent(String type, Point location, Polygon look, int length, String val, Font font)
 	{
 		this(type, location);
 		
-		getStyle().setShape(shape);
+		getStyle().setLook(look);
 		getStyle().setFont(font);
 
 		// Set all important attributes below:
@@ -78,16 +76,16 @@ public abstract class GComponent implements Serializable
 		setValue(val);
 	}
 	
-	public GComponent(String type, Shape shape, int length, String val, Font font)
+	public GComponent(String type, Polygon look, int length, String val, Font font)
 	{
-		this(type, shape.getBounds().getLocation(), shape, length, val, font);
+		this(type, look.getBounds().getLocation(), look, length, val, font);
 	}
 	
-	public GComponent(String type, Point location, Shape shape, String val, Font font)
+	public GComponent(String type, Point location, Polygon look, String val, Font font)
 	{
 		this(type, location);
 
-		getStyle().setShape(shape);
+		getStyle().setLook(look);
 		getStyle().setFont(font);
 
 		// Set all important attributes below:
@@ -186,7 +184,7 @@ public abstract class GComponent implements Serializable
 	public String toString()
 	{
 		return getClass().hashCode() + " (class: " + this.getClass().getSimpleName() + ", type: \"" + getType()
-				+ "\"):\ndesign = " + getStyle().getDesign().getClass().getSimpleName() + "\nshape = " + getStyle().getShape() + "\nlength = "
+				+ "\"):\ndesign = " + getStyle().getDesign().getClass().getSimpleName() + "\nshape = " + getStyle().getLook() + "\nlength = "
 				+ getStyle().getLength() + "\nvalue = \"" + value + "\"\nfontSize = " + getStyle().getFont().getFontSize() + "\nvisible = " + getStyle().isVisible();
 	}
 

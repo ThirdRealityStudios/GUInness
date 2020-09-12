@@ -3,12 +3,12 @@ package core.gui.component.selection;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.io.File;
 
 import core.Meta;
 import core.feature.Path;
 import core.feature.image.ImageToolkit;
+import core.feature.shape.ShapeMaker;
 import core.gui.component.GComponent;
 
 public abstract class GCheckbox extends GComponent
@@ -17,14 +17,14 @@ public abstract class GCheckbox extends GComponent
 
 	public GCheckbox(Point location, boolean checked)
 	{
-		super("checkbox", location, new Rectangle(new Point(location), new Dimension(20, 20)), 0, null, null);
+		super("checkbox", location, ShapeMaker.createRectangle(location, new Dimension(20, 20)), 0, null, null);
 		
 		init(checked);
 	}
 
 	public GCheckbox(Point location, boolean checked, int sizePx)
 	{
-		super("checkbox", location, new Rectangle(new Point(location), new Dimension(sizePx, sizePx)), 0, null, null);
+		super("checkbox", location, ShapeMaker.createRectangle(location, new Dimension(sizePx, sizePx)), 0, null, null);
 		
 		init(checked);
 	}
@@ -36,7 +36,7 @@ public abstract class GCheckbox extends GComponent
 		
 		getStyle().setImage(ImageToolkit.loadImage(Path.ICON + File.separator + "check_sign.png"));
 		
-		int size_scaled = getStyle().getShape().getBounds().width - 4*getStyle().getDesign().getBorderThickness();
+		int size_scaled = getStyle().getLook().getBounds().width - 4*getStyle().getDesign().getBorderThickness();
 		
 		getStyle().setImage(getStyle().getImage().getScaledInstance(size_scaled, size_scaled, Image.SCALE_SMOOTH));
 	}

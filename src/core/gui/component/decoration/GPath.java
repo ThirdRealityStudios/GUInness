@@ -2,39 +2,35 @@ package core.gui.component.decoration;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.geom.Path2D;
-
+import java.awt.Polygon;
 import core.Meta;
+import core.feature.shape.ShapeMaker;
 import core.gui.component.GComponent;
 
 public class GPath extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
-	
-	private Path2D.Double path;
+
+	private Polygon path;
 	private boolean fill;
 
-	public GPath(Path2D.Double path, Color drawColor, boolean fill, Point location)
+	public GPath(Polygon path, Color drawColor, boolean fill, Point location)
 	{
 		super("path", location, null, 0, null, null);
 		
-		Rectangle bounds = path.getBounds();
-		Rectangle rect = new Rectangle(location.x, location.y, bounds.width, bounds.height);
-		
-		getStyle().setShape(rect);
+		getStyle().setLook(ShapeMaker.createRectangleFrom(path.getBounds()));
 		
 		setPath(path);
 		getStyle().setPrimaryColor(drawColor); // The "primary color" of GComponent is used as the "draw color".
 		setFill(fill);
 	}
 
-	public Path2D.Double getPath()
+	public Polygon getPath()
 	{
 		return path;
 	}
 
-	public void setPath(Path2D.Double path)
+	public void setPath(Polygon path)
 	{
 		this.path = path;
 	}

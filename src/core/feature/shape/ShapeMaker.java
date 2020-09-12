@@ -1,12 +1,31 @@
 package core.feature.shape;
 
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.Rectangle;
-import java.awt.Shape;
 
 public class ShapeMaker
 {
-	public static Shape createRectangle(int x, int y, int width, int height)
+	public static Polygon createRectangle(int x, int y, int width, int height)
 	{
-		return (Shape) new Rectangle(x, y, width, height);
+		Polygon polygon = new Polygon();
+		
+		polygon.addPoint(x, y);
+		polygon.addPoint(x + width, y);
+		polygon.addPoint(x + width, y + height);
+		polygon.addPoint(x, y + height);
+		
+		return polygon;
+	}
+	
+	public static Polygon createRectangle(Point location, Dimension dimension)
+	{
+		return createRectangle(location.x, location.y, dimension.width, dimension.height);
+	}
+	
+	public static Polygon createRectangleFrom(Rectangle rect)
+	{
+		return createRectangle(rect.x, rect.y, rect.width, rect.height);
 	}
 }

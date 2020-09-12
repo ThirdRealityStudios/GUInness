@@ -2,6 +2,7 @@ package core.gui.component.selection.list;
 
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.io.File;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import core.Meta;
 import core.feature.Path;
 import core.feature.image.ImageToolkit;
+import core.feature.shape.ShapeMaker;
 import core.gui.component.GComponent;
 
 public class GSelectionBox extends GComponent
@@ -20,7 +22,7 @@ public class GSelectionBox extends GComponent
 	// This list contains all shapes related to an option.
 	// This makes it easier for the rendering progress to just access the data more easily.
 	// Also it will prevent all shapes from being calculated too frequently which enhances the performance actually.
-	private ArrayList<Rectangle[]> updateShapeTable;
+	private ArrayList<Polygon[]> updateShapeTable;
 	
 	private int index = -1;
 	
@@ -33,7 +35,7 @@ public class GSelectionBox extends GComponent
 	{
 		super("selectionbox", location);
 		
-		updateShapeTable = new ArrayList<Rectangle[]>();
+		updateShapeTable = new ArrayList<Polygon[]>();
 		
 		options = new ArrayList<GSelectionOption>();
 		
@@ -44,7 +46,7 @@ public class GSelectionBox extends GComponent
 	{
 		super("selectionbox", location);
 		
-		updateShapeTable = new ArrayList<Rectangle[]>();
+		updateShapeTable = new ArrayList<Polygon[]>();
 		
 		initIcon();
 		
@@ -82,7 +84,7 @@ public class GSelectionBox extends GComponent
 		return options;
 	}
 	
-	public ArrayList<Rectangle[]> getShapeTable()
+	public ArrayList<Polygon[]> getShapeTable()
 	{
 		return updateShapeTable;
 	}
@@ -122,16 +124,16 @@ public class GSelectionBox extends GComponent
 		
 		for(int i = 0; i < getShapeTable().size(); i++)
 		{
-			maxWidth = Math.max(maxWidth, (getShapeTable().get(i)[0].width + getShapeTable().get(i)[1].width + getShapeTable().get(i)[2].width));
+			maxWidth = Math.max(maxWidth, (getShapeTable().get(i)[0].getBounds().width + getShapeTable().get(i)[1].getBounds().width + getShapeTable().get(i)[2].getBounds().width));
 		}
 		
 		Point originalLocation = getStyle().getLocation();
 		
-		Rectangle lastShape = getShapeTable().get(getShapeTable().size()-1)[4];
+		Polygon lastShape = getShapeTable().get(getShapeTable().size()-1)[4];
 		
-		sumHeight = (lastShape.y + lastShape.height) - originalLocation.y;
+		sumHeight = (lastShape.getBounds().y + lastShape.getBounds().height) - originalLocation.y;
 		
-		getStyle().setShape(new Rectangle(originalLocation.x, originalLocation.y, maxWidth, sumHeight));
+		getStyle().setLook(ShapeMaker.createRectangle(originalLocation.x, originalLocation.y, maxWidth, sumHeight));
 	}
 
 	// This will actually calculate a grid for every single option you add to this GSelectionBox.
@@ -183,21 +185,21 @@ public class GSelectionBox extends GComponent
 			// Creates an array of shapes for each option and adds it to the list.
 			// This will give every option a set of shapes.
 			{
-				Rectangle[] optionShapes = new Rectangle[5];
+				Polygon[] optionShapes = new Polygon[5];
 				
-				optionShapes[0] = optionSymbolShape;
+				optionShapes[0] = ShapeMaker.createRectangleFrom(optionSymbolShape);
 				
 				// Apply the symbol size (reference "optionSymbolShape") to the icons (which will be the corresponding symbol for the "unselected" and "selected" state).
 				// This way, it is guaranteed the icons are displayed correctly later depending on the font size.
 				icon[0] = icon[0].getScaledInstance(optionSymbolShape.width, optionSymbolShape.height, Image.SCALE_SMOOTH);
 				icon[1] = icon[1].getScaledInstance(optionSymbolShape.width, optionSymbolShape.height, Image.SCALE_SMOOTH);
 				
-				optionShapes[1] = optionSeparationWidth;
+				optionShapes[1] = ShapeMaker.createRectangleFrom(optionSeparationWidth);
 				
-				optionShapes[2] = optionTitleShape;
+				optionShapes[2] = ShapeMaker.createRectangleFrom(optionTitleShape);
 				
-				optionShapes[3] = optionPaddingBottom;
-				optionShapes[4] = optionPaddingTop;
+				optionShapes[3] = ShapeMaker.createRectangleFrom(optionPaddingBottom);
+				optionShapes[4] = ShapeMaker.createRectangleFrom(optionPaddingTop);
 				
 				updateShapeTable.add(optionShapes);
 			}
