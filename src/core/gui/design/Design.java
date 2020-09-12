@@ -2,6 +2,7 @@ package core.gui.design;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.Serializable;
 
@@ -104,7 +105,7 @@ public abstract class Design implements Serializable
 		return fL;
 	}
 	
-	public abstract void drawContext(Graphics g, GComponent c);
+	public abstract void drawContext(Graphics g, GComponent c, Point offset, float scale);
 	
 	abstract void drawDefault(Graphics g, GComponent c);
 	

@@ -53,6 +53,8 @@ public class Main
 	
 	private Font default1 = new Font("default1", Font.getDefaultFilepath(), 25), default2 = new Font("default2", Font.getDefaultFilepath());
 
+	private Viewport viewport;
+
 	public static void main(String[] args)
 	{
 		Main m = new Main();
@@ -250,12 +252,15 @@ public class Main
 	public void init()
 	{
 		default1.setFontColor(Color.RED);
-		
+
 		design = new Classic(Color.BLACK, Color.LIGHT_GRAY, Color.DARK_GRAY, Color.GRAY, Color.BLACK, 5, 1);
 
 		display = new Display();
-		
-		display.setViewport(new Viewport(display.getEventHandler()));
+
+		viewport = new Viewport(display.getEventHandler());
+		viewport.setOffset(new Point(50, 50));
+
+		display.setViewport(viewport);
 
 		initComponents();
 	}

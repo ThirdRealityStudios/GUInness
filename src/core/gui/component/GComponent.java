@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 import core.Meta;
 import core.feature.Path;
+import core.feature.shape.ShapeTransform;
 import core.gui.Display;
 import core.gui.design.Sample;
 import core.gui.font.Font;
@@ -30,6 +31,11 @@ public abstract class GComponent implements Serializable
 	 * A layer would otherwise just overwrite the already set value with default values.
 	 */
 	private Boolean enabled = null;
+	
+	private boolean scalable = true;
+	
+	// Relates to the offset.
+	private boolean movable = true;
 
 	protected volatile String value = "";
 
@@ -234,5 +240,21 @@ public abstract class GComponent implements Serializable
 		{
 			getStyle().getDesign().updateDefaultShape(this);
 		}
+	}
+
+	public boolean isScalable() {
+		return scalable;
+	}
+
+	public void setScalable(boolean scalable) {
+		this.scalable = scalable;
+	}
+
+	public boolean isMovable() {
+		return movable;
+	}
+
+	public void setMovable(boolean movable) {
+		this.movable = movable;
 	}
 }

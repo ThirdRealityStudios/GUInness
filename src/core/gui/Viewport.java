@@ -2,6 +2,7 @@ package core.gui;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.JPanel;
@@ -28,6 +29,10 @@ public class Viewport extends JPanel
 	private EventHandler eventHandler;
 	
 	private int layerModifications = 0;
+	
+	private Point offset = new Point();
+	
+	private float scale = 1f;
 
 	public Viewport(EventHandler eventHandler)
 	{
@@ -73,7 +78,7 @@ public class Viewport extends JPanel
 		{
 			if(edC.getStyle().isVisible() && edC.isEnabled())
 			{
-				edC.getStyle().getDesign().drawContext(g, edC);
+				edC.getStyle().getDesign().drawContext(g, edC, getOffset(), getScale());
 			}
 		}
 	}
@@ -201,5 +206,21 @@ public class Viewport extends JPanel
 	public int getLayerModifications()
 	{
 		return layerModifications;
+	}
+
+	public Point getOffset() {
+		return offset;
+	}
+
+	public void setOffset(Point offset) {
+		this.offset = offset;
+	}
+
+	public float getScale() {
+		return scale;
+	}
+
+	public void setScale(float scale) {
+		this.scale = scale;
 	}
 }
