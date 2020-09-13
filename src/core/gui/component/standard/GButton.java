@@ -14,6 +14,8 @@ public abstract class GButton extends GComponent
 	{
 		super("button", location, null, title.length(), title, font);
 		
+		getStyle().setBorderRadiusPx(4);
+		
 		// This method is always called after the base values have been set, e.g. font size.
 		updateDefaultShape();
 	}

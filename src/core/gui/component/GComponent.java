@@ -68,7 +68,7 @@ public abstract class GComponent implements Serializable
 	{
 		this(type, location);
 		
-		getStyle().setLook(look);
+		getStyle().setPrimaryLook(look);
 		getStyle().setFont(font);
 
 		// Set all important attributes below:
@@ -85,7 +85,7 @@ public abstract class GComponent implements Serializable
 	{
 		this(type, location);
 
-		getStyle().setLook(look);
+		getStyle().setPrimaryLook(look);
 		getStyle().setFont(font);
 
 		// Set all important attributes below:
@@ -184,7 +184,7 @@ public abstract class GComponent implements Serializable
 	public String toString()
 	{
 		return getClass().hashCode() + " (class: " + this.getClass().getSimpleName() + ", type: \"" + getType()
-				+ "\"):\ndesign = " + getStyle().getDesign().getClass().getSimpleName() + "\nshape = " + getStyle().getLook() + "\nlength = "
+				+ "\"):\ndesign = " + getStyle().getDesign().getClass().getSimpleName() + "\nshape = " + getStyle().getPrimaryLook() + "\nlength = "
 				+ getStyle().getLength() + "\nvalue = \"" + value + "\"\nfontSize = " + getStyle().getFont().getFontSize() + "\nvisible = " + getStyle().isVisible();
 	}
 
@@ -238,21 +238,5 @@ public abstract class GComponent implements Serializable
 		{
 			getStyle().getDesign().updateDefaultShape(this);
 		}
-	}
-
-	public boolean isScalable() {
-		return scalable;
-	}
-
-	public void setScalable(boolean scalable) {
-		this.scalable = scalable;
-	}
-
-	public boolean isMovable() {
-		return movable;
-	}
-
-	public void setMovable(boolean movable) {
-		this.movable = movable;
 	}
 }

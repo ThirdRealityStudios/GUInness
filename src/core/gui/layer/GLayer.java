@@ -71,7 +71,7 @@ public class GLayer implements Comparable<GLayer>, Serializable
 		{
 			// Checks whether both components would be in conflict with each other when appearing at the same position.
 			// In future there needs to be function which is able to test shapes regardless of whether it is a rectangle or something else.
-			if(check.getStyle().getLook().intersects(comp.getStyle().getLook().getBounds2D()))
+			if(check.getStyle().getPrimaryLook().intersects(comp.getStyle().getPrimaryLook().getBounds2D()))
 			{
 				return false;
 			}

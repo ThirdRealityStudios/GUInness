@@ -131,6 +131,7 @@ public class Main
 	private void initComponents()
 	{
 		rect = new GRectangle(0, -50, new Dimension(800, 136), Color.RED, 0.5f);
+		rect.getStyle().setBorderRadiusPx(10);
 		
 		// The button ("start" variable) is focused later during runtime instead.
 		rect.getLogic().setFocusable(false);
@@ -161,8 +162,6 @@ public class Main
 			public void onClick()
 			{
 				layer2.setEnabled(isChecked());
-				
-				moveButton.setValue((layer2.isEnabled() ? "Disable again " : "Enable ") + "second layer");
 			}
 
 			@Override
@@ -172,7 +171,7 @@ public class Main
 			}
 		};
 		
-		moveButton = new GButton(new Point(150, 75), "Move Viewport to the right", default2)
+		moveButton = new GButton(new Point(150, 75), "Move Viewport right", default2)
 		{
 			@Override
 			public void onHover()
@@ -204,9 +203,13 @@ public class Main
 			@Override
 			public void onClick()
 			{
-				viewport.setScale(viewport.getScale() + 0.1f);
+				viewport.setScale(viewport.getScale() + 0.0001f);
 			}
 		};
+		
+		increaseScale.getLogic().setDoubleClickingAllowed(true);
+		increaseScale.getStyle().setMovableForViewport(true);
+		increaseScale.getStyle().setScalableForViewport(false);
 		
 		exit = new GButton(new Point(20, 150), "EXIT", default1)
 		{
@@ -219,7 +222,7 @@ public class Main
 			@Override
 			public void onClick()
 			{
-				System.out.println("Exiting..");
+				System.out.println("[Main]: Exiting..");
 				System.exit(0);
 			}
 		};
@@ -273,7 +276,7 @@ public class Main
 
 		viewport = new Viewport(display.getEventHandler());
 		viewport.setOffset(new Point(50, 50));
-		viewport.setScale(0.81f);
+		viewport.setScale(0.9f);
 
 		display.setViewport(viewport);
 
@@ -291,8 +294,8 @@ public class Main
 		
 		layer1.add(getPolyButton0());
 		layer1.add(getPolyButton1());
-		layer1.add(moveButton);
 		layer1.add(increaseScale);
+		layer1.add(moveButton);
 		layer1.add(checkbox1);
 
 		layer2.add(description);

@@ -18,7 +18,7 @@ public class GPath extends GComponent
 	{
 		super("path", location, null, 0, null, null);
 		
-		getStyle().setLook(ShapeMaker.createRectangleFrom(path.getBounds()));
+		getStyle().setPrimaryLook(ShapeMaker.createRectangleFrom(path.getBounds()));
 		
 		setPath(path);
 		getStyle().setPrimaryColor(drawColor); // The "primary color" of GComponent is used as the "draw color".

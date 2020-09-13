@@ -29,6 +29,9 @@ public abstract class GTextfield extends GComponent
 		else
 			throw new IllegalArgumentException("Title length is bigger than the specified maximum length!");
 		
+		getStyle().setPrimaryColor(Color.WHITE);
+		getStyle().setBorderRadiusPx(3);
+		
 		// This method is always called after the base values have been set, e.g. font size.
 		updateDefaultShape();
 	}

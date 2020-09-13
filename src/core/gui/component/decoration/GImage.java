@@ -20,7 +20,7 @@ public class GImage extends GComponent
 		int height = content.getHeight(null);
 		
 		Polygon rectangle = ShapeMaker.createRectangle(location.x, location.y, width, height);
-		getStyle().setLook(rectangle);
+		getStyle().setPrimaryLook(rectangle);
 		
 		getStyle().setImage(content);
 	}
@@ -33,7 +33,7 @@ public class GImage extends GComponent
 		int scaledHeight = (int) (scale * content.getHeight(null));
 		
 		Polygon rectangle = ShapeMaker.createRectangle(location.x, location.y, scaledWidth, scaledHeight);
-		getStyle().setLook(rectangle);
+		getStyle().setPrimaryLook(rectangle);
 		
 		getStyle().setImage(content);
 	}
@@ -43,7 +43,7 @@ public class GImage extends GComponent
 		super("image", location, null, 0, null, null);
 		
 		Polygon rectangle = ShapeMaker.createRectangle(location.x, location.y, size.width, size.height);
-		getStyle().setLook(rectangle);
+		getStyle().setPrimaryLook(rectangle);
 		
 		getStyle().setImage(content);
 	}
@@ -56,7 +56,7 @@ public class GImage extends GComponent
 		int scaledHeight = useAsWidth ? (int) (((float) size / content.getWidth(null)) * content.getHeight(null)) : size;
 		
 		Polygon rectangle = ShapeMaker.createRectangle(location.x, location.y, scaledWidth, scaledHeight);
-		getStyle().setLook(rectangle);
+		getStyle().setPrimaryLook(rectangle);
 		
 		getStyle().setImage(content);
 	}

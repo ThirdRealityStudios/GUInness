@@ -36,7 +36,7 @@ public abstract class GCheckbox extends GComponent
 		
 		getStyle().setImage(ImageToolkit.loadImage(Path.ICON + File.separator + "check_sign.png"));
 		
-		int size_scaled = getStyle().getLook().getBounds().width - 4*getStyle().getDesign().getBorderThickness();
+		int size_scaled = getStyle().getPrimaryLook().getBounds().width - 4*getStyle().getDesign().getBorderThickness();
 		
 		getStyle().setImage(getStyle().getImage().getScaledInstance(size_scaled, size_scaled, Image.SCALE_SMOOTH));
 	}

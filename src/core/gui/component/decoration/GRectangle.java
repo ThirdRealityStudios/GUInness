@@ -2,7 +2,6 @@ package core.gui.component.decoration;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import core.Meta;
 import core.feature.shape.ShapeMaker;
 import core.gui.component.GComponent;

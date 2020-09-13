@@ -3,6 +3,7 @@ package core.gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.JPanel;
@@ -27,11 +28,11 @@ public class Viewport extends JPanel
 	private GComponent[] compOutput;
 
 	private EventHandler eventHandler;
-	
+
 	private int layerModifications = 0;
-	
+
 	private Point offset = new Point();
-	
+
 	private float scale = 1f;
 
 	public Viewport(EventHandler eventHandler)
@@ -208,19 +209,34 @@ public class Viewport extends JPanel
 		return layerModifications;
 	}
 
-	public Point getOffset() {
+	// Returns the current offset, regardless of any Viewport scaling (!).
+	// If you want to consider the Viewport scaling in your application and more precision,
+	// use the getRelativeOffset()-method below please.
+	public Point getOffset()
+	{
 		return offset;
 	}
 
-	public void setOffset(Point offset) {
+	// Returns the exact offset relative to the current Viewport scale.
+	// This method is definitely recommended when you need high precision,
+	// though its frequent execution could cause a worse impact on the performance (remind floating point calculations and object creation).
+	public Point2D.Float getRelativeOffset()
+	{
+		return new Point2D.Float(getScale() * getOffset().x, getScale() * getOffset().y);
+	}
+
+	public void setOffset(Point offset)
+	{
 		this.offset = offset;
 	}
 
-	public float getScale() {
+	public float getScale()
+	{
 		return scale;
 	}
 
-	public void setScale(float scale) {
+	public void setScale(float scale)
+	{
 		this.scale = scale;
 	}
 }

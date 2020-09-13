@@ -133,7 +133,7 @@ public class GSelectionBox extends GComponent
 		
 		sumHeight = (lastShape.getBounds().y + lastShape.getBounds().height) - originalLocation.y;
 		
-		getStyle().setLook(ShapeMaker.createRectangle(originalLocation.x, originalLocation.y, maxWidth, sumHeight));
+		getStyle().setPrimaryLook(ShapeMaker.createRectangle(originalLocation.x, originalLocation.y, maxWidth, sumHeight));
 	}
 
 	// This will actually calculate a grid for every single option you add to this GSelectionBox.

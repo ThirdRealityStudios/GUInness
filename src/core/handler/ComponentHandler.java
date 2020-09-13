@@ -3,7 +3,6 @@ package core.handler;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
@@ -241,7 +240,7 @@ public class ComponentHandler
 								
 								boolean isViewportAvailable = display.getViewport() != null;
 								
-								float scale = isViewportAvailable ? display.getViewport().getScale() : 1f;
+								float scale = isViewportAvailable && focused.getStyle().isScalableForViewport() ? display.getViewport().getScale() : 1f;
 
 								// Creates two moved and scaled copies (by the global offset and scale factor).
 								Polygon transformed0 = ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(rect0, pos0), scale);

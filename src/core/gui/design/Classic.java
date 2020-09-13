@@ -79,6 +79,7 @@ public class Classic extends Design
 			
 			case "textfield":
 			{
+				
 				drawTextfield(g, c);
 				
 				break;
@@ -105,9 +106,22 @@ public class Classic extends Design
 				break;
 			}
 			
+			case "button":
+			{
+				Color temp = getBorderColor();
+				
+				setBorderColor(c.getStyle().getPrimaryColor().darker().darker());
+				
+				drawGeneralField(g, c, false);
+				
+				setBorderColor(temp);
+
+				break;
+			}
+			
 			default:
 			{
-				drawDefault(g, c);
+				drawGeneralField(g, c, true);
 			}
 		}
 	}
@@ -119,28 +133,35 @@ public class Classic extends Design
 		if(c.getType().contentEquals("rectangle"))
 		{
 			GRectangle rect = (GRectangle) c;
-			
-			Rectangle shape = rect.getStyle().getLook().getBounds();
-			
+
+			// Polygon rectangle = ShapeMaker.createRectangle(rect.getStyle().getLook().getBounds().getLocation(), rect.getStyle().getLook().getBounds().getSize());
+			Polygon rectangle = ShapeMaker.createRectangleFrom(rect.getStyle().getPrimaryLook().getBounds(), rect.getStyle().getBorderRadiusPx());
+
 			g.setColor(rect.getStyle().getPrimaryColor() == null ? Color.BLACK : rect.getStyle().getPrimaryColor());
+
+			// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
+			float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
 			
-			int x = (int) ((c.isMovable() ? shape.x + getOffset().x : shape.x) * scale);
-			int y = (int) ((c.isMovable() ? shape.y + getOffset().y : shape.y) * scale);
-			
-			if(shape != null)
+			int x = (int) ((c.getStyle().isMovableForViewport() ? rectangle.getBounds().x + getOffset().x : rectangle.getBounds().x) * scale);
+			int y = (int) ((c.getStyle().isMovableForViewport() ? rectangle.getBounds().y + getOffset().y : rectangle.getBounds().y) * scale);
+
+			if(rectangle.getBounds() != null)
 			{
-				g.fillRect(x, y, (int) (shape.width * scale), (int) (shape.height * scale));
+				g.fillPolygon(ShapeTransform.movePolygonTo(ShapeTransform.scalePolygon(rectangle, scale), x, y));
 			}
 		}
 		// If it's not a GRectangle just draw the shape if there is one. Anyway, you can do less things here..
-		else if(c.getStyle().getLook() != null)
+		else if(c.getStyle().getPrimaryLook() != null)
 		{
-			Rectangle shape = c.getStyle().getLook().getBounds();
+			Rectangle shape = c.getStyle().getPrimaryLook().getBounds();
 			
 			g.setColor(c.getStyle().getPrimaryColor() == null ? Color.BLACK : c.getStyle().getPrimaryColor());
 			
-			int x = (int) ((c.isMovable() ? shape.x + getOffset().x : shape.x) * scale);
-			int y = (int) ((c.isMovable() ? shape.y + getOffset().y : shape.y) * scale);
+			// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
+			float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
+			
+			int x = (int) ((c.getStyle().isMovableForViewport() ? shape.x + getOffset().x : shape.x) * scale);
+			int y = (int) ((c.getStyle().isMovableForViewport() ? shape.y + getOffset().y : shape.y) * scale);
 			
 			if(shape != null)
 			{
@@ -152,10 +173,13 @@ public class Classic extends Design
 	private void drawDescription(Graphics g, GComponent c)
 	{
 		// Represents simply the outer bounds of the component.
-		Rectangle bounds = c.getStyle().getLook().getBounds();
+		Rectangle bounds = c.getStyle().getPrimaryLook().getBounds();
 		
-		int x = (int) ((bounds.getLocation().x + getInnerThickness() + getBorderThickness() + (c.isMovable() ? getOffset().x : 0)) * scale);
-		int y = (int) ((bounds.getLocation().y + getInnerThickness() + getBorderThickness() + (c.isMovable() ? getOffset().y : 0)) * scale);
+		// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
+		float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
+		
+		int x = (int) ((bounds.getLocation().x + getInnerThickness() + getBorderThickness() + (c.getStyle().isMovableForViewport() ? getOffset().x : 0)) * scale);
+		int y = (int) ((bounds.getLocation().y + getInnerThickness() + getBorderThickness() + (c.getStyle().isMovableForViewport() ? getOffset().y : 0)) * scale);
 		
 		Font original = c.getStyle().getFont();
 		Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
@@ -166,10 +190,13 @@ public class Classic extends Design
 	private void drawImage(Graphics g, GComponent c)
 	{
 		// Represents simply the outer bounds of the component.
-		Rectangle bounds = c.getStyle().getLook().getBounds();
+		Rectangle bounds = c.getStyle().getPrimaryLook().getBounds();
 		
-		int x = (int) ((bounds.getLocation().x + (c.isMovable() ? getOffset().x : 0)) * scale);
-		int y = (int) ((bounds.getLocation().y + (c.isMovable() ? getOffset().y : 0)) * scale);
+		// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
+		float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
+		
+		int x = (int) ((bounds.getLocation().x + (c.getStyle().isMovableForViewport() ? getOffset().x : 0)) * scale);
+		int y = (int) ((bounds.getLocation().y + (c.getStyle().isMovableForViewport() ? getOffset().y : 0)) * scale);
 		
 		g.drawImage(c.getStyle().getImage(), x, y, (int) (bounds.width * scale), (int) (bounds.height * scale), null);
 	}
@@ -196,47 +223,13 @@ public class Classic extends Design
 	
 	private void drawTextfield(Graphics g, GComponent c)
 	{
-		// Represents simply the outer bounds of the component.
-		Rectangle bounds = c.getStyle().getLook().getBounds();
-
-		g.setColor(getBorderColor());
-		
-		int x = (int) ((bounds.getLocation().x + (c.isMovable() ? getOffset().x : 0)) * scale);
-
-		int y = (int) ((bounds.getLocation().y + (c.isMovable() ? getOffset().y : 0)) * scale);
-		
-		int width = (int) (bounds.getSize().width * scale);
-		int height = (int) (bounds.getSize().height * scale);
-		
-		g.fillRect(x, y, width, height);
-
-		int fontSize = c.getStyle().getFont().getFontSize();
-		
-		int titleWidth = fontSize * c.getStyle().getLength();
-
-		g.setColor(Color.WHITE);
-		
-		int xBorder = x + (int) (getBorderThickness() * scale);
-		int yBorder = y + (int) (getBorderThickness() * scale);
-
-		int widthBorder = (int) ((titleWidth + 2 * getInnerThickness()) * scale);
-		int heightBorder = (int) ((fontSize + 2 * getInnerThickness()) * scale);
-		
-		g.fillRect(xBorder, yBorder, widthBorder, heightBorder);
-
-		int xInner = (int) (xBorder + getInnerThickness() * scale);
-		int yInner = (int) (yBorder + getInnerThickness() * scale);
-		
-		Font original = c.getStyle().getFont();
-		Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
-		
-		DrawToolkit.drawString(g, c.getValue(), xInner, yInner, scaledFont);
+		drawGeneralField(g, c, false);
 	}
 	
 	private void drawCheckbox(Graphics g, GComponent c)
 	{
 		// Represents simply the outer bounds of the component.
-		Rectangle bounds = c.getStyle().getLook().getBounds();
+		Rectangle bounds = c.getStyle().getPrimaryLook().getBounds();
 		
 		// It wouldn't matter if you use 'height' or 'width' because both values are the same.
 		int size = bounds.width;
@@ -245,8 +238,11 @@ public class Classic extends Design
 
 		g.setColor(getBorderColor());
 		
-		int x = (int) (((c.isMovable() ? getOffset().x : 0) + bounds.getLocation().x) * scale);
-		int y = (int) (((c.isMovable() ? getOffset().y : 0) + bounds.getLocation().y) * scale);
+		// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
+		float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
+		
+		int x = (int) (((c.getStyle().isMovableForViewport() ? getOffset().x : 0) + bounds.getLocation().x) * scale);
+		int y = (int) (((c.getStyle().isMovableForViewport() ? getOffset().y : 0) + bounds.getLocation().y) * scale);
 		
 		int outerSize = (int) ((size + getInnerThickness()) * scale);
 		
@@ -285,6 +281,9 @@ public class Classic extends Design
 		
 		ArrayList<Polygon[]> shapeTable = selectionBox.getShapeTable();
 		
+		// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
+		float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
+		
 		// Draws every single option from the GSelectionBox.
 		for(int i = 0; i < shapeTable.size(); i++)
 		{
@@ -293,8 +292,8 @@ public class Classic extends Design
 			Polygon optionShape = ShapeTransform.scalePolygon(shapeTable.get(i)[0], scale);
 			Polygon titleShape = ShapeTransform.scalePolygon(shapeTable.get(i)[2], scale);
 			
-			int xOption = c.isMovable() ? optionShape.getBounds().x + (int) (getOffset().x  * scale) : optionShape.getBounds().x;
-			int yOption = c.isMovable() ? optionShape.getBounds().y + (int) (getOffset().y * scale) : optionShape.getBounds().y;
+			int xOption = c.getStyle().isMovableForViewport() ? optionShape.getBounds().x + (int) (getOffset().x  * scale) : optionShape.getBounds().x;
+			int yOption = c.getStyle().isMovableForViewport() ? optionShape.getBounds().y + (int) (getOffset().y * scale) : optionShape.getBounds().y;
 			
 			int optionShapeWidth = optionShape.getBounds().width;
 			int optionShapeHeight = optionShape.getBounds().height;
@@ -311,8 +310,8 @@ public class Classic extends Design
 			// Every option can have a background color..
 			Color optionColor = option.getStyle().getPrimaryColor();
 			
-			int xTitle = c.isMovable() ? titleShape.getBounds().x + (int) (getOffset().x * scale) : titleShape.getBounds().x;
-			int yTitle = c.isMovable() ? titleShape.getBounds().y + (int) (getOffset().y * scale) : titleShape.getBounds().y;
+			int xTitle = c.getStyle().isMovableForViewport() ? titleShape.getBounds().x + (int) (getOffset().x * scale) : titleShape.getBounds().x;
+			int yTitle = c.getStyle().isMovableForViewport() ? titleShape.getBounds().y + (int) (getOffset().y * scale) : titleShape.getBounds().y;
 			
 			int titleShapeWidth = titleShape.getBounds().width;
 			int titleShapeHeight = titleShape.getBounds().height;
@@ -334,14 +333,17 @@ public class Classic extends Design
 	protected void drawPolyButton(Graphics g, GComponent c)
 	{
 		// Represents simply the outer bounds of the component.
-		Rectangle bounds = c.getStyle().getLook().getBounds();
+		Rectangle bounds = c.getStyle().getPrimaryLook().getBounds();
 
-		Polygon look = c.getStyle().getLook();
+		Polygon look = c.getStyle().getPrimaryLook();
 
+		// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
+		float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
+		
 		g.setColor(c.getStyle().getPrimaryColor());
 
-		int xButton = (int) (look.getBounds().x + (c.isMovable() ? getOffset().x : 0));
-		int yButton = (int) (look.getBounds().y + (c.isMovable() ? getOffset().y : 0));
+		int xButton = (int) (look.getBounds().x + (c.getStyle().isMovableForViewport() ? getOffset().x : 0));
+		int yButton = (int) (look.getBounds().y + (c.getStyle().isMovableForViewport() ? getOffset().y : 0));
 
 		// Here it is only working with a copy in order not to modify the original object (polygon and Polybutton).
 		Polygon transformedCopy = ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(look, xButton, yButton), scale);
@@ -355,8 +357,8 @@ public class Classic extends Design
 			int centerX = bounds.getLocation().x + bounds.width / 2 - textLength / 2;
 			int centerY = bounds.getLocation().y + bounds.height / 2 - c.getStyle().getFont().getFontSize() / 2;
 
-			int x = c.isMovable() ? centerX + c.getStyle().getTextAlignTransition().x + getOffset().x : centerX + c.getStyle().getTextAlignTransition().x;
-			int y = c.isMovable() ? centerY + c.getStyle().getTextAlignTransition().y + getOffset().y : centerY + c.getStyle().getTextAlignTransition().y;
+			int x = c.getStyle().isMovableForViewport() ? centerX + c.getStyle().getTextAlignTransition().x + getOffset().x : centerX + c.getStyle().getTextAlignTransition().x;
+			int y = c.getStyle().isMovableForViewport() ? centerY + c.getStyle().getTextAlignTransition().y + getOffset().y : centerY + c.getStyle().getTextAlignTransition().y;
 
 			Font original = c.getStyle().getFont();
 			Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
@@ -365,58 +367,63 @@ public class Classic extends Design
 		}
 		else // If text should be displayed normally (upper-left corner of the component).
 		{
-			int x = c.isMovable() ? bounds.x + c.getStyle().getTextAlignTransition().x + getOffset().x : bounds.x + c.getStyle().getTextAlignTransition().x;
-			int y = c.isMovable() ? bounds.y + c.getStyle().getTextAlignTransition().y + getOffset().y : bounds.y + c.getStyle().getTextAlignTransition().y;
+			int x = c.getStyle().isMovableForViewport() ? bounds.x + c.getStyle().getTextAlignTransition().x + getOffset().x : bounds.x + c.getStyle().getTextAlignTransition().x;
+			int y = c.getStyle().isMovableForViewport() ? bounds.y + c.getStyle().getTextAlignTransition().y + getOffset().y : bounds.y + c.getStyle().getTextAlignTransition().y;
 			
 			DrawToolkit.drawString(g, c.getValue(), (int) (x * scale), (int) (y * scale), c.getStyle().getFont());
 		}
 	}
 
-	protected void drawDefault(Graphics g, GComponent c)
+	protected void drawGeneralField(Graphics g, GComponent c, boolean backgroundFitsTextLength)
 	{
-		// Represents simply the outer bounds of the component.
-		Rectangle bounds = c.getStyle().getLook().getBounds();
-
+		// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
+		float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
+		
+		int xBackground = (int) ((c.getStyle().isMovableForViewport() ? c.getStyle().getLocation().getLocation().x + getOffset().x : c.getStyle().getLocation().getLocation().x) * scale);
+		int yBackground = (int) ((c.getStyle().isMovableForViewport() ? c.getStyle().getLocation().getLocation().y + getOffset().y : c.getStyle().getLocation().getLocation().y) * scale);
+		
+		Polygon scaledBackground = ShapeTransform.scalePolygon(c.getStyle().getPrimaryLook(), scale);
+		
+		Polygon movedBackground = ShapeTransform.movePolygonTo(scaledBackground, xBackground, yBackground);
+		
 		g.setColor(getBorderColor());
+		g.fillPolygon(movedBackground);
 
-		int x = (int) ((c.isMovable() ? bounds.getLocation().x + getOffset().x : bounds.getLocation().x) * scale);
-		int y = (int) ((c.isMovable() ? bounds.getLocation().y + getOffset().y : bounds.getLocation().y) * scale);
+		int xInnerArea = xBackground + (int) (getBorderThickness() * scale);
+		int yInnerArea = yBackground + (int) (getBorderThickness() * scale);
 		
-		int width = (int) (bounds.getSize().width * scale);
-		int height = (int) (bounds.getSize().height * scale);
-		
-		g.fillRect(x, y, width, height);
-
-		g.setColor(c.getStyle().getPrimaryColor());
-
-		int innerX = x + (int) (getBorderThickness() * scale);
-		int innerY = y + (int) (getBorderThickness() * scale);
-
 		int titleWidth = c.getStyle().getFont().getFontSize() * c.getValue().length();
 
-		int innerWidth = (int) ((titleWidth + 2 * getInnerThickness()) * scale);
+		int innerWidth = (int) (((backgroundFitsTextLength ? titleWidth : c.getStyle().getLength() * c.getStyle().getFont().getFontSize()) + 2 * getInnerThickness()) * scale);
 		int innerHeight = (int) ((c.getStyle().getFont().getFontSize() + 2 * getInnerThickness()) * scale);
-
-		g.fillRect(innerX, innerY, innerWidth, innerHeight);
-
-		int textX = x + (int) ((getInnerThickness() + getBorderThickness()) * scale);
-		int textY = y + (int) (getInnerThickness() + getBorderThickness() * scale);
 		
+		Polygon innerArea = ShapeMaker.createRectangleFrom(xInnerArea, yInnerArea, innerWidth, innerHeight, c.getStyle().getBorderRadiusPx());
+
+		Polygon movedInnerArea = ShapeTransform.movePolygonTo(innerArea, xInnerArea, yInnerArea);
+
+		g.setColor(c.getStyle().getPrimaryColor());
+		g.fillPolygon(movedInnerArea);
+
+		int textX = xBackground + (int) ((getInnerThickness() + getBorderThickness()) * scale);
+		int textY = yBackground + (int) ((getInnerThickness() + getBorderThickness()) * scale);
+
 		Font original = c.getStyle().getFont();
 		Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
-		
+
 		DrawToolkit.drawString(g, c.getValue(), textX, textY, scaledFont);
 	}
 
 	// Returns a determined shape which uses the design defined in this class.
 	public Polygon generateDefaultShape(GComponent c)
 	{
-		// Calculates the correct size of the rectangle for the text component.
+		// Calculates the correct size of the rectangle for the default button component.
 		Dimension backgroundSize = new Dimension(c.getStyle().getLength() * c.getStyle().getFont().getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness(), c.getStyle().getFont().getFontSize() + 2 * getInnerThickness() + 2 * getBorderThickness());
 
+		Rectangle rectangle = new Rectangle(c.getStyle().getLocation(), backgroundSize);
+		
 		// Creates a rectangle actually.
-		Polygon polygon = ShapeMaker.createRectangle(c.getStyle().getLocation(), backgroundSize);
-
+		Polygon polygon = ShapeMaker.createRectangleFrom(rectangle, c.getStyle().getBorderRadiusPx());
+		
 		return polygon;
 	}
 
@@ -426,7 +433,7 @@ public class Classic extends Design
 	{
 		Polygon recalculated = generateDefaultShape(c);
 		
-		c.getStyle().setLook(recalculated);
+		c.getStyle().setPrimaryLook(recalculated);
 	}
 
 	// Will return the offset of the Viewport.

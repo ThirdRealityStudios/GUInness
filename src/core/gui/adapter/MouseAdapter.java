@@ -8,10 +8,8 @@ import java.util.ArrayList;
 
 import core.exec.LoopedThread;
 import core.feature.Timer;
-import core.feature.shape.ShapeMaker;
 import core.feature.shape.ShapeTransform;
 import core.gui.Display;
-import core.gui.Viewport;
 import core.gui.component.GComponent;
 import core.gui.layer.GLayer;
 
@@ -193,7 +191,7 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 		// Loads the viewports offset if a Viewport is actually given by the Display yet.
 		Point viewportOffset = isViewportAvailable ? context.getViewport().getOffset() : new Point();
 		
-		float scale = isViewportAvailable ? context.getViewport().getScale() : 1f;
+		float scale = isViewportAvailable && target.getStyle().isScalableForViewport() ? context.getViewport().getScale() : 1f;
 		
 		/*
 		 *  This is just the relative component position in the JPanel (Viewport) which also regards the offset.
@@ -203,11 +201,11 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 		 *  there would be a difference between the real components position and what is displayed graphically with a transition on screen.
 		 */
 		
-		Point absoluteComponentLocation = target.getStyle().getLook().getBounds().getLocation();
+		Point absoluteComponentLocation = target.getStyle().getPrimaryLook().getBounds().getLocation();
 		
 		Point relativeComponentLocation = new Point(absoluteComponentLocation.x + viewportOffset.x, absoluteComponentLocation.y + viewportOffset.y);		
 		
-		return ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(target.getStyle().getLook(), relativeComponentLocation), scale).contains(getCursorLocation());
+		return ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(target.getStyle().getPrimaryLook(), target.getStyle().isMovableForViewport() ? relativeComponentLocation : absoluteComponentLocation), scale).contains(getCursorLocation());
 	}
 	
 	// Tests if the user is clicking a component.

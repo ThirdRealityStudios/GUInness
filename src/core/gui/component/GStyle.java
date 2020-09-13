@@ -17,8 +17,11 @@ public class GStyle implements Serializable
 	// Will tell the render method how to render this component.
 	private Design design;
 	
-	// Contains the look of the component.
-	protected Polygon look;
+	// Contains the primary look of the component.
+	private Polygon primaryLook = new Polygon();
+	
+	// Contains the secondary look of the component.
+	private Polygon secondaryLook = new Polygon();
 
 	// Tells whether the context or component is visible or not.
 	// If 'null', a value will be automatically assigned later.
@@ -28,6 +31,12 @@ public class GStyle implements Serializable
 	// adding new components to a layer.
 	// A layer would otherwise just overwrite the already set value with default values.
 	private Boolean visible = null;
+	
+	// Can the component be moved somewhere else by the Viewport?
+	private boolean isMovable = true;
+	
+	// Can the component be scaled larger or smaller by the Viewport?
+	private boolean isScalable = true;
 	
 	/*
 	 * WARNING! This property might not be supported for all components.
@@ -78,14 +87,24 @@ public class GStyle implements Serializable
 		this.design = d;
 	}
 
-	public Polygon getLook()
+	public Polygon getPrimaryLook()
 	{
-		return look;
+		return primaryLook;
 	}
 
-	public void setLook(Polygon look)
+	public void setPrimaryLook(Polygon primaryLook)
 	{
-		this.look = look;
+		this.primaryLook = primaryLook;
+	}
+	
+	public Polygon getSecondaryLook()
+	{
+		return secondaryLook;
+	}
+
+	public void setSecondaryLook(Polygon secondaryLook)
+	{
+		this.secondaryLook = secondaryLook;
 	}
 
 	public Boolean isVisible()
@@ -240,5 +259,25 @@ public class GStyle implements Serializable
 	public void setTextTransition(Point textAlignTransition)
 	{
 		this.textTransition = textAlignTransition;
+	}
+
+	public boolean isMovableForViewport()
+	{
+		return isMovable;
+	}
+
+	public void setMovableForViewport(boolean isMovable)
+	{
+		this.isMovable = isMovable;
+	}
+
+	public boolean isScalableForViewport()
+	{
+		return isScalable;
+	}
+
+	public void setScalableForViewport(boolean isScalable)
+	{
+		this.isScalable = isScalable;
 	}
 }
