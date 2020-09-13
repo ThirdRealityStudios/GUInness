@@ -78,7 +78,7 @@ It really shouldn't lack of brief comments in the code actually..👍
 
 # Stats / Nice To Know (as of Sep 12 2020)
 - Total lines of code: 3244 (counted them with "[cloc](https://github.com/AlDanial/cloc)")
-- Code size: ~125,2 kB
+- Code size: ~125.2 kB
 
 
 # Donations (Via LiteCoin)
