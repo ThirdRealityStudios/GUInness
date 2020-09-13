@@ -7,7 +7,7 @@ Currently, the focus of the development goes on solidity and stability before an
 
 
 # First Impression
-![Application sample](https://i.ibb.co/hLt7dQp/newest.png)
+![Application sample](https://i.ibb.co/qdhZN4J/preview.png)
 
 
 # History
