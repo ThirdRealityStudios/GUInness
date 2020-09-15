@@ -208,8 +208,13 @@ public class Main
 		};
 		
 		increaseScale.getLogic().setDoubleClickingAllowed(true);
-		increaseScale.getStyle().setMovableForViewport(true);
-		increaseScale.getStyle().setScalableForViewport(false);
+		
+		// These both settings are especially interesting for creating zoom-maps, browser-related content or similar stuff.
+		// It prevents the "increase scale button" (+) to be changed by the Viewport when scrolling or zooming in/out (as an example).
+		{
+			increaseScale.getStyle().setMovableForViewport(false);
+			increaseScale.getStyle().setScalableForViewport(false);
+		}
 		
 		exit = new GButton(new Point(20, 150), "EXIT", default1)
 		{

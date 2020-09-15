@@ -1,4 +1,4 @@
-A simple tool to draw graphical objects and create custom GUI environments.
+**A simple tool to draw graphical objects and create custom GUI environments**
 
 If you want to test this API first, you can just download the binaries ("bin"-folder) and run the Main.class file.
 It will give you a look through all the features which are available currently.
@@ -65,8 +65,10 @@ If these points are also really guaranteed the next step would it be theoretical
 - add paths
 - add video components
 - add simple background sound tracks.
-- add ability for LOD levels depending on current the Viewport scale (especially for creating maps or games).
+- add ability for LOD levels depending on the current Viewport scale¹.
 - add hyperlinks to open links on the web.
+
+¹especially for creating maps, games or browser-related content.
 
 
 # Documentation
@@ -82,15 +84,13 @@ It really shouldn't lack of brief comments in the code actually..👍
 
 
 # Donations (Via LiteCoin)
-If you maybe have some LiteCoins left and you wouldn't mind to support this project,
-you can do so with this wallet address:
+I do this in my free-time so any donation would be highly appreciated and motivates me;
+especially in the mind of open-source it is more about the attention someone gives you rather than the amount.
+
+Wallet address:
 
 MEE93XavWVjebG5H3iGTfPyKajkfxx2ZPz
 
 or
 
 litecoin:MEE93XavWVjebG5H3iGTfPyKajkfxx2ZPz?label=Donation
-
-The amount isn't important; I do this in my freetime so any donation would be purely for some attention.
-Always think, you can better support mutliple developers and/or repositories;
-this will just make more people happy and encouraged, especially in the mind of open-source.
