@@ -206,7 +206,7 @@ public class Main
 				viewport.setScale(viewport.getScale() + 0.0001f);
 			}
 		};
-		
+
 		increaseScale.getLogic().setDoubleClickingAllowed(true);
 		
 		// These both settings are especially interesting for creating zoom-maps, browser-related content or similar stuff.

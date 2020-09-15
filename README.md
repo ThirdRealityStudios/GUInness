@@ -31,12 +31,16 @@ You also do not need that much background knowledge like with Swing.
 
 
 # Features
-- GUI components organized in "layers" with priorities (kind of comparable to HTML).
-- all GUI components are very easy-to-use in terms of methods and attributes.
-- dozens of very detailed error logs and comments, amongst them for better and quicker maintenance (even advices).
-- simple way to create you own design / look (by just using the classic design ("Classic.java") as a base).
-- capable of multi-threading.
-- Viewport movement & scaling (especially for creating games or maps).
+- GUI components organized in "layers" with priorities¹
+- all GUI components are very easy-to-use in your code
+- dozens of very detailed error logs and brief comments
+- simple way to create your own design / look²
+- capable of multi-threading
+- Viewport movement & scaling³
+
+¹comparable to HTML (to get a very rough impression on how it works)
+²by using the "Classic.java" as a base for further implementations
+³especially for creating maps, games or browser-related content
 
 
 # Component Features
@@ -64,11 +68,11 @@ If these points are also really guaranteed the next step would it be theoretical
 # Planed Features
 - add paths
 - add video components
-- add simple background sound tracks.
-- add ability for LOD levels depending on the current Viewport scale¹.
-- add hyperlinks to open links on the web.
+- add simple background sound tracks
+- add ability for LOD levels depending on the current Viewport scale¹
+- add hyperlinks to open links on the web
 
-¹especially for creating maps, games or browser-related content.
+¹especially for creating maps, games or browser-related content
 
 
 # Documentation
@@ -84,10 +88,8 @@ It really shouldn't lack of brief comments in the code actually..👍
 
 
 # Donations (Via LiteCoin)
-I do this in my free-time so any donation would be highly appreciated and motivates me;
-especially in the mind of open-source it is more about the attention someone gives you rather than the amount.
-
-Wallet address:
+I do this in my free-time so any donation would be highly appreciated;
+especially in the mind of open-source it is more about the attention someone gives me rather than the amount.
 
 MEE93XavWVjebG5H3iGTfPyKajkfxx2ZPz
 
