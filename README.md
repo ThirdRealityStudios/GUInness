@@ -31,18 +31,18 @@ You also do not need that much background knowledge like with Swing.
 
 
 # Features
-- GUI components organized in "layers" with priorities¹
+- GUI components organized in "layers" with priorities**¹**
 - all GUI components are very easy-to-use in your code
 - dozens of very detailed error logs and brief comments
-- simple way to create your own design / look²
+- simple way to create your own design / look**²**
 - capable of multi-threading
-- Viewport movement & scaling³
+- Viewport movement & scaling**³**
 
-¹comparable to HTML (to get a very rough impression on how it works)
+**¹**comparable to HTML (to get a very rough impression on how it works)
 
-²by using the "Classic.java" as a base for further implementations
+**²**by using the "Classic.java" as a base for further implementations
 
-³especially for creating maps, games or browser-related content
+**³**especially for creating maps, games or browser-related content
 
 
 # Component Features
@@ -71,10 +71,10 @@ If these points are also really guaranteed the next step would it be theoretical
 - add paths
 - add video components
 - add simple background sound tracks
-- add ability for LOD levels depending on the current Viewport scale¹
+- add ability for LOD levels depending on the current Viewport scale**¹**
 - add hyperlinks to open links on the web
 
-¹especially for creating maps, games or browser-related content
+**¹**especially for creating maps, games or browser-related content
 
 
 # Documentation
