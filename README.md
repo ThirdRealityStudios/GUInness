@@ -39,7 +39,9 @@ You also do not need that much background knowledge like with Swing.
 - Viewport movement & scaling³
 
 ¹comparable to HTML (to get a very rough impression on how it works)
+
 ²by using the "Classic.java" as a base for further implementations
+
 ³especially for creating maps, games or browser-related content
 
 
