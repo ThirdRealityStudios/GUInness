@@ -89,6 +89,12 @@ It really shouldn't lack of brief comments in the code actually..👍
 - Code size: ~125.2 kB
 
 
+# Already having used GUInness?
+Maybe you want to fill in a little survey just shortly for what you are using GUInness actually for:
+
+[Fill in survey](https://xoyondo.com/ap/Zq39H0hSWRU5k2E)
+
+
 # Donations (via LiteCoin)
 I do this in my free-time so any donation would be highly appreciated;
 especially in the mind of open-source it is more about the attention someone gives me rather than the amount.
