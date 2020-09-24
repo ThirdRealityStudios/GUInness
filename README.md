@@ -18,61 +18,45 @@ Currently, the focus of the development goes on solidity and stability before an
 - as a lightweight alternative to the Swing library
 
 
-# Features
-- GUI components organized in "layers" with priorities**¹**
-- all GUI components are very easy-to-use in your code
-- dozens of very detailed error logs and brief comments
-- simple way to create your own design / look**²**
+# General Features
 - capable of multi-threading
-- Viewport movement & scaling**³**
+- viewport movement & scaling**¹**
+- all components are organized in "layers"**²**
+- all components have actions defined
+- easy error-tracking (logs, advices and brief comments)
 
-**¹**comparable to HTML (to get a very rough impression on how it works)
+**¹**especially for creating maps, games or browser-related content
 
-**²**by using the "Classic.java" as a base for further implementations
-
-**³**especially for creating maps, games or browser-related content
-
-
-# Component Features
-- Texts
-- Buttons (rectangle button / default)
-- Polygon buttons (a special and dynamic shape button)
-- Textfields
-- Checkboxes
-- Selection-boxes (with radio buttons)
-- Images/pictures
-- Rectangles
+**²**comparable to CSS with "z-index" property.
 
 
-# Runtime Features
-- Components tasks / actions can be executed by enabling "multi-threading" per object method.
-
-
-# Stability And Solidity First
-As already mentioned, the main goal is it to keep and improve the stability.
-For the solidity it is the case that the code is tried to be kept as small and clean as possible.
-It is also important for me not to get messy with the code structure and to deliver enough comments and error messages for best maintenance.
-If these points are also really guaranteed the next step would it be theoretically to add a new feature.
+# Featured Components (ready-to-use)
+- text descriptions
+- buttons (rectangle button / default)
+- polygon buttons (a special and dynamic shape button)
+- text-fields
+- check-boxes
+- selection-boxes (using radio buttons)
+- images / pictures
+- rectangles
 
 
 # Planed Features
 - add paths
-- add video components
+- add hyper-links for referring to webpages
 - add simple background sound tracks
+- add video components
 - add ability for LOD levels depending on the current Viewport scale**¹**
-- add hyperlinks to open links on the web
 
 **¹**especially for creating maps, games or browser-related content
 
 
 # Documentation
-Will follow at the final release because several things / features can still change "fundamentally".
-This means, it isn't the effort worth until now to note every single change.
-Anyway, there are of course dozens of comments and a sample application (Main.java) for better understanding.
-It really shouldn't lack of brief comments in the code actually..👍
+Will follow at the final release.
+Anyway, you can find brief comments in the code yet but I know it's a dirty compilation still..
 
 
-# History
+# Motivation for development
 GUInness was originally written first because I wanted to build a solid structure in order
 to build 2D games more easily.
 At all I want to build a simple strategy game which probably lacks of graphics but is rich in terms of features.
@@ -81,8 +65,8 @@ so that's the challenge for me.
 
 
 # Stats / Nice To Know (as of Sep 12 2020)
-- Total lines of code: 3244 (counted them with "[cloc](https://github.com/AlDanial/cloc)")
-- Code size: ~125.2 kB
+- total lines of code: 3244 (counted them with "[cloc](https://github.com/AlDanial/cloc)")
+- code size: ~125.2 kB
 
 
 # Already having used GUInness?
