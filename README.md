@@ -11,24 +11,11 @@ Currently, the focus of the development goes on solidity and stability before an
 ![Application sample](https://i.ibb.co/qdhZN4J/preview.png)
 
 
-# History
-This API was originally written first because I wanted to build a solid structure in order
-to build 2D games more easily.
-At all I want to build a simple strategy game which probably lacks of graphics but is rich in terms of features.
-I could have used available game engines from the web but my plan was it to build everything up from scratch,
-so that's the challenge for me.
-
-
-# Who Is This API For?
-As you read above the API is mainly being developed for simple 2D games which do not require such an efficient rendering API.
-GUInness already uses the "paintMethod(Graphics g)"-method in order to realize the displaying of components, graphics and more.
-As you probably know, that's not the approach for AAA-Games, nor you can expect high-resoluted graphics.
-Anyway, the limits of GUInness and Swing have not been reached yet in terms of rendering and quality.
-If you just want to build a simple GUI which is easy-to-use and fast-to-build then you are also defintely right here.
-GUInness is also an alternative to the yet largely-used Swing library, meaning the components it offers.
-Of course, there are still a lot of features to be added in order to be at least a little "competetive".
-Last but not least GUInness is especially suitable for Java beginners due to the simple structure.
-You also do not need that much background knowledge like with Swing.
+# Uses of GUInness
+- for development of simple 2D games
+- for fast creation of GUI environments
+- for highly modifiable GUIs
+- as a lightweight alternative to the Swing library
 
 
 # Features
@@ -83,6 +70,14 @@ Will follow at the final release because several things / features can still cha
 This means, it isn't the effort worth until now to note every single change.
 Anyway, there are of course dozens of comments and a sample application (Main.java) for better understanding.
 It really shouldn't lack of brief comments in the code actually..👍
+
+
+# History
+GUInness was originally written first because I wanted to build a solid structure in order
+to build 2D games more easily.
+At all I want to build a simple strategy game which probably lacks of graphics but is rich in terms of features.
+I could have used available game engines from the web but my plan was it to build everything up from scratch,
+so that's the challenge for me.
 
 
 # Stats / Nice To Know (as of Sep 12 2020)
