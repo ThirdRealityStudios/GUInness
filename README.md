@@ -92,7 +92,7 @@ It really shouldn't lack of brief comments in the code actually..👍
 # Already having used GUInness?
 Maybe you want to fill in a little survey just shortly for what you are using GUInness actually for:
 
-[Fill in survey](https://xoyondo.com/ap/Zq39H0hSWRU5k2E)
+[Fill in survey](https://xoyondo.com/ap/kH4TWzyf1bJVah4)
 
 
 # Donations (via LiteCoin)
