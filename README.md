@@ -89,7 +89,7 @@ It really shouldn't lack of brief comments in the code actually..👍
 - Code size: ~125.2 kB
 
 
-# Donations (Via LiteCoin)
+# Donations (via LiteCoin)
 I do this in my free-time so any donation would be highly appreciated;
 especially in the mind of open-source it is more about the attention someone gives me rather than the amount.
 
