@@ -5,7 +5,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
 
-import org.thirdreality.Meta;
+import org.thirdreality.guinness.Meta;
 import org.thirdreality.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.guinness.gui.component.GComponent;
 

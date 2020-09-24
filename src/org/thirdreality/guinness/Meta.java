@@ -1,4 +1,4 @@
-package org.thirdreality;
+package org.thirdreality.guinness;
 
 public interface Meta
 {

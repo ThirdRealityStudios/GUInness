@@ -3,7 +3,7 @@ package org.thirdreality.guinness.gui.component.decoration;
 import java.awt.Color;
 import java.awt.Dimension;
 
-import org.thirdreality.Meta;
+import org.thirdreality.guinness.Meta;
 import org.thirdreality.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.guinness.gui.component.GComponent;
 

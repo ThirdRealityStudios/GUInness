@@ -6,7 +6,7 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.io.Serializable;
 
-import org.thirdreality.Meta;
+import org.thirdreality.guinness.Meta;
 import org.thirdreality.guinness.gui.design.Design;
 import org.thirdreality.guinness.gui.font.Font;
 

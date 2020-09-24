@@ -10,7 +10,7 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
-import org.thirdreality.Meta;
+import org.thirdreality.guinness.Meta;
 import org.thirdreality.guinness.draw.DrawToolkit;
 import org.thirdreality.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.guinness.feature.shape.ShapeTransform;

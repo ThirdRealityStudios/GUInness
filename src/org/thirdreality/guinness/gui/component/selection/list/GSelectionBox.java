@@ -7,7 +7,7 @@ import java.awt.Rectangle;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.thirdreality.Meta;
+import org.thirdreality.guinness.Meta;
 import org.thirdreality.guinness.feature.Path;
 import org.thirdreality.guinness.feature.image.ImageToolkit;
 import org.thirdreality.guinness.feature.shape.ShapeMaker;

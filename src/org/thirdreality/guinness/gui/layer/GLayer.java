@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.thirdreality.Meta;
+import org.thirdreality.guinness.Meta;
 import org.thirdreality.guinness.gui.component.GComponent;
 import org.thirdreality.guinness.gui.design.Design;
 import org.thirdreality.guinness.gui.design.Sample;

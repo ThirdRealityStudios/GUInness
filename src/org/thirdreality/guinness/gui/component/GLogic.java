@@ -2,7 +2,7 @@ package org.thirdreality.guinness.gui.component;
 
 import java.io.Serializable;
 
-import org.thirdreality.Meta;
+import org.thirdreality.guinness.Meta;
 
 public class GLogic implements Serializable
 {

@@ -5,7 +5,7 @@ import java.awt.Polygon;
 import java.io.File;
 import java.io.Serializable;
 
-import org.thirdreality.Meta;
+import org.thirdreality.guinness.Meta;
 import org.thirdreality.guinness.feature.Path;
 import org.thirdreality.guinness.gui.Display;
 import org.thirdreality.guinness.gui.design.Sample;
