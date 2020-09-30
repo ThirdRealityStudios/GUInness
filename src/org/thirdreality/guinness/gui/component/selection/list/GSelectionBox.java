@@ -75,8 +75,8 @@ public class GSelectionBox extends GComponent
 	{
 		icon = new Image[2];
 		
-		icon[0] = ImageToolkit.loadImage(Path.ICON + File.separator + "radio_unselected.png");
-		icon[1] = ImageToolkit.loadImage(Path.ICON + File.separator + "radio_selected.png");
+		icon[0] = ImageToolkit.loadImage(Path.ICON_FOLDER + File.separator + "radio_unselected.png");
+		icon[1] = ImageToolkit.loadImage(Path.ICON_FOLDER + File.separator + "radio_selected.png");
 	}
 	
 	public ArrayList<GSelectionOption> getOptions()

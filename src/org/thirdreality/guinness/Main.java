@@ -265,7 +265,7 @@ public class Main
 			}
 		};
 
-		Image i = ImageToolkit.loadImage(Path.ROOT + File.separator + "media" + File.separator + "samples" + File.separator + "MountainLake.jpg");
+		Image i = ImageToolkit.loadImage(Path.ROOT_FOLDER + File.separator + "media" + File.separator + "samples" + File.separator + "MountainLake.jpg");
 
 		img0 = new GImage(new Point(0, 0), 600, false , i);
 		img0.getLogic().setActionOnHover(false);

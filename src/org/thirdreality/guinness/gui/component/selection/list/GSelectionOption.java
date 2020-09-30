@@ -33,7 +33,7 @@ public class GSelectionOption
 		setLogic(new GLogic());
 		
 		// This line makes sure every GComponent also has a default font, no matter it is used or not or for other cases.
-		getStyle().setFont(new Font("default", Path.FONT + File.separator + "StandardFont.png", 18));
+		getStyle().setFont(new Font("default", Path.FONT_FOLDER + File.separator + "StandardFont.png", 18));
 	}
 	
 	public GSelectionOption(GStyle style, GLogic logic, boolean isDefaultOption)
