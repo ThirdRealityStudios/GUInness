@@ -119,9 +119,14 @@ public class Classic extends Design
 				break;
 			}
 			
+			case "window":
+			{
+				drawWindow(g, c);
+			}
+			
 			default:
 			{
-				drawGeneralField(g, c, true);
+				// drawGeneralField(g, c, true);
 			}
 		}
 	}
@@ -411,6 +416,15 @@ public class Classic extends Design
 		Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
 
 		DrawToolkit.drawString(g, c.getValue(), textX, textY, scaledFont);
+	}
+	
+	public void drawWindow(Graphics g, GComponent c)
+	{
+		g.setColor(Color.RED);
+		g.fillPolygon(ShapeTransform.movePolygonTo(c.getStyle().getPrimaryLook(), c.getStyle().getPrimaryLook().getBounds().getLocation()));
+		
+		g.setColor(Color.BLUE);
+		g.fillPolygon(ShapeTransform.movePolygonTo(c.getStyle().getSecondaryLook(), c.getStyle().getSecondaryLook().getBounds().getLocation()));
 	}
 
 	// Returns a determined shape which uses the design defined in this class.

@@ -46,14 +46,13 @@ public abstract class GComponent implements Serializable
 	
 	private GLogic logic;
 
-	public GComponent(String type, Point location)
+	public GComponent(String type)
 	{
 		style = new GStyle();
 		
 		logic = new GLogic();
 		
 		setType(type);
-		getStyle().setLocation(location);
 		
 		// This line makes sure every GComponent also has a default font, no matter it is used or not or for other cases.
 		getStyle().setFont(new Font("default", Path.FONT_FOLDER + File.separator + "StandardFont.png", 18));
@@ -66,9 +65,13 @@ public abstract class GComponent implements Serializable
 	
 	public GComponent(String type, Point location, Polygon look, int length, String val, Font font)
 	{
-		this(type, location);
+		this(type);
 		
 		getStyle().setPrimaryLook(look);
+		
+		// Is always executed after having set the look because it transforms the shape directly to the given location.
+		getStyle().setLocation(location);
+		
 		getStyle().setFont(font);
 
 		// Set all important attributes below:
@@ -83,9 +86,13 @@ public abstract class GComponent implements Serializable
 	
 	public GComponent(String type, Point location, Polygon look, String val, Font font)
 	{
-		this(type, location);
+		this(type);
 
 		getStyle().setPrimaryLook(look);
+		
+		// Is always executed after having set the look because it transforms the shape directly to the given location.
+		getStyle().setLocation(location);
+		
 		getStyle().setFont(font);
 
 		// Set all important attributes below:
@@ -185,7 +192,7 @@ public abstract class GComponent implements Serializable
 	{
 		return getClass().hashCode() + " (class: " + this.getClass().getSimpleName() + ", type: \"" + getType()
 				+ "\"):\ndesign = " + getStyle().getDesign().getClass().getSimpleName() + "\nshape = " + getStyle().getPrimaryLook() + "\nlength = "
-				+ getStyle().getLength() + "\nvalue = \"" + value + "\"\nfontSize = " + getStyle().getFont().getFontSize() + "\nvisible = " + getStyle().isVisible();
+				+ "\nvalue = \"" + "\nvisible = " + getStyle().isVisible();
 	}
 
 	public Display getDisplay()

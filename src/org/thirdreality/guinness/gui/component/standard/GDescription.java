@@ -14,9 +14,16 @@ public class GDescription extends GComponent
 	
 	public GDescription(Point location, String title, Font font)
 	{
-		super("description", location, null, title.length(), title, font);
+		super("description");
+		
+		setTitle(title);
+		getStyle().setLength(title.length());
+		
+		getStyle().setFont(font);
 		
 		updateDefaultShape();
+		
+		getStyle().setLocation(location);
 	}
 
 	public String getTitle()

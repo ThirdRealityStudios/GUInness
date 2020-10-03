@@ -7,6 +7,7 @@ import java.awt.Polygon;
 import java.io.Serializable;
 
 import org.thirdreality.guinness.Meta;
+import org.thirdreality.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.guinness.gui.design.Design;
 import org.thirdreality.guinness.gui.font.Font;
 
@@ -16,10 +17,10 @@ public class GStyle implements Serializable
 
 	// Will tell the render method how to render this component.
 	private Design design;
-	
+
 	// Contains the primary look of the component.
 	private Polygon primaryLook = new Polygon();
-	
+
 	// Contains the secondary look of the component.
 	private Polygon secondaryLook = new Polygon();
 
@@ -165,6 +166,15 @@ public class GStyle implements Serializable
 	public void setLocation(Point location)
 	{
 		this.location = location;
+		
+		setPrimaryLook(ShapeTransform.movePolygonTo(getPrimaryLook(), location));
+		
+		// Because only the primary look is obligatory there's actually no need for a secondary look.
+		// Because secondary looks are mostly used in special cases only it is checked whether one is available for update.
+		if(getSecondaryLook() != null)
+		{
+			setSecondaryLook(ShapeTransform.movePolygonTo(getSecondaryLook(), location));
+		}
 	}
 
 	public Image getImage()

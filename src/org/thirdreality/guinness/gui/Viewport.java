@@ -154,7 +154,7 @@ public class Viewport extends JPanel
 		
 		return false;
 	}
-	
+
 	// The priority of a layer has to be at least zero or greater.
 	private boolean isValidPriority(GLayer layer)
 	{
@@ -203,7 +203,7 @@ public class Viewport extends JPanel
 	{
 		return layers.get(index);
 	}
-	
+
 	public int getLayerModifications()
 	{
 		return layerModifications;

@@ -17,23 +17,38 @@ public abstract class GTextfield extends GComponent
 
 	public GTextfield(Point location, String title, int maxInput, Font font)
 	{
-		super("textfield", location, null, -1, title, font);
-		
-		if (maxInput > 0)
-			getStyle().setLength(maxInput);
-		else
-			throw new IllegalArgumentException("Maximum length must be 1 or longer!");
+		super("textfield");
 
-		if (title.length() <= getStyle().getLength())
-			setValue(title);
+		if(maxInput > 0)
+		{
+			getStyle().setLength(maxInput);
+		}
 		else
+		{
+			throw new IllegalArgumentException("Maximum length must be 1 or greater!");
+		}
+		
+		boolean isValidTextfield = title.length() <= getStyle().getLength();
+
+		if(isValidTextfield)
+		{
+			// Will set the title or text which is contained yet.
+			// Will also update the "default shape".
+			setValue(title);
+			
+			// Is always executed after having set the default shape from the setValue(String title)-method above.
+			// The setLocation(...)-method is dependent on a look available in order to transform it to the given location.
+			getStyle().setLocation(location);
+			
+			getStyle().setPrimaryColor(Color.WHITE);
+			getStyle().setBorderRadiusPx(3);
+
+			getStyle().setFont(font);
+		}
+		else
+		{
 			throw new IllegalArgumentException("Title length is bigger than the specified maximum length!");
-		
-		getStyle().setPrimaryColor(Color.WHITE);
-		getStyle().setBorderRadiusPx(3);
-		
-		// This method is always called after the base values have been set, e.g. font size.
-		updateDefaultShape();
+		}
 	}
 
 	public void onClick(){}
@@ -93,6 +108,7 @@ public abstract class GTextfield extends GComponent
 
 		this.value = title;
 
+		// This method is (in general) always called after some base values have changed, e.g. the font size or like here it is the title.
 		updateDefaultShape();
 	}
 }

@@ -159,8 +159,6 @@ public class ComponentHandler
 					textfield = null;
 				}
 			}
-			
-			
 		}
 
 		// This is the actual part where text-fields are modified, meaning the value or
@@ -206,16 +204,16 @@ public class ComponentHandler
 				if(!doubleClicked || focused.getLogic().isDoubleClickingAllowed())
 				{
 					switch(focused.getType())
-					{
+					{					
 						// Additionally check-boxes are treated here.
 						// This will simply enable or disable the check-box this is about..
 						case "checkbox":
 						{
 							GCheckbox checkbox = (GCheckbox) focused;
-							
+
 							// Just invert the current setting.
 							checkbox.setChecked(!checkbox.isChecked());
-							
+
 							break;
 						}
 						

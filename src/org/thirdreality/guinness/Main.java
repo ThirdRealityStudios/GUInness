@@ -15,6 +15,7 @@ import org.thirdreality.guinness.gui.Viewport;
 import org.thirdreality.guinness.gui.component.decoration.GImage;
 import org.thirdreality.guinness.gui.component.decoration.GRectangle;
 import org.thirdreality.guinness.gui.component.input.GTextfield;
+import org.thirdreality.guinness.gui.component.placeholder.GWindow;
 import org.thirdreality.guinness.gui.component.selection.GCheckbox;
 import org.thirdreality.guinness.gui.component.selection.list.GSelectionBox;
 import org.thirdreality.guinness.gui.component.selection.list.GSelectionOption;
@@ -46,8 +47,10 @@ public class Main
 	private ArrayList<GSelectionOption> options;
 	
 	private GSelectionBox gSB;
+	
+	private GWindow window;
 
-	private GLayer layer0, layer1, layer2;
+	private GLayer layer0, layer1, layer2, layer3;
 
 	private Design design;
 	
@@ -130,6 +133,8 @@ public class Main
 	
 	private void initComponents()
 	{
+		window = new GWindow("Sample window", default2, new Point(200, 200), new Dimension(200, 150), 10, 10, null);
+		
 		rect = new GRectangle(0, -50, new Dimension(800, 136), Color.RED, 0.5f);
 		rect.getStyle().setBorderRadiusPx(10);
 		
@@ -281,7 +286,7 @@ public class Main
 
 		viewport = new Viewport(display.getEventHandler());
 		viewport.setOffset(new Point(50, 50));
-		viewport.setScale(0.9f);
+		viewport.setScale(1f);
 
 		display.setViewport(viewport);
 
@@ -312,6 +317,8 @@ public class Main
 		
 		layer2.add(gSB);
 		layer2.add(rect);
+		
+		// layer3.add(window);
 	}
 
 	public void run()
@@ -325,11 +332,13 @@ public class Main
 		layer0 = new GLayer(0, true);
 		layer1 = new GLayer(1, true);
 		layer2 = new GLayer(2, true);
+		layer3 = new GLayer(4, true);
 		
 		setupLayers();
 
 		display.getViewport().addLayer(layer0);
 		display.getViewport().addLayer(layer1);
 		display.getViewport().addLayer(layer2);
+		display.getViewport().addLayer(layer3);
 	}
 }

@@ -5,8 +5,6 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 
-import org.thirdreality.guinness.gui.component.decoration.GRectangle;
-
 public class ShapeMaker
 {
 	public static Polygon createRectangle(int x, int y, int width, int height)

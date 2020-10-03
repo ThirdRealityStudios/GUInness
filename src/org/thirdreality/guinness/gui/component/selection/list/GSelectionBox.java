@@ -11,6 +11,7 @@ import org.thirdreality.guinness.Meta;
 import org.thirdreality.guinness.feature.Path;
 import org.thirdreality.guinness.feature.image.ImageToolkit;
 import org.thirdreality.guinness.feature.shape.ShapeMaker;
+import org.thirdreality.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.guinness.gui.component.GComponent;
 
 public class GSelectionBox extends GComponent
@@ -31,20 +32,9 @@ public class GSelectionBox extends GComponent
 	// Keeps two different icons which illustrate two possible states of an option (selected / unselected).
 	private Image[] icon;
 
-	public GSelectionBox(Point location)
-	{
-		super("selectionbox", location);
-		
-		updateShapeTable = new ArrayList<Polygon[]>();
-		
-		options = new ArrayList<GSelectionOption>();
-		
-		initIcon();
-	}
-	
 	public GSelectionBox(Point location, ArrayList<GSelectionOption> options)
 	{
-		super("selectionbox", location);
+		super("selectionbox");
 		
 		updateShapeTable = new ArrayList<Polygon[]>();
 		
@@ -64,10 +54,15 @@ public class GSelectionBox extends GComponent
 		
 		// This will actually calculate a grid for every single option you add to this GSelectionBox.
 		// Also, do not change order as the grid is important for the next method to determine the shape of the whole GSelectionBox.
-		updateShapeTable();
+		updateShapeTable(location);
 		
 		// Make sure, the current shape is updated with the correct size with the new options added.
-		updateSelectionBoxShape();
+		updateSelectionBoxShape(location);
+		
+		// Is always executed after having set the box shape because it transforms it directly to the given location.
+		getStyle().setLocation(location);
+		
+		System.out.println("box> " + getStyle().getPrimaryLook().getBounds());
 	}
 	
 	// Only there to load the images for the icons..
@@ -116,7 +111,7 @@ public class GSelectionBox extends GComponent
 	}
 	
 	// Makes sure, the current shape is updated with the correct size with new options added or removed.
-	private void updateSelectionBoxShape()
+	private void updateSelectionBoxShape(Point origin)
 	{
 		int maxWidth = 0;
 		
@@ -126,35 +121,33 @@ public class GSelectionBox extends GComponent
 		{
 			maxWidth = Math.max(maxWidth, (getShapeTable().get(i)[0].getBounds().width + getShapeTable().get(i)[1].getBounds().width + getShapeTable().get(i)[2].getBounds().width));
 		}
-		
-		Point originalLocation = getStyle().getLocation();
-		
+
 		Polygon lastShape = getShapeTable().get(getShapeTable().size()-1)[4];
 		
-		sumHeight = (lastShape.getBounds().y + lastShape.getBounds().height) - originalLocation.y;
+		sumHeight = (lastShape.getBounds().y + lastShape.getBounds().height) - origin.y;
 		
-		getStyle().setPrimaryLook(ShapeMaker.createRectangle(originalLocation.x, originalLocation.y, maxWidth, sumHeight));
+		getStyle().setPrimaryLook(ShapeMaker.createRectangle(origin.x, origin.y, maxWidth, sumHeight));
 	}
 
 	// This will actually calculate a grid for every single option you add to this GSelectionBox.
 	// It will to simplify the rendering process by not having to calculate these values frequently.
 	// It can directly the draw method all necessary measurements of the symbol and title text of an option added.
 	// Because of this, the "shape table" steadily needs to be updated when it is changed or just at the beginning.
-	private void updateShapeTable()
+	private void updateShapeTable(Point origin)
 	{
 		int lastHeights = 0;
-		
+
 		for(int i = 0; i < options.size(); i++)
 		{
 			// Stores the current option.
 			GSelectionOption option = getOptions().get(i);
-			
+
 			int fontSize = option.getStyle().getFont().getFontSize();
-			
+
 			Rectangle optionSymbolShape = null, optionSeparationWidth = null, optionTitleShape = null, optionPaddingTop = null, optionPaddingBottom = null;
-			
+
 			// The location of this GSelectionBox.
-			Point location = new Point(getStyle().getLocation().x, getStyle().getLocation().y + lastHeights);
+			Point location = new Point(origin.x, origin.y + lastHeights);
 
 			// Sizes (just dimensions) calculated here..
 			{
@@ -269,8 +262,8 @@ public class GSelectionBox extends GComponent
 			index = options.size() - 1;
 		}
 		
-		updateShapeTable();
-		updateSelectionBoxShape();
+		updateShapeTable(getStyle().getLocation());
+		updateSelectionBoxShape(getStyle().getLocation());
 	}
 	
 	private void unselectCompletelyAt(int index)

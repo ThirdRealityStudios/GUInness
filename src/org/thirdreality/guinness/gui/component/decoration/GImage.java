@@ -51,13 +51,16 @@ public class GImage extends GComponent
 
 	public GImage(Point location, int size, boolean useAsWidth, Image content)
 	{
-		super("image", location, null, 0, null, null);
+		super("image");
 
 		int scaledWidth = useAsWidth ? size : (int) (((float) size / content.getHeight(null)) * content.getWidth(null));
 		int scaledHeight = useAsWidth ? (int) (((float) size / content.getWidth(null)) * content.getHeight(null)) : size;
 		
 		Polygon rectangle = ShapeMaker.createRectangle(location.x, location.y, scaledWidth, scaledHeight);
 		getStyle().setPrimaryLook(rectangle);
+		
+		// Is always executed after having set the primary look because it transforms it directly to the given location.
+		getStyle().setLocation(location);
 		
 		getStyle().setImage(content);
 	}
