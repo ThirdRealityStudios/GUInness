@@ -47,8 +47,11 @@ Currently, the focus of the development goes on solidity and stability before an
 - add simple background sound tracks
 - add video components
 - add ability for LOD levels depending on the current Viewport scale**¹**
+- add windows (frames) for use within the Viewport**²**
 
 **¹**especially for creating maps, games or browser-related content
+
+**²**useful for making menus, grouping components or similar stuff
 
 
 # Documentation
@@ -64,9 +67,9 @@ I could have used available game engines from the web but my plan was it to buil
 so that's the challenge for me.
 
 
-# Stats / Nice To Know (as of Sep 12 2020)
-- total lines of code: 3244 (counted them with "[cloc](https://github.com/AlDanial/cloc)")
-- code size: ~125.2 kB
+# Stats / Nice To Know (as of 10/03/2020)
+- total lines of code: 3410 (counted them with "[cloc](https://github.com/AlDanial/cloc)")
+- code size: 133.1 kB
 
 
 # Already having used GUInness?
