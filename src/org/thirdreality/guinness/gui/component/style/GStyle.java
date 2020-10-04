@@ -1,4 +1,4 @@
-package org.thirdreality.guinness.gui.component;
+package org.thirdreality.guinness.gui.component.style;
 
 import java.awt.Color;
 import java.awt.Image;
@@ -6,12 +6,13 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.io.Serializable;
 
+import org.thirdreality.guinness.IssueTracker;
 import org.thirdreality.guinness.Meta;
-import org.thirdreality.guinness.feature.shape.ShapeTransform;
+import org.thirdreality.guinness.gui.component.style.property.GBorder;
 import org.thirdreality.guinness.gui.design.Design;
 import org.thirdreality.guinness.gui.font.Font;
 
-public class GStyle implements Serializable
+public abstract class GStyle implements Serializable
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 
@@ -19,10 +20,10 @@ public class GStyle implements Serializable
 	private Design design;
 
 	// Contains the primary look of the component.
-	private Polygon primaryLook = new Polygon();
+	private Polygon primaryLook;
 
 	// Contains the secondary look of the component.
-	private Polygon secondaryLook = new Polygon();
+	private Polygon secondaryLook;
 
 	// Tells whether the context or component is visible or not.
 	// If 'null', a value will be automatically assigned later.
@@ -52,7 +53,7 @@ public class GStyle implements Serializable
 	// you can tell the program to translate or reposition the text by any x and y value.
 	// The translated text is then not recognized later as a component itself.
 	// Translating your text is because of that just for pure decoration purposes.
-	private Point textTransition = new Point();
+	private Point textTransition;
 
 	private int length = 0;
 	
@@ -61,22 +62,58 @@ public class GStyle implements Serializable
 	private int paddingTop = 0, paddingBottom = 0;
 	
 	private float opacity = 1f;
-	
-	// For specific component types, such as GRectangle, you can define a border-radius (just like in CSS for HTML).
-	private int borderRadiusPx = 0;
 
 	private Color primaryColor = null, bufferedColor = null;
+	
+	// If supported by the component, its borders can be modified by the properties stored in GBorder:
+	// e.g. the border thickness and border radiuses in pixels.
+	private GBorder border;
 
-	private Point location = new Point();
+	protected Point location;
 
 	// Just contains an image in case it is wanted.
 	// If you want the GComponent to be rendered as an image,
 	// you need to clarify it in the variable "type" above (String value needs to be
 	// "image" then).
 	private Image img;
-	
+
 	// The same as above but can be used as a buffer to things in between when needed..
 	private Image imgBuffered;
+
+	public GStyle()
+	{
+		primaryLook = new Polygon();
+		secondaryLook = new Polygon();
+		
+		textTransition = new Point();
+		location = new Point();
+		border = new GBorder();
+	}
+
+	// Creates a GStyle from another GStyle without modifying its values.
+	// The new GStyle will be a unique copy.
+	// Anyway, you need specify the setLocation(...) again for your purpose..
+	public GStyle(GStyle style)
+	{
+		border = style.getBorderProperties().copy();
+		
+		setBufferedColor(style.getBufferedColor());
+		setBufferedImage(style.getBufferedImage());
+		setDesign(style.getDesign());
+		setFont(style.getFont());
+		setImage(style.getImage());
+		setLength(style.getLength());
+		setLocation(style.getLocation());
+		setOpacity(style.getOpacity());
+		setPaddingBottom(style.getPaddingBottom());
+		setPaddingTop(style.getPaddingTop());
+		setPrimaryColor(style.getPrimaryColor());
+		setPrimaryLook(style.getPrimaryLook());
+		setSecondaryLook(style.getSecondaryLook());
+		setTextAlign(style.getTextAlign());
+		setTextTransition(style.getTextTransition());
+		setVisible(style.isVisible());
+	}
 
 	public Design getDesign()
 	{
@@ -97,7 +134,7 @@ public class GStyle implements Serializable
 	{
 		this.primaryLook = primaryLook;
 	}
-	
+
 	public Polygon getSecondaryLook()
 	{
 		return secondaryLook;
@@ -163,19 +200,8 @@ public class GStyle implements Serializable
 		return location;
 	}
 
-	public void setLocation(Point location)
-	{
-		this.location = location;
-		
-		setPrimaryLook(ShapeTransform.movePolygonTo(getPrimaryLook(), location));
-		
-		// Because only the primary look is obligatory there's actually no need for a secondary look.
-		// Because secondary looks are mostly used in special cases only it is checked whether one is available for update.
-		if(getSecondaryLook() != null)
-		{
-			setSecondaryLook(ShapeTransform.movePolygonTo(getSecondaryLook(), location));
-		}
-	}
+	// Sets the location and also transforms the corresponding look / polygon to that location.
+	public abstract void setLocation(Point location);
 
 	public Image getImage()
 	{
@@ -186,7 +212,7 @@ public class GStyle implements Serializable
 	{
 		this.img = img;
 	}
-	
+
 	public Image getBufferedImage()
 	{
 		return imgBuffered;
@@ -195,6 +221,16 @@ public class GStyle implements Serializable
 	public void setBufferedImage(Image imgBuffered)
 	{
 		this.imgBuffered = imgBuffered;
+	}
+	
+	public GBorder getBorderProperties()
+	{
+		return border;
+	}
+	
+	public void setBorderProperties(GBorder borderProperties)
+	{
+		border = borderProperties;
 	}
 
 	public int getPaddingTop()
@@ -241,16 +277,6 @@ public class GStyle implements Serializable
 		}
 	}
 
-	public int getBorderRadiusPx()
-	{
-		return borderRadiusPx;
-	}
-
-	public void setBorderRadiusPx(int borderRadiusPx)
-	{
-		this.borderRadiusPx = borderRadiusPx;
-	}
-
 	public int getTextAlign()
 	{
 		return textAlign;
@@ -261,7 +287,7 @@ public class GStyle implements Serializable
 		this.textAlign = textAlign;
 	}
 
-	public Point getTextAlignTransition()
+	public Point getTextTransition()
 	{
 		return textTransition;
 	}
@@ -289,5 +315,17 @@ public class GStyle implements Serializable
 	public void setScalableForViewport(boolean isScalable)
 	{
 		this.isScalable = isScalable;
+	}
+	
+	public GStyle copy()
+	{
+		return new GStyle(this)
+		{
+			@Override
+			public void setLocation(Point location)
+			{
+				System.err.println(IssueTracker.COPIED_ABSTRACT_CLASS_WARNING + "\nAffected methods: GStyle.setLocation(Point location)");
+			}
+		};
 	}
 }

@@ -5,6 +5,8 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 
+import org.thirdreality.guinness.gui.component.style.property.GBorder;
+
 public class ShapeMaker
 {
 	public static Polygon createRectangle(int x, int y, int width, int height)
@@ -41,36 +43,65 @@ public class ShapeMaker
 		return fed;
 	}
 	
-	public static Polygon createRectangleFrom(int x, int y, int width, int height, int borderRadiusPx)
+	private static Polygon getLowerLeftRadius(GBorder borderProperties, Rectangle rect)
 	{
-		Polygon borderRadius = createCircle(borderRadiusPx, 1/4f, 1f);
+		int borderRadiusLLPx = borderProperties.getLowerLeftBorderRadiusPx() == null ? borderProperties.getBorderRadiusPx() : borderProperties.getLowerLeftBorderRadiusPx();
+		Polygon borderRadiusLL = createCircle(borderRadiusLLPx, 1/4f, 1f);
 		
-		Polygon rectangle = createRectangleFrom(new Rectangle(x, y, width, height));
+		borderRadiusLL = ShapeTransform.flipVertically(borderRadiusLL);
+		borderRadiusLL = ShapeTransform.inverseOrderFrom(borderRadiusLL);
+		borderRadiusLL.translate(0, rect.height - borderRadiusLLPx);
 		
-		Polygon topLeftRadius = ShapeTransform.flip(borderRadius);
-		
-		Polygon bottomLeftRadius = ShapeTransform.inverseOrderFrom(ShapeTransform.flipVertically(borderRadius));
-		bottomLeftRadius.translate(0, rectangle.getBounds().height - borderRadiusPx);
-		
-		Polygon bottomRightRadius = ShapeTransform.inverseOrderFrom(ShapeTransform.flipVertically(bottomLeftRadius));
-		bottomRightRadius.translate(rectangle.getBounds().width - borderRadiusPx, 0);
-		
-		Polygon topRightRadius = ShapeTransform.inverseOrderFrom(ShapeTransform.flipHorizontically(bottomRightRadius));
-		topRightRadius.translate(0, - (rectangle.getBounds().height - borderRadiusPx));
-		
-		Polygon roundedRectangle = new Polygon();
-		
-		roundedRectangle = addPointsTo(roundedRectangle, topLeftRadius);
-		roundedRectangle = addPointsTo(roundedRectangle, bottomLeftRadius);
-		roundedRectangle = addPointsTo(roundedRectangle, bottomRightRadius);
-		roundedRectangle = addPointsTo(roundedRectangle, topRightRadius);
-		
-		return ShapeTransform.movePolygonTo(roundedRectangle, x, y);
+		return borderRadiusLL;
 	}
 	
-	public static Polygon createRectangleFrom(Rectangle rect, int borderRadiusPx)
+	private static Polygon getLowerRightRadius(GBorder borderProperties, Rectangle rect)
 	{
-		return createRectangleFrom(rect.x, rect.y, rect.width, rect.height, borderRadiusPx);
+		int borderRadiusLRPx = borderProperties.getLowerRightBorderRadiusPx() == null ? borderProperties.getBorderRadiusPx() : borderProperties.getLowerRightBorderRadiusPx();
+		Polygon borderRadiusLR = createCircle(borderRadiusLRPx, 1/4f, 1f);
+		
+		borderRadiusLR.translate(rect.width - borderRadiusLRPx, rect.height - borderRadiusLRPx);
+		
+		return borderRadiusLR;
+	}
+	
+	private static Polygon getUpperLeftRadius(GBorder borderProperties)
+	{
+		int borderRadiusTLPx = borderProperties.getUpperLeftBorderRadiusPx() == null ? borderProperties.getBorderRadiusPx() : borderProperties.getUpperLeftBorderRadiusPx();
+		Polygon borderRadiusTL = createCircle(borderRadiusTLPx, 1/4f, 1f);
+		
+		borderRadiusTL = ShapeTransform.flip(borderRadiusTL);
+		
+		return borderRadiusTL;
+	}
+	
+	private static Polygon getUpperRightRadius(GBorder borderProperties, Rectangle rect)
+	{		
+		int borderRadiusTRPx = borderProperties.getUpperRightBorderRadiusPx() == null ? borderProperties.getBorderRadiusPx() : borderProperties.getUpperRightBorderRadiusPx();
+		Polygon borderRadiusTR = createCircle(borderRadiusTRPx, 1/4f, 1f);
+
+		borderRadiusTR = ShapeTransform.flipHorizontically(borderRadiusTR);
+		borderRadiusTR = ShapeTransform.inverseOrderFrom(borderRadiusTR);
+		borderRadiusTR.translate(rect.width - borderRadiusTRPx, 0);
+
+		return borderRadiusTR;
+	}
+	
+	public static Polygon createRectangleFrom(Rectangle rect, GBorder borderProperties)
+	{
+		Polygon roundedRectangle = new Polygon();
+		
+		Polygon borderRadiusTL = getUpperLeftRadius(borderProperties);
+		Polygon borderRadiusLL = getLowerLeftRadius(borderProperties, rect);
+		Polygon borderRadiusLR = getLowerRightRadius(borderProperties, rect);
+		Polygon borderRadiusTR = getUpperRightRadius(borderProperties, rect);
+		
+		roundedRectangle = addPointsTo(roundedRectangle, borderRadiusTL);
+		roundedRectangle = addPointsTo(roundedRectangle, borderRadiusLL);
+		roundedRectangle = addPointsTo(roundedRectangle, borderRadiusLR);
+		roundedRectangle = addPointsTo(roundedRectangle, borderRadiusTR);
+
+		return ShapeTransform.movePolygonTo(roundedRectangle, rect.getLocation());
 	}
 	
 	public static Polygon createCircle(int circleRadius, float circlePercentage, float quality) throws IllegalArgumentException

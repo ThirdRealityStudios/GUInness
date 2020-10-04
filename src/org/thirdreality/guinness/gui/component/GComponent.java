@@ -7,7 +7,9 @@ import java.io.Serializable;
 
 import org.thirdreality.guinness.Meta;
 import org.thirdreality.guinness.feature.Path;
+import org.thirdreality.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.guinness.gui.Display;
+import org.thirdreality.guinness.gui.component.style.GStyle;
 import org.thirdreality.guinness.gui.design.Sample;
 import org.thirdreality.guinness.gui.font.Font;
 
@@ -48,7 +50,16 @@ public abstract class GComponent implements Serializable
 
 	public GComponent(String type)
 	{
-		style = new GStyle();
+		style = new GStyle()
+		{
+			@Override
+			public void setLocation(Point location)
+			{
+				this.location = location;
+				
+				setPrimaryLook(ShapeTransform.movePolygonTo(getPrimaryLook(), location));
+			}
+		};
 		
 		logic = new GLogic();
 		
@@ -225,17 +236,17 @@ public abstract class GComponent implements Serializable
 	{
 		this.style = style;
 	}
-	
+
 	public GLogic getLogic()
 	{
 		return logic;
 	}
-	
+
 	public void setLogic(GLogic logic)
 	{
 		this.logic = logic;
 	}
-	
+
 	// Updates the shape if possible,
 	// meaning if a design available already.
 	// Otherwise the component needs to be updated internally with one.

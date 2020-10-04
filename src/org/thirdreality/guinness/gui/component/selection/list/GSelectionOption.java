@@ -1,11 +1,13 @@
 package org.thirdreality.guinness.gui.component.selection.list;
 
 import java.awt.Image;
+import java.awt.Point;
 import java.io.File;
 
 import org.thirdreality.guinness.feature.Path;
+import org.thirdreality.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.guinness.gui.component.GLogic;
-import org.thirdreality.guinness.gui.component.GStyle;
+import org.thirdreality.guinness.gui.component.style.GStyle;
 import org.thirdreality.guinness.gui.font.Font;
 
 public class GSelectionOption
@@ -28,7 +30,16 @@ public class GSelectionOption
 
 		setTitle(title);
 		
-		setStyle(new GStyle());
+		setStyle(new GStyle()
+		{
+			@Override
+			public void setLocation(Point location)
+			{
+				// In real it has no effect because there is no use at all..
+				// The GSelectionOption class was rather made for logical purposes (marking something just as marked or unmarked).
+				this.location = location;
+			}
+		});
 		
 		setLogic(new GLogic());
 		

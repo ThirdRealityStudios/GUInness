@@ -118,6 +118,8 @@ public class ShapeTransform
 	
 	public static Polygon flip(Polygon p)
 	{
-		return movePolygonTo(invertPolygon(p), p.getBounds().x, p.getBounds().y);
+		Point formerLocation = p.getBounds().getLocation();
+		
+		return movePolygonTo(invertPolygon(p), formerLocation);
 	}
 }

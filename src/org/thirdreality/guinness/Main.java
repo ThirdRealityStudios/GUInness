@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -22,6 +23,7 @@ import org.thirdreality.guinness.gui.component.selection.list.GSelectionOption;
 import org.thirdreality.guinness.gui.component.standard.GButton;
 import org.thirdreality.guinness.gui.component.standard.GDescription;
 import org.thirdreality.guinness.gui.component.standard.GPolyButton;
+import org.thirdreality.guinness.gui.component.style.property.GBorder;
 import org.thirdreality.guinness.gui.design.Classic;
 import org.thirdreality.guinness.gui.design.Design;
 import org.thirdreality.guinness.gui.font.Font;
@@ -54,7 +56,7 @@ public class Main
 
 	private Design design;
 	
-	private Font default1 = new Font("default1", Font.getDefaultFilepath(), 25), default2 = new Font("default2", Font.getDefaultFilepath());
+	private Font biggerFont = new Font("biggerFont", Font.getDefaultFilepath(), 25), smallerFont = new Font("smallerFont", Font.getDefaultFilepath());
 
 	private Viewport viewport;
 
@@ -77,7 +79,7 @@ public class Main
 		poly.addPoint(75, 125);
 		poly.addPoint(0, 125);
 		
-		GPolyButton gPolyButton = new GPolyButton(new Point(450, 370), "CLICK ME", default2, poly)
+		GPolyButton gPolyButton = new GPolyButton(new Point(450, 370), "CLICK ME", smallerFont, poly)
 		{
 			@Override
 			public void onHover()
@@ -109,7 +111,7 @@ public class Main
 		poly.addPoint(125, 125);
 		poly.addPoint(0, 250);
 		
-		GPolyButton gPolyButton = new GPolyButton(new Point(250, 310), "Button", default2, poly)
+		GPolyButton gPolyButton = new GPolyButton(new Point(250, 310), "Button", smallerFont, poly)
 		{
 			@Override
 			public void onHover()
@@ -133,10 +135,27 @@ public class Main
 	
 	private void initComponents()
 	{
-		window = new GWindow("Sample window", default2, new Point(200, 200), new Dimension(200, 150), 10, 10, null);
+		Rectangle windowRepresentation = new Rectangle(new Point(200, 200), new Dimension(200, 150));
+		
+		GBorder borderProperties = new GBorder(10, 5);
+		
+		window = new GWindow("Sample window", smallerFont, windowRepresentation, borderProperties, null)
+		{
+			@Override
+			public void onClick()
+			{
+				System.out.println("Clicked on window!");
+			}
+			
+			@Override
+			public void onHover()
+			{
+				// TODO Auto-generated method stub
+			}
+		};
 		
 		rect = new GRectangle(0, -50, new Dimension(800, 136), Color.RED, 0.5f);
-		rect.getStyle().setBorderRadiusPx(10);
+		rect.getStyle().getBorderProperties().setBorderRadiusPx(14);
 		
 		// The button ("start" variable) is focused later during runtime instead.
 		rect.getLogic().setFocusable(false);
@@ -176,7 +195,7 @@ public class Main
 			}
 		};
 		
-		moveButton = new GButton(new Point(150, 75), "Move Viewport right", default2)
+		moveButton = new GButton(new Point(150, 75), "Move Viewport right", smallerFont)
 		{
 			@Override
 			public void onHover()
@@ -197,7 +216,7 @@ public class Main
 		moveButton.getLogic().setActionOnClick(true);
 		moveButton.getLogic().setMultithreading(false); // This will run parallel (with threads) which is in some cases faster (of course unnecessary if you just want to print something to the console).
 
-		increaseScale = new GButton(new Point(150, 100), "increase scale", default2)
+		increaseScale = new GButton(new Point(150, 100), "increase scale", smallerFont)
 		{
 			@Override
 			public void onHover()
@@ -221,7 +240,7 @@ public class Main
 			increaseScale.getStyle().setScalableForViewport(false);
 		}
 		
-		exit = new GButton(new Point(20, 150), "EXIT", default1)
+		exit = new GButton(new Point(20, 150), "EXIT", biggerFont)
 		{
 			@Override
 			public void onHover()
@@ -240,7 +259,7 @@ public class Main
 		exit.getLogic().setActionOnHover(false);
 		exit.getLogic().setActionOnClick(true);
 
-		input1 = new GTextfield(new Point(20, 300), "GERMAN", 10, default2)
+		input1 = new GTextfield(new Point(20, 300), "GERMAN", 10, smallerFont)
 		{
 			@Override
 			public void onHover()
@@ -252,7 +271,7 @@ public class Main
 		input1.getLogic().setInteractable(false);
 		input1.getLogic().setActionOnClick(false);
 
-		input2 = new GTextfield(new Point(20, 375), "DEUTSCH", 10, default2)
+		input2 = new GTextfield(new Point(20, 375), "DEUTSCH", 10, smallerFont)
 		{
 			@Override
 			public void onHover()
@@ -261,7 +280,7 @@ public class Main
 			}
 		};
 
-		input3 = new GTextfield(new Point(20, 450), "ALEMAN", 10, default2)
+		input3 = new GTextfield(new Point(20, 450), "ALEMAN", 10, smallerFont)
 		{
 			@Override
 			public void onHover()
@@ -278,14 +297,14 @@ public class Main
 
 	public void init()
 	{
-		default1.setFontColor(Color.RED);
+		biggerFont.setFontColor(Color.RED);
 
 		design = new Classic(Color.BLACK, Color.LIGHT_GRAY, Color.DARK_GRAY, Color.GRAY, Color.BLACK, 5, 1);
 
 		display = new Display();
 
 		viewport = new Viewport(display.getEventHandler());
-		viewport.setOffset(new Point(50, 50));
+		viewport.setOffset(new Point(0, 75));
 		viewport.setScale(1f);
 
 		display.setViewport(viewport);
@@ -295,7 +314,7 @@ public class Main
 
 	public void setupLayers()
 	{
-		description = new GDescription(new Point(20, 520), "Money here for nothing!", default2);
+		description = new GDescription(new Point(20, 520), "Money here for nothing!", smallerFont);
 
 		//layer0.add(new GPath(design, Path2DMaker.makeRectangle(0, 0, 200, 300), Color.RG, true, new Point(0, 300), true));
 		//layer0.add(new GPath(design, Path2DMaker.makeRectangle(0, 0, 800, 30), Color.PINK, true, new Point(100, 300), true));
@@ -318,7 +337,7 @@ public class Main
 		layer2.add(gSB);
 		layer2.add(rect);
 		
-		// layer3.add(window);
+		layer3.add(window);
 	}
 
 	public void run()

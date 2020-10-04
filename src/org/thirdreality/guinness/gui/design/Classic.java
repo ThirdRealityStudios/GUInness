@@ -17,6 +17,7 @@ import org.thirdreality.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.guinness.gui.component.GComponent;
 import org.thirdreality.guinness.gui.component.decoration.GPath;
 import org.thirdreality.guinness.gui.component.decoration.GRectangle;
+import org.thirdreality.guinness.gui.component.placeholder.GWindow;
 import org.thirdreality.guinness.gui.component.selection.GCheckbox;
 import org.thirdreality.guinness.gui.component.selection.list.GSelectionBox;
 import org.thirdreality.guinness.gui.component.selection.list.GSelectionOption;
@@ -26,9 +27,9 @@ import org.thirdreality.guinness.gui.font.Font;
 public class Classic extends Design
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
-	
+
 	private Point offset;
-	
+
 	private float scale;
 
 	public Classic(Color borderColor, Color backgroundColor, Color activeColor, Color hoverColor, Color fontColor, int innerThickness, int borderThickness)
@@ -62,14 +63,14 @@ public class Classic extends Design
 		
 				break;
 			}
-		
+
 			case "image":
 			{				
 				drawImage(g, c);
 				
 				break;
 			}
-		
+
 			case "path":
 			{
 				drawPath(g, c);
@@ -140,7 +141,7 @@ public class Classic extends Design
 			GRectangle rect = (GRectangle) c;
 
 			// Polygon rectangle = ShapeMaker.createRectangle(rect.getStyle().getLook().getBounds().getLocation(), rect.getStyle().getLook().getBounds().getSize());
-			Polygon rectangle = ShapeMaker.createRectangleFrom(rect.getStyle().getPrimaryLook().getBounds(), rect.getStyle().getBorderRadiusPx());
+			Polygon rectangle = ShapeMaker.createRectangleFrom(rect.getStyle().getPrimaryLook().getBounds(), rect.getStyle().getBorderProperties());
 
 			g.setColor(rect.getStyle().getPrimaryColor() == null ? Color.BLACK : rect.getStyle().getPrimaryColor());
 
@@ -362,8 +363,8 @@ public class Classic extends Design
 			int centerX = bounds.getLocation().x + bounds.width / 2 - textLength / 2;
 			int centerY = bounds.getLocation().y + bounds.height / 2 - c.getStyle().getFont().getFontSize() / 2;
 
-			int x = c.getStyle().isMovableForViewport() ? centerX + c.getStyle().getTextAlignTransition().x + getOffset().x : centerX + c.getStyle().getTextAlignTransition().x;
-			int y = c.getStyle().isMovableForViewport() ? centerY + c.getStyle().getTextAlignTransition().y + getOffset().y : centerY + c.getStyle().getTextAlignTransition().y;
+			int x = c.getStyle().isMovableForViewport() ? centerX + c.getStyle().getTextTransition().x + getOffset().x : centerX + c.getStyle().getTextTransition().x;
+			int y = c.getStyle().isMovableForViewport() ? centerY + c.getStyle().getTextTransition().y + getOffset().y : centerY + c.getStyle().getTextTransition().y;
 
 			Font original = c.getStyle().getFont();
 			Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
@@ -372,8 +373,8 @@ public class Classic extends Design
 		}
 		else // If text should be displayed normally (upper-left corner of the component).
 		{
-			int x = c.getStyle().isMovableForViewport() ? bounds.x + c.getStyle().getTextAlignTransition().x + getOffset().x : bounds.x + c.getStyle().getTextAlignTransition().x;
-			int y = c.getStyle().isMovableForViewport() ? bounds.y + c.getStyle().getTextAlignTransition().y + getOffset().y : bounds.y + c.getStyle().getTextAlignTransition().y;
+			int x = c.getStyle().isMovableForViewport() ? bounds.x + c.getStyle().getTextTransition().x + getOffset().x : bounds.x + c.getStyle().getTextTransition().x;
+			int y = c.getStyle().isMovableForViewport() ? bounds.y + c.getStyle().getTextTransition().y + getOffset().y : bounds.y + c.getStyle().getTextTransition().y;
 			
 			DrawToolkit.drawString(g, c.getValue(), (int) (x * scale), (int) (y * scale), c.getStyle().getFont());
 		}
@@ -394,17 +395,29 @@ public class Classic extends Design
 		g.setColor(getBorderColor());
 		g.fillPolygon(movedBackground);
 
-		int xInnerArea = xBackground + (int) (getBorderThickness() * scale);
-		int yInnerArea = yBackground + (int) (getBorderThickness() * scale);
+		Point locInnerArea;
+		{
+			int xInnerArea = xBackground + (int) (getBorderThickness() * scale);
+			int yInnerArea = yBackground + (int) (getBorderThickness() * scale);
+			
+			locInnerArea = new Point(xInnerArea, yInnerArea);
+		}
 		
-		int titleWidth = c.getStyle().getFont().getFontSize() * c.getValue().length();
+		Dimension dimInnerArea;
+		{
+			int titleWidth = c.getStyle().getFont().getFontSize() * c.getValue().length();
 
-		int innerWidth = (int) (((backgroundFitsTextLength ? titleWidth : c.getStyle().getLength() * c.getStyle().getFont().getFontSize()) + 2 * getInnerThickness()) * scale);
-		int innerHeight = (int) ((c.getStyle().getFont().getFontSize() + 2 * getInnerThickness()) * scale);
+			int innerWidth = (int) (((backgroundFitsTextLength ? titleWidth : c.getStyle().getLength() * c.getStyle().getFont().getFontSize()) + 2 * getInnerThickness()) * scale);
+			int innerHeight = (int) ((c.getStyle().getFont().getFontSize() + 2 * getInnerThickness()) * scale);
+			
+			dimInnerArea = new Dimension(innerWidth, innerHeight);
+		}
 		
-		Polygon innerArea = ShapeMaker.createRectangleFrom(xInnerArea, yInnerArea, innerWidth, innerHeight, c.getStyle().getBorderRadiusPx());
+		Rectangle innerField = new Rectangle(locInnerArea, dimInnerArea);
+		
+		Polygon innerArea = ShapeMaker.createRectangleFrom(innerField, c.getStyle().getBorderProperties());
 
-		Polygon movedInnerArea = ShapeTransform.movePolygonTo(innerArea, xInnerArea, yInnerArea);
+		Polygon movedInnerArea = ShapeTransform.movePolygonTo(innerArea, innerField.getLocation());
 
 		g.setColor(c.getStyle().getPrimaryColor());
 		g.fillPolygon(movedInnerArea);
@@ -417,14 +430,62 @@ public class Classic extends Design
 
 		DrawToolkit.drawString(g, c.getValue(), textX, textY, scaledFont);
 	}
-	
+
 	public void drawWindow(Graphics g, GComponent c)
 	{
-		g.setColor(Color.RED);
-		g.fillPolygon(ShapeTransform.movePolygonTo(c.getStyle().getPrimaryLook(), c.getStyle().getPrimaryLook().getBounds().getLocation()));
+		// Draws the outer part of the window, including offset and scale by Viewport of course.
+		{
+			g.setColor(Color.RED);
+			
+			Point primaryLookMoved = new Point(c.getStyle().getPrimaryLook().getBounds().getLocation());
+			primaryLookMoved.translate(getOffset().x, getOffset().y);
+			
+			Polygon movedByOffset = ShapeTransform.movePolygonTo(c.getStyle().getPrimaryLook(), primaryLookMoved);
+			
+			Polygon scaledByViewport = ShapeTransform.scalePolygon(movedByOffset, getScale());
+			
+			g.fillPolygon(scaledByViewport);
+		}
 		
-		g.setColor(Color.BLUE);
-		g.fillPolygon(ShapeTransform.movePolygonTo(c.getStyle().getSecondaryLook(), c.getStyle().getSecondaryLook().getBounds().getLocation()));
+		// Draws the inner part of the window, including offset and scale by Viewport of course.
+		{
+			g.setColor(Color.BLUE);
+			
+			Point secondaryLookMoved = new Point(c.getStyle().getSecondaryLook().getBounds().getLocation());
+			secondaryLookMoved.translate(getOffset().x, getOffset().y);
+			
+			Polygon movedByOffset = ShapeTransform.movePolygonTo(c.getStyle().getSecondaryLook(), secondaryLookMoved);
+			
+			Polygon scaledByViewport = ShapeTransform.scalePolygon(movedByOffset, getScale());
+			
+			g.fillPolygon(scaledByViewport);
+		}
+		
+		GWindow window = (GWindow) c;
+		
+		{
+			Point exitButtonMoved_Loc = new Point(window.getExitButton().getStyle().getLocation());
+			exitButtonMoved_Loc.translate(getOffset().x, getOffset().y);
+			
+			Polygon exitButtonMoved = ShapeTransform.movePolygonTo(window.getExitButton().getStyle().getPrimaryLook(), exitButtonMoved_Loc);
+			
+			Polygon exitButtonScaled = ShapeTransform.scalePolygon(exitButtonMoved, getScale());
+			
+			g.setColor(window.getExitButton().getStyle().getPrimaryColor());
+			g.fillPolygon(exitButtonScaled);
+		}
+		
+		{	
+			Point minimizeButtonMoved_Loc = new Point(window.getMinimizeButton().getStyle().getLocation());
+			minimizeButtonMoved_Loc.translate(getOffset().x, getOffset().y);
+			
+			Polygon minimizeButtonMoved = ShapeTransform.movePolygonTo(window.getMinimizeButton().getStyle().getPrimaryLook(), minimizeButtonMoved_Loc);
+			
+			Polygon minimizeButtonScaled = ShapeTransform.scalePolygon(minimizeButtonMoved, getScale());
+			
+			g.setColor(window.getMinimizeButton().getStyle().getPrimaryColor());
+			g.fillPolygon(minimizeButtonScaled);
+		}
 	}
 
 	// Returns a determined shape which uses the design defined in this class.
@@ -436,7 +497,7 @@ public class Classic extends Design
 		Rectangle rectangle = new Rectangle(c.getStyle().getLocation(), backgroundSize);
 		
 		// Creates a rectangle actually.
-		Polygon polygon = ShapeMaker.createRectangleFrom(rectangle, c.getStyle().getBorderRadiusPx());
+		Polygon polygon = ShapeMaker.createRectangleFrom(rectangle, c.getStyle().getBorderProperties());
 		
 		return polygon;
 	}

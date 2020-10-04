@@ -41,7 +41,7 @@ public abstract class GTextfield extends GComponent
 			getStyle().setLocation(location);
 			
 			getStyle().setPrimaryColor(Color.WHITE);
-			getStyle().setBorderRadiusPx(3);
+			getStyle().getBorderProperties().setBorderRadiusPx(3);
 
 			getStyle().setFont(font);
 		}
