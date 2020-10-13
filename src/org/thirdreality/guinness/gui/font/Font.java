@@ -137,4 +137,19 @@ public class Font
 	{
 		return defaultFilepath;
 	}
+	
+	public Font copy()
+	{
+		return new Font(name, file.getAbsolutePath(), fontSize);
+	}
+	
+	// Simply creates a copy from this Font but in addition it also changes the font size of the new object by the given scale.
+	public Font getScaledFont(float scale)
+	{
+		Font scaledUp = copy();
+		
+		scaledUp.setFontSize((int) (scaledUp.getFontSize() * scale));
+		
+		return scaledUp;
+	}
 }

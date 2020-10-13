@@ -3,6 +3,7 @@ package org.thirdreality.guinness.draw;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 import org.thirdreality.guinness.feature.image.ImageToolkit;
@@ -58,7 +59,7 @@ public class DrawToolkit
 
 	// Displays a whole string (only alphabetic letters) and scales it according to
 	// the specified font size.
-	public static Dimension drawString(Graphics g, String text, int xPos, int yPos, Font font)
+	public static Dimension drawString(Graphics g, String text, Point pos, Font font)
 	{
 		char[] converted = text.toCharArray();
 
@@ -66,51 +67,11 @@ public class DrawToolkit
 
 		for (char c : converted)
 		{
-			drawChar(g, c, xPos + font.getFontSize() * offset, yPos, font);
+			drawChar(g, c, pos.x + font.getFontSize() * offset, pos.y, font);
 
 			offset++;
 		}
 
 		return new Dimension(font.getFontSize() * text.length(), font.getFontSize());
-	}
-
-	// Displays a letter from the delivered alphabet pattern on the specified
-	// graphics object.
-	// Uses the specified scale relative to the fonts original size (30px).
-	public static void drawChar(Graphics g, char letter, int xPos, int yPos, float scale)
-	{
-		// This is the size of each symbol in the font image file (PNG),
-		// meaning 30px as a "base font size".
-		// Scaling it can blur the symbol.
-		int dim = 30, scaled = (int) (dim * scale);
-
-		drawChar(g, letter, xPos, yPos, scaled);
-	}
-
-	// Displays a whole string (only alphabetic letters) and scales it according to
-	// the specified percentage value.
-	public static Dimension drawString(Graphics g, String text, int xPos, int yPos, float scale)
-	{
-		char[] converted = text.toCharArray();
-
-		// This is the size of each symbol in the font image file (PNG),
-		// meaning 30px as a "base font size".
-		// Scaling it can blur the symbol.
-		int dim = 30;
-		
-		// This is the scaled size of a single font symbol in the String.
-		// With this method, it is scaled percentagewise.
-		int scaled = (int) (dim * scale);
-
-		int offset = 0;
-
-		for (char c : converted)
-		{
-			drawChar(g, c, xPos + scaled * offset, yPos, scale);
-
-			offset++;
-		}
-
-		return new Dimension((int) (scale * dim) * text.length(), (int) (scale * dim));
 	}
 }

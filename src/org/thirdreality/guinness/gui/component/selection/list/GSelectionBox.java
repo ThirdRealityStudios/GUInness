@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.thirdreality.guinness.Meta;
+import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.feature.Path;
 import org.thirdreality.guinness.feature.image.ImageToolkit;
 import org.thirdreality.guinness.feature.shape.ShapeMaker;
@@ -61,8 +62,6 @@ public class GSelectionBox extends GComponent
 		
 		// Is always executed after having set the box shape because it transforms it directly to the given location.
 		getStyle().setLocation(location);
-		
-		System.out.println("box> " + getStyle().getPrimaryLook().getBounds());
 	}
 	
 	// Only there to load the images for the icons..

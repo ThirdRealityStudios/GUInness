@@ -3,6 +3,8 @@ package org.thirdreality.guinness.feature.shape;
 import java.awt.Point;
 import java.awt.Polygon;
 
+import org.thirdreality.guinness.feature.GIPoint;
+
 public class ShapeTransform
 {
 	public static Polygon movePolygonTo(Polygon p, int x, int y)
@@ -35,6 +37,13 @@ public class ShapeTransform
 	
 	public static Polygon scalePolygon(Polygon p, float k)
 	{
+		// If k is 1, there is no change in the polygon except it returns a copy of it only.
+		// This prevents the loops below from being ran to reduce performance lacks.
+		if(k == 1)
+		{
+			return new Polygon(p.xpoints, p.ypoints, p.npoints);
+		}
+		
 		int[] xpoints = new int[p.npoints];
 		int[] ypoints = new int[p.npoints];
 		
@@ -121,5 +130,17 @@ public class ShapeTransform
 		Point formerLocation = p.getBounds().getLocation();
 		
 		return movePolygonTo(invertPolygon(p), formerLocation);
+	}
+	
+	// Use this method to retrieve a copy of a polygon which fits the scale and offset given by the Viewport.
+	public static Polygon getPolygonRelativeToViewport(Polygon p, Point offset, float scale)
+	{
+		return ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(p, new GIPoint(p.getBounds().getLocation()).add(offset)), scale);
+	}
+	
+	// Use this method to retrieve a location which considers the scale and offset given by this Viewport.
+	public static Point getLocationRelativeToViewport(Point location, Point offset, float scale)
+	{
+		return new Point((int) ((location.x + offset.x) * scale), (int) ((location.y + offset.y) * scale));
 	}
 }

@@ -1,10 +1,13 @@
 package org.thirdreality.guinness.handler;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import org.thirdreality.guinness.exec.LoopedThread;
 import org.thirdreality.guinness.exec.ThreadManager;
@@ -13,6 +16,8 @@ import org.thirdreality.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.guinness.gui.Display;
 import org.thirdreality.guinness.gui.Viewport;
 import org.thirdreality.guinness.gui.component.GComponent;
+import org.thirdreality.guinness.gui.component.placeholder.GWindow;
+import org.thirdreality.guinness.gui.component.placeholder.window.GWindowButton;
 import org.thirdreality.guinness.gui.component.selection.GCheckbox;
 import org.thirdreality.guinness.gui.component.selection.list.GSelectionBox;
 
@@ -204,7 +209,7 @@ public class ComponentHandler
 				if(!doubleClicked || focused.getLogic().isDoubleClickingAllowed())
 				{
 					switch(focused.getType())
-					{					
+					{	
 						// Additionally check-boxes are treated here.
 						// This will simply enable or disable the check-box this is about..
 						case "checkbox":
@@ -253,6 +258,34 @@ public class ComponentHandler
 							break;
 						}
 					}
+
+					// Ignoring checking whether double-clicking is wanted or not (opposite of the switch-statement above).
+					switch(focused.getType())
+					{
+						case "window":
+						{
+							GWindow window = (GWindow) focused;
+
+							Polygon innerFrame = display.getViewport().getPolygonRelativeToViewport(window.getStyle().getSecondaryLook());
+							Polygon exitButton = display.getViewport().getPolygonRelativeToViewport(window.getExitButton().getStyle().getPrimaryLook());
+							Polygon minimizeButton = display.getViewport().getPolygonRelativeToViewport(window.getMinimizeButton().getStyle().getPrimaryLook());
+
+							boolean isBorderClicked = !innerFrame.contains(mouseLocation) && !exitButton.contains(mouseLocation) && !minimizeButton.contains(mouseLocation);
+
+							if(isBorderClicked)
+							{
+								
+								
+								Point offset = new Point(display.getViewport().getLocationRelativeToViewport(mouseLocation));
+
+								window.getStyle().setLocation(offset);
+							}
+
+							// Prevent the window's onClick() method from being executed.
+							// Instead execute the minimize or exit buttons action methods.
+							break;
+						}
+					}
 					
 					// This will decide internally whether the component is being executed by threads or in sequence order.
 					// It actually just runs the defined click action by the user.
@@ -260,23 +293,85 @@ public class ComponentHandler
 					executeClick(focused);
 				}
 			}
-		}
-	}
-	
-	private void resetLastFocus()
-	{
-		// When hovering over something else the cursor is set to default.
-		display.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-		
-		switch(lastlyFocused.getType())
-		{
-			case "button":
+			else
 			{
-				lastlyFocused.getStyle().setPrimaryColor(lastlyFocused.getStyle().getDesign().getBackgroundColor());
+				// Internal actions which should run on hovering and affect the general component (not user-defined) logic..
+				switch(focused.getType())
+				{
+					case "window":
+					{
+						GWindow window = (GWindow) focused;
+						
+						// Make sure, when no one is clicking the origin is reseted
+						{
+							// System.out.println("Idle");
+							
+							// window.setMovementOrigin(null);
+						}
+						
+						break;
+					}
+				}
 			}
 		}
 	}
 
+	private void resetLastFocus()
+	{
+		// When hovering over something else the cursor is set to default.
+		display.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+
+		switch(lastlyFocused.getType())
+		{		
+			case "button":
+			{
+				lastlyFocused.getStyle().setPrimaryColor(lastlyFocused.getStyle().getDesign().getBackgroundColor());
+				
+				break;
+			}
+
+			case "window":
+			{
+				GWindow window = (GWindow) lastlyFocused;
+
+				window.getExitButton().getStyle().setPrimaryColor(window.getExitButton().getDefaultColor());
+				window.getMinimizeButton().getStyle().setPrimaryColor(window.getMinimizeButton().getDefaultColor());
+				
+				break;
+			}
+
+			default:
+			{
+				
+			}
+		}
+	}
+
+	private void triggerWindowButtonColor(GWindowButton windowButton, Point mouseLocation, boolean clicking)
+	{
+		boolean activeColorIsSame = windowButton.getStyle().getPrimaryColor().equals(windowButton.getClickColor());
+		boolean hoverColorIsSame = windowButton.getStyle().getPrimaryColor().equals(windowButton.getHoverColor());
+
+		if(display.getViewport().getPolygonRelativeToViewport(windowButton.getStyle().getPrimaryLook()).contains(mouseLocation))
+		{
+			if(clicking)
+			{
+				if(!activeColorIsSame)
+				{
+					windowButton.getStyle().setPrimaryColor(windowButton.getClickColor());
+				}
+			}
+			else if(!hoverColorIsSame)
+			{
+				windowButton.getStyle().setPrimaryColor(windowButton.getHoverColor());
+			}
+		}
+		else
+		{
+			windowButton.getStyle().setPrimaryColor(windowButton.getDefaultColor());
+		}
+	}
+	
 	private void triggerAnimation(GComponent focused, boolean clicking, Point mouseLocation)
 	{
 		boolean sameComponentFocused = lastlyFocused != focused && lastlyFocused != null;
@@ -319,12 +414,22 @@ public class ComponentHandler
 
 					break;
 				}
+				
+				case "window":
+				{
+					GWindow window = (GWindow) focused;
+
+					triggerWindowButtonColor(window.getExitButton(), mouseLocation, clicking);
+					triggerWindowButtonColor(window.getMinimizeButton(), mouseLocation, clicking);
+
+					break;
+				}
 
 				default:
 				{
 					// Make sure the 'default' branch is executed only once.
 					if(sameComponentFocused)
-					{						
+					{
 						resetLastFocus();
 					}
 				}

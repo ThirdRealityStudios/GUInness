@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.io.File;
 
 import org.thirdreality.guinness.Meta;
+import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.feature.Path;
 import org.thirdreality.guinness.feature.image.ImageToolkit;
 import org.thirdreality.guinness.feature.shape.ShapeMaker;

@@ -135,7 +135,7 @@ public class Main
 	
 	private void initComponents()
 	{
-		Rectangle windowRepresentation = new Rectangle(new Point(200, 200), new Dimension(200, 150));
+		Rectangle windowRepresentation = new Rectangle(new Point(0, 50), new Dimension(600, 400));
 		
 		GBorder borderProperties = new GBorder(10, 5);
 		
@@ -316,8 +316,8 @@ public class Main
 	{
 		description = new GDescription(new Point(20, 520), "Money here for nothing!", smallerFont);
 
-		//layer0.add(new GPath(design, Path2DMaker.makeRectangle(0, 0, 200, 300), Color.RG, true, new Point(0, 300), true));
-		//layer0.add(new GPath(design, Path2DMaker.makeRectangle(0, 0, 800, 30), Color.PINK, true, new Point(100, 300), true));
+		//layer0.add(new GPath(design, Path2DMaker.makeRectangle(0, 0, 200, 300), Color.RG, true, new GPoint(0, 300), true));
+		//layer0.add(new GPath(design, Path2DMaker.makeRectangle(0, 0, 800, 30), Color.PINK, true, new GPoint(100, 300), true));
 
 		layer0.add(img0);
 		

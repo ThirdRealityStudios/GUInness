@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.Serializable;
 
 import org.thirdreality.guinness.Meta;
+import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.feature.Path;
 import org.thirdreality.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.guinness.gui.Display;
@@ -92,7 +93,7 @@ public abstract class GComponent implements Serializable
 	
 	public GComponent(String type, Polygon look, int length, String val, Font font)
 	{
-		this(type, look.getBounds().getLocation(), look, length, val, font);
+		this(type, new Point(look.getBounds().getLocation()), look, length, val, font);
 	}
 	
 	public GComponent(String type, Point location, Polygon look, String val, Font font)

@@ -3,11 +3,14 @@ package org.thirdreality.guinness.gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.geom.Point2D;
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.JPanel;
 
+import org.thirdreality.guinness.feature.GIPoint;
+import org.thirdreality.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.guinness.gui.component.GComponent;
 import org.thirdreality.guinness.gui.layer.GLayer;
 import org.thirdreality.guinness.handler.EventHandler;
@@ -220,9 +223,9 @@ public class Viewport extends JPanel
 	// Returns the exact offset relative to the current Viewport scale.
 	// This method is definitely recommended when you need high precision,
 	// though its frequent execution could cause a worse impact on the performance (remind floating point calculations and object creation).
-	public Point2D.Float getRelativeOffset()
-	{
-		return new Point2D.Float(getScale() * getOffset().x, getScale() * getOffset().y);
+	public Point.Float getRelativeOffset()
+	{		
+		return new Point.Float(getScale() * getOffset().x, getScale() * getOffset().y);
 	}
 
 	public void setOffset(Point offset)
@@ -238,5 +241,17 @@ public class Viewport extends JPanel
 	public void setScale(float scale)
 	{
 		this.scale = scale;
+	}
+	
+	// Use this method to retrieve a copy of a polygon which fits the scale and offset given by the Viewport.
+	public Polygon getPolygonRelativeToViewport(Polygon p)
+	{
+		return ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(p, new GIPoint(p.getBounds().getLocation()).add(getOffset())), getScale());
+	}
+	
+	// Use this method to retrieve a location which considers the scale and offset given by this Viewport.
+	public Point getLocationRelativeToViewport(Point location)
+	{
+		return new Point((int) ((location.x + offset.x) * scale), (int) ((location.y + offset.y) * scale));
 	}
 }
