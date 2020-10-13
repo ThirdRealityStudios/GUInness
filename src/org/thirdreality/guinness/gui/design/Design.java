@@ -108,7 +108,7 @@ public abstract class Design implements Serializable
 	
 	public abstract void drawContext(Graphics g, GComponent c, Point offset, float scale);
 	
-	abstract void drawGeneralField(Graphics g, GComponent c, boolean backgroundFitsTextLength);
+	abstract void drawGeneralField(Graphics g, GComponent c);
 	
 	public abstract Polygon generateDefaultShape(GComponent c);
 	

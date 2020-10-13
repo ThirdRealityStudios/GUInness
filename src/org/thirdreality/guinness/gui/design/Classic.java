@@ -115,7 +115,7 @@ public class Classic extends Design
 				
 				setBorderColor(c.getStyle().getPrimaryColor().darker().darker());
 				
-				drawGeneralField(g, c, false);
+				drawGeneralField(g, c);
 				
 				setBorderColor(temp);
 
@@ -133,7 +133,7 @@ public class Classic extends Design
 			}
 		}
 	}
-	
+
 	private void drawRectangle(Graphics g, GComponent c)
 	{
 		// A GRectangle can do more than a usual GComponent.
@@ -177,16 +177,11 @@ public class Classic extends Design
 			}
 		}
 	}
-	
+
 	private void drawDescription(Graphics g, GComponent c)
 	{
 		// Represents simply the outer bounds of the component.
 		Rectangle bounds = c.getStyle().getPrimaryLook().getBounds();
-
-		/*
-		int x = (int) ((bounds.getLocation().x + getInnerThickness() + getBorderThickness() + (c.getStyle().isMovableForViewport() ? getOffset().x : 0)) * scale);
-		int y = (int) ((bounds.getLocation().y + getInnerThickness() + getBorderThickness() + (c.getStyle().isMovableForViewport() ? getOffset().y : 0)) * scale);
-		*/
 		
 		Point descLoc = new GIPoint(bounds.getLocation()).add(getInnerThickness()).add(getBorderThickness()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(getScale(), c.getStyle().isScalableForViewport());
 		
@@ -195,7 +190,7 @@ public class Classic extends Design
 		
 		DrawToolkit.drawString(g, c.getValue(), descLoc, scaledFont);
 	}
-	
+
 	private void drawImage(Graphics g, GComponent c)
 	{
 		// Represents simply the outer bounds of the component.
@@ -232,42 +227,41 @@ public class Classic extends Design
 	
 	private void drawTextfield(Graphics g, GComponent c)
 	{
-		drawGeneralField(g, c, false);
+		drawGeneralField(g, c);
 	}
 	
 	private void drawCheckbox(Graphics g, GComponent c)
 	{
+		GCheckbox checkbox = (GCheckbox) c;
+		
+		boolean isScalable = c.getStyle().isScalableForViewport();
+		boolean isMovable = c.getStyle().isMovableForViewport();
+		
 		// Represents simply the outer bounds of the component.
 		Rectangle bounds = c.getStyle().getPrimaryLook().getBounds();
 		
 		// It wouldn't matter if you use 'height' or 'width' because both values are the same.
-		int size = bounds.width;
+		Dimension outerSize = new Dimension(bounds.width, bounds.width);
+		Dimension innerSize = new Dimension(outerSize.width - getInnerThickness(), outerSize.width - getInnerThickness());
 		
-		GCheckbox checkbox = (GCheckbox) c;
+		Point locOuter = new GIPoint(bounds.getLocation()).add(getOffset(), isMovable);
+		Point locInner = new GIPoint(locOuter).add(getBorderThickness());
+		
+		
+		
+		Point locOuterScaled = new GIPoint(locOuter).mul(getScale(), isScalable);
+		Point locInnerScaled = new GIPoint(locInner).mul(getScale(), isScalable);
+
+		Dimension outerSizeScaled = new GIDimension(outerSize).mul(getScale(), isScalable);
+		Dimension innerSizeScaled = new GIDimension(innerSize).mul(getScale(), isScalable);
 
 		g.setColor(getBorderColor());
-		
-		// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
-		float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
-		
-		int x = (int) (((c.getStyle().isMovableForViewport() ? getOffset().x : 0) + bounds.getLocation().x) * scale);
-		int y = (int) (((c.getStyle().isMovableForViewport() ? getOffset().y : 0) + bounds.getLocation().y) * scale);
-		
-		int outerSize = (int) ((size + getInnerThickness()) * scale);
-		
-		g.fillRect(x, y, outerSize, outerSize);
+
+		g.fillRect(locOuterScaled.x, locOuterScaled.y, outerSizeScaled.width, outerSizeScaled.width);
 
 		g.setColor(Color.WHITE);
-		
-		int rectX = x + (int) (getBorderThickness() * scale);
-		int rectY = y + (int) (getBorderThickness() * scale);
 
-		int innerSize = (int) (size * scale);
-		
-		g.fillRect(rectX, rectY, innerSize, innerSize);
-
-		int imgX = x + (int) (2 * getBorderThickness() * scale);
-		int imgY = y + (int) (2 * getBorderThickness() * scale);
+		g.fillRect(locInnerScaled.x, locInnerScaled.y, innerSizeScaled.width, innerSizeScaled.width);
 		
 		if(checkbox.isChecked())
 		{
@@ -276,9 +270,16 @@ public class Classic extends Design
 			// Simply the square size of the image.
 			// The image is saved with square dimensions,
 			// so it doesn't matter if you take the width or height (see package core.gui.image.icon for "check_sign.png").
-			int sizePx = (int) (checkSymbol.getWidth(null) * scale);
+			int sizePx = (int) (checkSymbol.getWidth(null));
 			
-			g.drawImage(checkSymbol, imgX, imgY, sizePx, sizePx, null);
+			if(c.getStyle().isScalableForViewport())
+			{
+				sizePx *= getScale();
+			}
+			
+			Point imgLoc = new GIPoint(locInner).add(getBorderThickness()).mul(getScale(), isScalable);
+			
+			g.drawImage(checkSymbol, imgLoc.x, imgLoc.y, sizePx, sizePx, null);
 		}
 	}
 	
@@ -366,11 +367,6 @@ public class Classic extends Design
 			int centerX = bounds.getLocation().x + bounds.width / 2 - textLength / 2;
 			int centerY = bounds.getLocation().y + bounds.height / 2 - c.getStyle().getFont().getFontSize() / 2;
 
-			/*
-			int x = c.getStyle().isMovableForViewport() ? centerX + c.getStyle().getTextTransition().x + getOffset().x : centerX + c.getStyle().getTextTransition().x;
-			int y = c.getStyle().isMovableForViewport() ? centerY + c.getStyle().getTextTransition().y + getOffset().y : centerY + c.getStyle().getTextTransition().y;
-			*/
-
 			Point loc = new GIPoint(centerX, centerY).add(c.getStyle().getTextTransition()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(getScale(), c.getStyle().isScalableForViewport());
 			
 			Font original = c.getStyle().getFont();
@@ -380,18 +376,13 @@ public class Classic extends Design
 		}
 		else // If text should be displayed normally (upper-left corner of the component).
 		{
-			/*
-			int x = c.getStyle().isMovableForViewport() ? bounds.x + c.getStyle().getTextTransition().x + getOffset().x : bounds.x + c.getStyle().getTextTransition().x;
-			int y = c.getStyle().isMovableForViewport() ? bounds.y + c.getStyle().getTextTransition().y + getOffset().y : bounds.y + c.getStyle().getTextTransition().y;
-			*/
-			
 			Point loc = new GIPoint(bounds.getLocation()).add(c.getStyle().getTextTransition()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(getScale(), c.getStyle().isScalableForViewport());
 			
 			DrawToolkit.drawString(g, c.getValue(), loc, c.getStyle().getFont());
 		}
 	}
 
-	protected void drawGeneralField(Graphics g, GComponent c, boolean backgroundFitsTextLength)
+	protected void drawGeneralField(Graphics g, GComponent c)
 	{		
 		Polygon background = c.getStyle().getPrimaryLook();
 
