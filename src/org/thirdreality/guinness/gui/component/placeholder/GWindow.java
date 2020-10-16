@@ -46,6 +46,9 @@ public abstract class GWindow extends GComponent
 		super("window");
 
 		this.components = components;
+		
+		// Here, the buttons are created, e.g. exit and minimize buttons for the window.
+		createWindowButtons(window, borderProperties);
 
 		initStyle(window, borderProperties);
 		
@@ -54,9 +57,6 @@ public abstract class GWindow extends GComponent
 		setTitle(title);
 
 		setLogic(new GLogic());
-
-		// Here, the buttons are created, e.g. exit and minimize buttons for the window.
-		createWindowButtons(window, borderProperties);
 	}
 
 	private void initStyle(Rectangle window, GBorder borderProperties)
@@ -68,17 +68,17 @@ public abstract class GWindow extends GComponent
 			@Override
 			public void setLocation(Point location)
 			{
-				this.location = location;
-
 				setPrimaryLook(ShapeTransform.movePolygonTo(getPrimaryLook(), location));
 
 				Point movedInnerArea = new Point(location.x + borderProperties.getBorderThicknessPx(), location.y + borderProperties.getBorderThicknessPx() + titleAreaHeightPx);
 				setSecondaryLook(ShapeTransform.movePolygonTo(getSecondaryLook(), movedInnerArea));				
-
+				
 				updateWindowButtons(getStyle().getPrimaryLook().getBounds());
+
+				this.location = location;
 			}
 		});
-		
+
 		frameColor = Color.decode("#656bff");
 		frameColor = new Color(frameColor.getRed(), frameColor.getGreen(), frameColor.getBlue(), 160);
 
@@ -99,8 +99,10 @@ public abstract class GWindow extends GComponent
 		GBorder innerAreaBorders = new GBorder(0);
 
 		getStyle().setSecondaryLook(ShapeMaker.createRectangleFrom(innerArea, innerAreaBorders));
+
+		getStyle().setLocation(window.getLocation());
 	}
-	
+
 	// Updates the window buttons when something has changed, e.g. the location of the GWindow or its dimensions (re-sized or scaled).
 	private void updateWindowButtons(Rectangle window)
 	{
@@ -134,10 +136,7 @@ public abstract class GWindow extends GComponent
 
 		exitButton = new GWindowButton(exitButtonRect, Color.RED, 0.9f, exitBorderStyle, null)
 		{
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
+			private static final long serialVersionUID = Meta.serialVersionUID;
 
 			@Override
 			public void onClick()
@@ -160,10 +159,7 @@ public abstract class GWindow extends GComponent
 
 		minimizeButton = new GWindowButton(minimizeButtonRect, Color.decode("#606060"), 0.9f, minimizeBorderStyle, null)
 		{
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
+			private static final long serialVersionUID = Meta.serialVersionUID;
 
 			@Override
 			public void onClick()

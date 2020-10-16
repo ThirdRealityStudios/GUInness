@@ -104,7 +104,12 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	@Override
 	public void mouseDragged(MouseEvent mouseEvent)
 	{
-		// Not used.
+		// The cursor was generally just dragged (still recognized as a click action) somewhere on the frame (true).
+		action = true;
+
+		// Update the current cursor location relative to the Viewport.
+		// The boundaries of the Display (JFrame) are disregarded in this retrieved location.
+		cursorLocation = mouseEvent.getPoint();
 	}
 
 	@Override
@@ -164,7 +169,7 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	// Tells whether the mouse is being clicked.
 	public Boolean isClicking()
 	{
-		return (getAction() != null) ? getAction() == true : false;
+		return (getAction() != null) ? getAction() : false;
 	}
 	
 	// Returns the absolute current cursor location.

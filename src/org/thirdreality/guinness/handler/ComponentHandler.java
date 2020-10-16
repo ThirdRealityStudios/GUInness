@@ -1,16 +1,13 @@
 package org.thirdreality.guinness.handler;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Vector;
-
 import org.thirdreality.guinness.exec.LoopedThread;
 import org.thirdreality.guinness.exec.ThreadManager;
+import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.feature.Timer;
 import org.thirdreality.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.guinness.gui.Display;
@@ -142,10 +139,12 @@ public class ComponentHandler
 
 		Timer.pauseMillisecond(execute.getLogic().getDelayMs());
 	}
+	
+	private Point initialLoc = null;
 
 	// Is responsible for firing the implemented functions by the component.
 	private void triggerGeneralLogic(GComponent focused, boolean clicking, Point mouseLocation, int keyStroke)
-	{
+	{		
 		if(clicking)
 		{
 			// relates to text-fields only.
@@ -203,13 +202,59 @@ public class ComponentHandler
 				executeHover(focused);
 			}
 
-			if(clicking && focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnClick()) // ask whether it should run the onClick() method if wished by the components configuration.
+			boolean isClickingAllowed = clicking && focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnClick();
+			
+			if(isClickingAllowed) // ask whether it should run the onClick() method depending on whether it is wanted to interact or click on it.
 			{
+				// Interactions which do not regard whether it is double clicked
+				switch(focused.getType())
+				{
+					case "window":
+					{
+						GWindow window = (GWindow) focused;
+
+						Polygon outerArea = ShapeTransform.getPolygonRelativeToViewport(window.getStyle().getPrimaryLook(), window.getStyle().isMovableForViewport() ? display.getViewport().getOffset() : new Point(), window.getStyle().isScalableForViewport() ? display.getViewport().getScale() : 1f);
+
+						Polygon innerArea = ShapeTransform.getPolygonRelativeToViewport(window.getStyle().getSecondaryLook(), window.getStyle().isMovableForViewport() ? display.getViewport().getOffset() : new Point(), window.getStyle().isScalableForViewport() ? display.getViewport().getScale() : 1f);
+
+						Polygon exitButtonArea = ShapeTransform.getPolygonRelativeToViewport(window.getExitButton().getStyle().getPrimaryLook(), window.getStyle().isMovableForViewport() ? display.getViewport().getOffset() : new Point(), window.getStyle().isScalableForViewport() ? display.getViewport().getScale() : 1f);
+
+						Polygon minimizeButtonArea = ShapeTransform.getPolygonRelativeToViewport(window.getMinimizeButton().getStyle().getPrimaryLook(), window.getStyle().isMovableForViewport() ? display.getViewport().getOffset() : new Point(), window.getStyle().isScalableForViewport() ? display.getViewport().getScale() : 1f);
+
+						boolean focusedWindowBorder = clicking && !innerArea.contains(mouseLocation) && !exitButtonArea.contains(mouseLocation) && !minimizeButtonArea.contains(mouseLocation);					
+
+						if(focusedWindowBorder)
+						{
+							if(this.initialLoc == null)
+							{
+								this.initialLoc = mouseLocation;
+							}
+						}
+
+						boolean movingWindowCurrently = initialLoc != null;
+
+						if(movingWindowCurrently)
+						{
+							Point diff = new GIPoint(mouseLocation).sub(initialLoc);
+
+							Point moved = new GIPoint(window.getStyle().getLocation()).add(diff);
+
+							window.getStyle().setLocation(moved);
+
+							this.initialLoc = mouseLocation;
+						}
+
+						break;
+					}
+				}
+
+				boolean isDoubleClickingWanted = !doubleClicked || focused.getLogic().isDoubleClickingAllowed();
+
 				// Make sure the user cannot double click the same component multiple times if it is unwanted.
-				if(!doubleClicked || focused.getLogic().isDoubleClickingAllowed())
+				if(isDoubleClickingWanted)
 				{
 					switch(focused.getType())
-					{	
+					{
 						// Additionally check-boxes are treated here.
 						// This will simply enable or disable the check-box this is about..
 						case "checkbox":
@@ -221,13 +266,13 @@ public class ComponentHandler
 
 							break;
 						}
-						
+
 						case "selectionbox":
 						{
 							GSelectionBox selectionbox = (GSelectionBox) focused;
-							
+
 							ArrayList<Polygon[]> shapeTable = selectionbox.getShapeTable();
-							
+
 							for(int i = 0; i < shapeTable.size(); i++)
 							{
 								Point offset = display.getViewport() != null ? display.getViewport().getOffset() : new Point();
@@ -259,59 +304,16 @@ public class ComponentHandler
 						}
 					}
 
-					// Ignoring checking whether double-clicking is wanted or not (opposite of the switch-statement above).
-					switch(focused.getType())
-					{
-						case "window":
-						{
-							GWindow window = (GWindow) focused;
-
-							Polygon innerFrame = display.getViewport().getPolygonRelativeToViewport(window.getStyle().getSecondaryLook());
-							Polygon exitButton = display.getViewport().getPolygonRelativeToViewport(window.getExitButton().getStyle().getPrimaryLook());
-							Polygon minimizeButton = display.getViewport().getPolygonRelativeToViewport(window.getMinimizeButton().getStyle().getPrimaryLook());
-
-							boolean isBorderClicked = !innerFrame.contains(mouseLocation) && !exitButton.contains(mouseLocation) && !minimizeButton.contains(mouseLocation);
-
-							if(isBorderClicked)
-							{
-								
-								
-								Point offset = new Point(display.getViewport().getLocationRelativeToViewport(mouseLocation));
-
-								window.getStyle().setLocation(offset);
-							}
-
-							// Prevent the window's onClick() method from being executed.
-							// Instead execute the minimize or exit buttons action methods.
-							break;
-						}
-					}
-					
 					// This will decide internally whether the component is being executed by threads or in sequence order.
 					// It actually just runs the defined click action by the user.
 					// It is executed here at the end to make sure changes by interacting with the components are recognized by the user defined click action.
 					executeClick(focused);
 				}
 			}
-			else
+			
+			if(!clicking)
 			{
-				// Internal actions which should run on hovering and affect the general component (not user-defined) logic..
-				switch(focused.getType())
-				{
-					case "window":
-					{
-						GWindow window = (GWindow) focused;
-						
-						// Make sure, when no one is clicking the origin is reseted
-						{
-							// System.out.println("Idle");
-							
-							// window.setMovementOrigin(null);
-						}
-						
-						break;
-					}
-				}
+				this.initialLoc = null;
 			}
 		}
 	}
@@ -326,7 +328,7 @@ public class ComponentHandler
 			case "button":
 			{
 				lastlyFocused.getStyle().setPrimaryColor(lastlyFocused.getStyle().getDesign().getBackgroundColor());
-				
+
 				break;
 			}
 
@@ -371,7 +373,7 @@ public class ComponentHandler
 			windowButton.getStyle().setPrimaryColor(windowButton.getDefaultColor());
 		}
 	}
-	
+
 	private void triggerAnimation(GComponent focused, boolean clicking, Point mouseLocation)
 	{
 		boolean sameComponentFocused = lastlyFocused != focused && lastlyFocused != null;
@@ -483,7 +485,18 @@ public class ComponentHandler
 		GComponent focused = display.getEventHandler().getMouseAdapter().getFocusedComponent();
 		
 		Point mouseLocation = display.getEventHandler().getMouseAdapter().getCursorLocation();
-
+		
+		boolean windowWasMoved = initialLoc != null;
+		
+		// Make sure if one window was focused before, the focus does NOT get lost.
+		// Otherwise, if you move a window the focus could get lost.
+		// This happens usually when the mouse cursor goes beyond the window borders.
+		// In this case, the focus would get lost if you wouldn't consider this event here.
+		if(windowWasMoved)
+		{
+			focused = lastlyFocused;
+		}
+		
 		/*
 		 *  WARNING! The code below must be executed only under certain circumstances ! ! !
 		 *  
@@ -505,7 +518,7 @@ public class ComponentHandler
 		preEvaluateEvents(focused);
 
 		boolean clicking = display.getEventHandler().getMouseAdapter().isClicking();
-
+		
 		// This line means if the KeyAdapter is active, then only read the currently
 		// pressed key from it.
 		// This is because the KeyAdapter is only available (!= null) when it is
