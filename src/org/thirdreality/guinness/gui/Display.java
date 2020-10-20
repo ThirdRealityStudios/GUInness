@@ -64,4 +64,9 @@ public class Display extends JFrame
 		
 		add(viewport);
 	}
+	
+	public boolean hasViewport()
+	{
+		return viewport != null;
+	}
 }

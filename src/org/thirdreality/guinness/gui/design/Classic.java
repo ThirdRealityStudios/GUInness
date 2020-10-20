@@ -41,7 +41,7 @@ public class Classic extends Design
 
 	// Every design has its own draw method in order to know how to draw each component.
 	// This is a "pre-method".
-	public void drawContext(Graphics g, GComponent c, Point offset, float scale)
+	public void drawContext(Graphics g, GComponent c, Point origin, Point offset, float scale)
 	{
 		this.offset = offset;
 		this.scale = scale;
@@ -183,7 +183,7 @@ public class Classic extends Design
 		// Represents simply the outer bounds of the component.
 		Rectangle bounds = c.getStyle().getPrimaryLook().getBounds();
 		
-		Point descLoc = new GIPoint(bounds.getLocation()).add(getInnerThickness()).add(getBorderThickness()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(getScale(), c.getStyle().isScalableForViewport());
+		Point descLoc = new GIPoint(bounds.getLocation()).add(getInnerThickness()).add(getBorderThickness()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
 		
 		Font original = c.getStyle().getFont();
 		Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
@@ -244,13 +244,13 @@ public class Classic extends Design
 		Dimension outerSize = new Dimension(bounds.width, bounds.width);
 		Dimension innerSize = new Dimension(outerSize.width - getInnerThickness(), outerSize.width - getInnerThickness());
 		
-		Point locOuter = new GIPoint(bounds.getLocation()).add(getOffset(), isMovable);
-		Point locInner = new GIPoint(locOuter).add(getBorderThickness());
+		Point locOuter = new GIPoint(bounds.getLocation()).add(getOffset(), isMovable).toPoint();
+		Point locInner = new GIPoint(locOuter).add(getBorderThickness()).toPoint();
 		
 		
 		
-		Point locOuterScaled = new GIPoint(locOuter).mul(getScale(), isScalable);
-		Point locInnerScaled = new GIPoint(locInner).mul(getScale(), isScalable);
+		Point locOuterScaled = new GIPoint(locOuter).mul(getScale(), isScalable).toPoint();
+		Point locInnerScaled = new GIPoint(locInner).mul(getScale(), isScalable).toPoint();
 
 		Dimension outerSizeScaled = new GIDimension(outerSize).mul(getScale(), isScalable);
 		Dimension innerSizeScaled = new GIDimension(innerSize).mul(getScale(), isScalable);
@@ -277,7 +277,7 @@ public class Classic extends Design
 				sizePx *= getScale();
 			}
 			
-			Point imgLoc = new GIPoint(locInner).add(getBorderThickness()).mul(getScale(), isScalable);
+			Point imgLoc = new GIPoint(locInner).add(getBorderThickness()).mul(getScale(), isScalable).toPoint();
 			
 			g.drawImage(checkSymbol, imgLoc.x, imgLoc.y, sizePx, sizePx, null);
 		}
@@ -367,7 +367,7 @@ public class Classic extends Design
 			int centerX = bounds.getLocation().x + bounds.width / 2 - textLength / 2;
 			int centerY = bounds.getLocation().y + bounds.height / 2 - c.getStyle().getFont().getFontSize() / 2;
 
-			Point loc = new GIPoint(centerX, centerY).add(c.getStyle().getTextTransition()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(getScale(), c.getStyle().isScalableForViewport());
+			Point loc = new GIPoint(centerX, centerY).add(c.getStyle().getTextTransition()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
 			
 			Font original = c.getStyle().getFont();
 			Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
@@ -376,7 +376,7 @@ public class Classic extends Design
 		}
 		else // If text should be displayed normally (upper-left corner of the component).
 		{
-			Point loc = new GIPoint(bounds.getLocation()).add(c.getStyle().getTextTransition()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(getScale(), c.getStyle().isScalableForViewport());
+			Point loc = new GIPoint(bounds.getLocation()).add(c.getStyle().getTextTransition()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
 			
 			DrawToolkit.drawString(g, c.getValue(), loc, c.getStyle().getFont());
 		}
@@ -386,7 +386,7 @@ public class Classic extends Design
 	{		
 		Polygon background = c.getStyle().getPrimaryLook();
 
-		Point backgroundLoc = new GIPoint(background.getBounds().getLocation()).add(getOffset(), c.getStyle().isMovableForViewport());
+		Point backgroundLoc = new GIPoint(background.getBounds().getLocation()).add(getOffset(), c.getStyle().isMovableForViewport()).toPoint();
 
 		background = ShapeTransform.movePolygonTo(background, backgroundLoc);
 		background = ShapeTransform.scalePolygon(background, c.getStyle().isScalableForViewport() ? getScale() : 1f);
@@ -398,7 +398,7 @@ public class Classic extends Design
 
 		Dimension frontDimension = new GIDimension(c.getStyle().getLength() * c.getStyle().getFont().getFontSize(), c.getStyle().getFont().getFontSize()).add(2*getInnerThickness());
 
-		Rectangle frontRectangle = new Rectangle(new GIPoint(backgroundLoc).add(getBorderThickness()), frontDimension);
+		Rectangle frontRectangle = new Rectangle(new GIPoint(backgroundLoc).add(getBorderThickness()).toPoint(), frontDimension);
 
 		Polygon front = ShapeMaker.createRectangleFrom(frontRectangle, c.getStyle().getBorderProperties());
 
@@ -409,7 +409,7 @@ public class Classic extends Design
 
 		
 
-		Point text = new GIPoint(backgroundLoc).add(getBorderThickness()).add(getInnerThickness()).mul(getScale(), c.getStyle().isScalableForViewport());
+		Point text = new GIPoint(backgroundLoc).add(getBorderThickness()).add(getInnerThickness()).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
 
 		DrawToolkit.drawString(g, c.getValue(), text, c.getStyle().getFont().getScaledFont(c.getStyle().isScalableForViewport() ? getScale() : 1f));
 	}
@@ -417,64 +417,83 @@ public class Classic extends Design
 	public void drawWindow(Graphics g, GComponent c)
 	{
 		GWindow window = (GWindow) c;
+
+		/*
+		 * The GWindow currently only supports offsets yet delivered by the corresponding Viewport.
+		 */
 		
 		// Draws the outer part of the window, including offset and scale by Viewport of course.
 		{
 			g.setColor(window.getFrameColor());
-			
-			Point windowOuterMoved = new GIPoint(c.getStyle().getPrimaryLook().getBounds().getLocation()).add(getOffset());
+
+			Point windowOuterMoved = new GIPoint(c.getStyle().getPrimaryLook().getBounds().getLocation()).add(getOffset(), window.getStyle().isMovableForViewport()).toPoint();
 
 			Polygon movedByOffset = ShapeTransform.movePolygonTo(c.getStyle().getPrimaryLook(), windowOuterMoved);
 
-			Polygon scaledByViewport = ShapeTransform.scalePolygon(movedByOffset, getScale());
+			/*
+			 * When scaling is wanted again, you can implement it here again with this code snippet..
+			 * 
+			 * Polygon scaledByViewport = ShapeTransform.scalePolygon(movedByOffset, window.getStyle().isScalableForViewport() ? getScale() : 1f);
+			 * 
+			 * g.fillPolygon(scaledByViewport);
+			 */
 
-			g.fillPolygon(scaledByViewport);
+			g.fillPolygon(movedByOffset);
 		}
-		
+
 		// Draws the inner part of the window, including offset and scale by Viewport of course.
 		{
 			g.setColor(Color.BLACK);
 			
-			Point secondaryLookMoved = new Point(c.getStyle().getSecondaryLook().getBounds().getLocation());
-			secondaryLookMoved.translate(getOffset().x, getOffset().y);
+			Point secondaryLookMoved = new GIPoint(c.getStyle().getSecondaryLook().getBounds().getLocation()).add(getOffset(), window.getStyle().isMovableForViewport()).toPoint();
 			
 			Polygon movedByOffset = ShapeTransform.movePolygonTo(c.getStyle().getSecondaryLook(), secondaryLookMoved);
 			
-			Polygon scaledByViewport = ShapeTransform.scalePolygon(movedByOffset, getScale());
-			
-			g.fillPolygon(scaledByViewport);
+			g.fillPolygon(movedByOffset);
 		}
 
 		// Draws the window title
 		{
-			Point titlePosition = new GIPoint(window.getStyle().getPrimaryLook().getBounds().getLocation()).addX(window.getStyle().getBorderProperties().getBorderThicknessPx()).addY(window.getStyle().getBorderProperties().getBorderThicknessPx() + window.getTitleAreaHeightPx() / 2 - window.getStyle().getFont().getFontSize() / 2);
-
-			titlePosition = ShapeTransform.getLocationRelativeToViewport(titlePosition, getOffset(), getScale());
-
-			DrawToolkit.drawString(g, window.getTitle(), titlePosition, window.getStyle().getFont().getScaledFont(getScale()));
+			int borderTopMargin = window.getStyle().getBorderProperties().getBorderThicknessPx() + window.getTitleAreaHeightPx() / 2 - window.getStyle().getFont().getFontSize() / 2;
+			
+			int borderLeftMargin = window.getStyle().getBorderProperties().getBorderThicknessPx();
+			
+			GIPoint titlePosition = new GIPoint(c.getStyle().getPrimaryLook().getBounds().getLocation()).add(getOffset(), window.getStyle().isMovableForViewport());		
+			
+			titlePosition = titlePosition.addY(borderTopMargin).addX(borderLeftMargin);
+			
+			// titlePosition.mul(getScale(), window.getStyle().isScalableForViewport());
+			
+			DrawToolkit.drawString(g, window.getTitle(), titlePosition.toPoint(), window.getStyle().getFont());// window.getStyle().isScalableForViewport() ? window.getStyle().getFont().getScaledFont(getScale()) : window.getStyle().getFont());
 		}
 
 		{
-			Point exitButtonMoved_Loc = new GIPoint(window.getExitButton().getStyle().getLocation()).add(getOffset());
+			Point exitButtonMoved_Loc = new GIPoint(window.getExitButton().getStyle().getLocation()).add(getOffset(), window.getStyle().isMovableForViewport()).toPoint();
 			
 			Polygon exitButtonMoved = ShapeTransform.movePolygonTo(window.getExitButton().getStyle().getPrimaryLook(), exitButtonMoved_Loc);
 			
-			Polygon exitButtonScaled = ShapeTransform.scalePolygon(exitButtonMoved, getScale());
+			// Polygon exitButtonScaled = ShapeTransform.scalePolygon(exitButtonMoved, window.getStyle().isScalableForViewport() ? getScale() : 1f);
 			
 			g.setColor(window.getExitButton().getStyle().getPrimaryColor());
-			g.fillPolygon(exitButtonScaled);
+			g.fillPolygon(exitButtonMoved);
 		}
 		
 		{	
-			Point minimizeButtonMoved_Loc = new Point(window.getMinimizeButton().getStyle().getLocation());
-			minimizeButtonMoved_Loc.translate(getOffset().x, getOffset().y);
+			Point minimizeButtonMoved_Loc = new GIPoint(window.getMinimizeButton().getStyle().getLocation()).add(getOffset(), window.getStyle().isMovableForViewport()).toPoint();
 			
 			Polygon minimizeButtonMoved = ShapeTransform.movePolygonTo(window.getMinimizeButton().getStyle().getPrimaryLook(), minimizeButtonMoved_Loc);
 			
-			Polygon minimizeButtonScaled = ShapeTransform.scalePolygon(minimizeButtonMoved, getScale());
+			// Polygon minimizeButtonScaled = ShapeTransform.scalePolygon(minimizeButtonMoved, window.getStyle().isScalableForViewport() ? getScale() : 1f);
 			
 			g.setColor(window.getMinimizeButton().getStyle().getPrimaryColor());
-			g.fillPolygon(minimizeButtonScaled);
+			g.fillPolygon(minimizeButtonMoved);
+		}
+		
+		{
+			if(window.hasViewport())
+			{
+				// Code that will render the components of a GWindow.
+			}
 		}
 	}
 

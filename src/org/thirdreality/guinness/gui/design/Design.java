@@ -106,7 +106,7 @@ public abstract class Design implements Serializable
 		return fL;
 	}
 	
-	public abstract void drawContext(Graphics g, GComponent c, Point offset, float scale);
+	public abstract void drawContext(Graphics g, GComponent c, Point origin, Point offset, float scale);
 	
 	abstract void drawGeneralField(Graphics g, GComponent c);
 	

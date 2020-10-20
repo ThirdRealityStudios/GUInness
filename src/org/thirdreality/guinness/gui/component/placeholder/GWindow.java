@@ -8,10 +8,10 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.thirdreality.guinness.Meta;
-import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.feature.Path;
 import org.thirdreality.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.guinness.feature.shape.ShapeTransform;
+import org.thirdreality.guinness.gui.Viewport;
 import org.thirdreality.guinness.gui.component.GComponent;
 import org.thirdreality.guinness.gui.component.GLogic;
 import org.thirdreality.guinness.gui.component.placeholder.window.GWindowButton;
@@ -23,7 +23,7 @@ public abstract class GWindow extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 
-	private String title;
+	private String title = "Default window";
 
 	private ArrayList<GComponent> components;
 
@@ -40,23 +40,32 @@ public abstract class GWindow extends GComponent
 	// To calculate it, you first you have remember the point when the window started to be re-moved,
 	// and this is where you go here... :
 	private Point movementOrigin = null;
+	
+	// This is the simulated viewport which you can apply per method setViewport(...).
+	// The Viewport is 100% compatible to the Viewport which is also applied to a Display (JFrame).
+	private Viewport viewport;
 
 	public GWindow(String title, Font titleFont, Rectangle window, GBorder borderProperties, ArrayList<GComponent> components)
 	{
 		super("window");
-
+		
 		this.components = components;
 		
+		setLogic(new GLogic());
+
+		initFrameStyle(title, window, borderProperties);
+	}
+
+	private void initFrameStyle(String title, Rectangle window, GBorder borderProperties)
+	{
 		// Here, the buttons are created, e.g. exit and minimize buttons for the window.
 		createWindowButtons(window, borderProperties);
 
 		initStyle(window, borderProperties);
-		
-		movementOrigin = getStyle().getPrimaryLook().getBounds().getLocation();
-		
-		setTitle(title);
 
-		setLogic(new GLogic());
+		movementOrigin = getStyle().getPrimaryLook().getBounds().getLocation();
+
+		setTitle(title);
 	}
 
 	private void initStyle(Rectangle window, GBorder borderProperties)
@@ -72,7 +81,7 @@ public abstract class GWindow extends GComponent
 
 				Point movedInnerArea = new Point(location.x + borderProperties.getBorderThicknessPx(), location.y + borderProperties.getBorderThicknessPx() + titleAreaHeightPx);
 				setSecondaryLook(ShapeTransform.movePolygonTo(getSecondaryLook(), movedInnerArea));				
-				
+
 				updateWindowButtons(getStyle().getPrimaryLook().getBounds());
 
 				this.location = location;
@@ -101,6 +110,8 @@ public abstract class GWindow extends GComponent
 		getStyle().setSecondaryLook(ShapeMaker.createRectangleFrom(innerArea, innerAreaBorders));
 
 		getStyle().setLocation(window.getLocation());
+		
+		getStyle().setScalableForViewport(false);
 	}
 
 	// Updates the window buttons when something has changed, e.g. the location of the GWindow or its dimensions (re-sized or scaled).
@@ -227,5 +238,23 @@ public abstract class GWindow extends GComponent
 	public void setMovementOrigin(Point movementOrigin)
 	{
 		this.movementOrigin = movementOrigin;
+	}
+	
+	public Viewport getViewport()
+	{
+		return viewport;
+	}
+	
+	public void setViewport(Viewport viewport)
+	{		
+		this.viewport = viewport;
+		
+		// Sets the position of the rendered content (so it fits the measurements of the window content).
+		viewport.setOrigin(getStyle().getSecondaryLook().getBounds().getLocation());
+	}
+	
+	public boolean hasViewport()
+	{
+		return viewport != null;
 	}
 }

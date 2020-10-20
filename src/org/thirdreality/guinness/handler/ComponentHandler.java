@@ -4,6 +4,7 @@ import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import org.thirdreality.guinness.exec.LoopedThread;
 import org.thirdreality.guinness.exec.ThreadManager;
@@ -141,6 +142,8 @@ public class ComponentHandler
 	}
 	
 	private Point initialLoc = null;
+	
+	private GIPoint pxCorrection = new GIPoint();
 
 	// Is responsible for firing the implemented functions by the component.
 	private void triggerGeneralLogic(GComponent focused, boolean clicking, Point mouseLocation, int keyStroke)
@@ -213,33 +216,44 @@ public class ComponentHandler
 					{
 						GWindow window = (GWindow) focused;
 
-						Polygon outerArea = ShapeTransform.getPolygonRelativeToViewport(window.getStyle().getPrimaryLook(), window.getStyle().isMovableForViewport() ? display.getViewport().getOffset() : new Point(), window.getStyle().isScalableForViewport() ? display.getViewport().getScale() : 1f);
+						/*
+						 * The GWindow currently only supports offsets yet delivered by the corresponding Viewport.
+						 */
+						
+						GIPoint offset = window.getStyle().isMovableForViewport() ? new GIPoint(display.getViewport().getOffset()) : new GIPoint();
+						
+						Polygon outerArea = window.getStyle().getPrimaryLook();
 
-						Polygon innerArea = ShapeTransform.getPolygonRelativeToViewport(window.getStyle().getSecondaryLook(), window.getStyle().isMovableForViewport() ? display.getViewport().getOffset() : new Point(), window.getStyle().isScalableForViewport() ? display.getViewport().getScale() : 1f);
+						outerArea = ShapeTransform.movePolygonTo(outerArea, offset.add(outerArea.getBounds().getLocation()).toPoint());
 
-						Polygon exitButtonArea = ShapeTransform.getPolygonRelativeToViewport(window.getExitButton().getStyle().getPrimaryLook(), window.getStyle().isMovableForViewport() ? display.getViewport().getOffset() : new Point(), window.getStyle().isScalableForViewport() ? display.getViewport().getScale() : 1f);
+						Polygon innerArea = window.getStyle().getSecondaryLook();
+						
+						innerArea = ShapeTransform.movePolygonTo(innerArea, offset.add(innerArea.getBounds().getLocation()).toPoint());
+						
+						Polygon exitButtonArea = window.getExitButton().getStyle().getPrimaryLook();
+						
+						exitButtonArea = ShapeTransform.movePolygonTo(exitButtonArea, offset.add(exitButtonArea.getBounds().getLocation()).toPoint());
+						
+						Polygon minimizeButtonArea = window.getMinimizeButton().getStyle().getPrimaryLook();
+						
+						minimizeButtonArea = ShapeTransform.movePolygonTo(minimizeButtonArea, offset.add(minimizeButtonArea.getBounds().getLocation()).toPoint());
+						
+						boolean focusedWindowBorderFirstTime = this.initialLoc == null && clicking && !innerArea.contains(mouseLocation) && !exitButtonArea.contains(mouseLocation) && !minimizeButtonArea.contains(mouseLocation);					
 
-						Polygon minimizeButtonArea = ShapeTransform.getPolygonRelativeToViewport(window.getMinimizeButton().getStyle().getPrimaryLook(), window.getStyle().isMovableForViewport() ? display.getViewport().getOffset() : new Point(), window.getStyle().isScalableForViewport() ? display.getViewport().getScale() : 1f);
-
-						boolean focusedWindowBorder = clicking && !innerArea.contains(mouseLocation) && !exitButtonArea.contains(mouseLocation) && !minimizeButtonArea.contains(mouseLocation);					
-
-						if(focusedWindowBorder)
+						if(focusedWindowBorderFirstTime)
 						{
-							if(this.initialLoc == null)
-							{
-								this.initialLoc = mouseLocation;
-							}
+							this.initialLoc = mouseLocation;
 						}
 
-						boolean movingWindowCurrently = initialLoc != null;
+						boolean aboutToMoveWindowYet = initialLoc != null;
 
-						if(movingWindowCurrently)
+						if(aboutToMoveWindowYet)
 						{
-							Point diff = new GIPoint(mouseLocation).sub(initialLoc);
+							GIPoint cursorDiff = new GIPoint(mouseLocation).sub(initialLoc);
 
-							Point moved = new GIPoint(window.getStyle().getLocation()).add(diff);
+							GIPoint moved = new GIPoint(window.getStyle().getLocation()).add(cursorDiff);//.div(display.getViewport().getScale(), window.getStyle().isScalableForViewport());
 
-							window.getStyle().setLocation(moved);
+							window.getStyle().setLocation(moved.toPoint());
 
 							this.initialLoc = mouseLocation;
 						}
@@ -314,6 +328,7 @@ public class ComponentHandler
 			if(!clicking)
 			{
 				this.initialLoc = null;
+				this.pxCorrection = new GIPoint();
 			}
 		}
 	}
@@ -483,11 +498,11 @@ public class ComponentHandler
 	private void triggerComponent()
 	{
 		GComponent focused = display.getEventHandler().getMouseAdapter().getFocusedComponent();
-		
+
 		Point mouseLocation = display.getEventHandler().getMouseAdapter().getCursorLocation();
-		
+
 		boolean windowWasMoved = initialLoc != null;
-		
+
 		// Make sure if one window was focused before, the focus does NOT get lost.
 		// Otherwise, if you move a window the focus could get lost.
 		// This happens usually when the mouse cursor goes beyond the window borders.
@@ -496,7 +511,7 @@ public class ComponentHandler
 		{
 			focused = lastlyFocused;
 		}
-		
+
 		/*
 		 *  WARNING! The code below must be executed only under certain circumstances ! ! !
 		 *  
@@ -505,10 +520,10 @@ public class ComponentHandler
 		if(focused != null && !focused.isEnabled())
 		{
 			preEvaluateEvents(focused);
-			
+
 			// Pretend there was no component detected.
 			postEvaluateEvents(false, null);
-			
+
 			// The remaining part of the code is not executed.
 			return;
 		}
@@ -518,7 +533,7 @@ public class ComponentHandler
 		preEvaluateEvents(focused);
 
 		boolean clicking = display.getEventHandler().getMouseAdapter().isClicking();
-		
+
 		// This line means if the KeyAdapter is active, then only read the currently
 		// pressed key from it.
 		// This is because the KeyAdapter is only available (!= null) when it is
@@ -526,7 +541,7 @@ public class ComponentHandler
 		// Anyway, in Gaming Mode (see definition of it in LayeredDisplay.java for
 		// reference) the KeyAdapter is always initialized and available.
 		int keyStroke = display.getEventHandler().getKeyAdapter().getActiveKey();
-		
+
 		triggerGeneralLogic(focused, clicking, mouseLocation, keyStroke);
 		triggerAnimation(focused, clicking, mouseLocation);
 

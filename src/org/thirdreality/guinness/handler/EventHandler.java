@@ -4,12 +4,12 @@ import org.thirdreality.guinness.gui.Display;
 import org.thirdreality.guinness.gui.adapter.KeyAdapter;
 import org.thirdreality.guinness.gui.adapter.MouseAdapter;
 
+// NOTICE! An EventHandler can only be used with Displays, not with GWindows, as they are only "simulated" windows / displays.
 public class EventHandler
 {
 	// All instances run from here generate ~30% of overall CPU usage
 	
 	private Display display = null;
-
 
 	private ComponentHandler componentHandler = null;
 

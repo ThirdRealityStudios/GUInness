@@ -25,7 +25,7 @@ public abstract class GWindowButton extends GComponent
 		getStyle().setBorderProperties(borderProperties);
 
 		getStyle().setPrimaryLook(ShapeMaker.createRectangleFrom(new Rectangle(rect.getSize()), getStyle().getBorderProperties()));
-		getStyle().setLocation(new GIPoint(rect.getLocation()));
+		getStyle().setLocation(new GIPoint(rect.getLocation()).toPoint());
 
 		getStyle().setPrimaryColor(background);
 		getStyle().setOpacity(opacity);

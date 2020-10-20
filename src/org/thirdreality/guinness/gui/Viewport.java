@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.geom.Point2D;
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.JPanel;
@@ -37,12 +36,32 @@ public class Viewport extends JPanel
 	private Point offset = new Point();
 
 	private float scale = 1f;
+	
+	// This will tell you whether this Viewport is used in a GWindow context (simulated) or in a Display context (real).
+	// The Viewport will know it is simulated by just passing 'null' to the constructor when creating it.
+	// In this case, the event handling is fully taken over by the "real Viewport" which makes use of its EventHandler yet.
+	// That means on the other hand, an EventHandler can only be used with Displays, not with GWindows !
+	private boolean isSimulated = false;
+
+	/* The origin can be set in order to apply an additional offset to the Viewport.
+	 * The origin is a special implementation in order to enable component content in GWindows.
+	 * Imagine, you have a GWindow but how should the main renderer know that there is an offset for a Viewport?
+	 * Normally, there are offsets only for components directly added to a Display (JFrame).
+	 * But in this case, you need to know further details to correctly position this Viewport in a GWindow.
+	 * 
+	 * By default, the origin is at (0|0) relative to the upper-left Display corner (also at (0|0) by nature).
+	 * Anyway, the origin is at the position of the GWindow content frame when it is used for "simulated" GUI environments..
+	 */
+	private Point origin = new Point();
 
 	public Viewport(EventHandler eventHandler)
 	{
 		this.eventHandler = eventHandler;
 		
-		addMouseDetection();
+		if(!isSimulated())
+		{
+			addMouseDetection();
+		}
 		
 		compBuffer = new CopyOnWriteArrayList<GComponent>();
 		compOutput = new GComponent[0];
@@ -82,11 +101,11 @@ public class Viewport extends JPanel
 		{
 			if(edC.getStyle().isVisible() && edC.isEnabled())
 			{
-				edC.getStyle().getDesign().drawContext(g, edC, getOffset(), getScale());
+				edC.getStyle().getDesign().drawContext(g, edC, getOrigin(), getOffset(), getScale());
 			}
 		}
 	}
-	
+
 	// Adds the MouseAdapter as a Mouse(Motion)Listener in order to work with the Viewport when mouse actions have to be evaluated.
 	private void addMouseDetection()
 	{
@@ -246,12 +265,27 @@ public class Viewport extends JPanel
 	// Use this method to retrieve a copy of a polygon which fits the scale and offset given by the Viewport.
 	public Polygon getPolygonRelativeToViewport(Polygon p)
 	{
-		return ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(p, new GIPoint(p.getBounds().getLocation()).add(getOffset())), getScale());
+		return ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(p, new GIPoint(p.getBounds().getLocation()).add(getOffset()).toPoint()), getScale());
 	}
 	
 	// Use this method to retrieve a location which considers the scale and offset given by this Viewport.
 	public Point getLocationRelativeToViewport(Point location)
 	{
 		return new Point((int) ((location.x + offset.x) * scale), (int) ((location.y + offset.y) * scale));
+	}
+	
+	public boolean isSimulated()
+	{
+		return eventHandler == null;
+	}
+	
+	public Point getOrigin()
+	{
+		return origin;
+	}
+	
+	public void setOrigin(Point origin)
+	{
+		this.origin = origin;
 	}
 }

@@ -135,7 +135,7 @@ public class ShapeTransform
 	// Use this method to retrieve a copy of a polygon which fits the scale and offset given by the Viewport.
 	public static Polygon getPolygonRelativeToViewport(Polygon p, Point offset, float scale)
 	{
-		return ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(p, new GIPoint(p.getBounds().getLocation()).add(offset)), scale);
+		return ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(p, new GIPoint(p.getBounds().getLocation()).add(offset).toPoint()), scale);
 	}
 	
 	// Use this method to retrieve a location which considers the scale and offset given by this Viewport.

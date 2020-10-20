@@ -50,15 +50,18 @@ public class Main
 	
 	private GSelectionBox gSB;
 	
-	private GWindow window;
+	private GWindow window0, window1;
 
-	private GLayer layer0, layer1, layer2, layer3;
+	private GLayer layer0, layer1, layer2, layer3, layer4;
 
 	private Design design;
 	
 	private Font biggerFont = new Font("biggerFont", Font.getDefaultFilepath(), 25), smallerFont = new Font("smallerFont", Font.getDefaultFilepath());
 
 	private Viewport viewport;
+	
+	// For simulating on a GWindow.
+	private Viewport viewportGWindow0;
 
 	public static void main(String[] args)
 	{
@@ -139,12 +142,31 @@ public class Main
 		
 		GBorder borderProperties = new GBorder(10, 5);
 		
-		window = new GWindow("Sample window", smallerFont, windowRepresentation, borderProperties, null)
+		// Tell the Viewport it is simulated (in a simulated display environment) by passing 'null' to its constructor.
+		viewportGWindow0 = new Viewport(null);
+		
+		window0 = new GWindow("Sample window", smallerFont, windowRepresentation, borderProperties, null)
 		{
 			@Override
 			public void onClick()
 			{
 				System.out.println("Clicked on window!");
+			}
+			
+			@Override
+			public void onHover()
+			{
+				// TODO Auto-generated method stub
+			}
+		};
+		
+		window1 = new GWindow("..Second window..", smallerFont, windowRepresentation, borderProperties, null)
+		{
+			@Override
+			public void onClick()
+			{
+				viewport.setScale(1);
+				System.out.println("Reduced scale to 1.00!");
 			}
 			
 			@Override
@@ -312,15 +334,12 @@ public class Main
 		initComponents();
 	}
 
-	public void setupLayers()
+	public void setupDisplayLayers()
 	{
 		description = new GDescription(new Point(20, 520), "Money here for nothing!", smallerFont);
 
-		//layer0.add(new GPath(design, Path2DMaker.makeRectangle(0, 0, 200, 300), Color.RG, true, new GPoint(0, 300), true));
-		//layer0.add(new GPath(design, Path2DMaker.makeRectangle(0, 0, 800, 30), Color.PINK, true, new GPoint(100, 300), true));
-
 		layer0.add(img0);
-		
+
 		layer1.add(getPolyButton0());
 		layer1.add(getPolyButton1());
 		layer1.add(increaseScale);
@@ -333,11 +352,13 @@ public class Main
 		layer2.add(input3);
 		layer2.add(input2);
 		layer2.add(input1);
-		
+
 		layer2.add(gSB);
 		layer2.add(rect);
-		
-		layer3.add(window);
+
+		layer3.add(window0);
+
+		layer4.add(window1);
 	}
 
 	public void run()
@@ -352,12 +373,18 @@ public class Main
 		layer1 = new GLayer(1, true);
 		layer2 = new GLayer(2, true);
 		layer3 = new GLayer(4, true);
+		layer4 = new GLayer(5, true);
 		
-		setupLayers();
+		setupDisplayLayers();
 
 		display.getViewport().addLayer(layer0);
 		display.getViewport().addLayer(layer1);
 		display.getViewport().addLayer(layer2);
 		display.getViewport().addLayer(layer3);
+		display.getViewport().addLayer(layer4);
+		
+		window0.setViewport(viewportGWindow0);
+		
+		viewportGWindow0.addLayer(layer0);
 	}
 }
