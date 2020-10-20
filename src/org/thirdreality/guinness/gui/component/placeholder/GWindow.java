@@ -110,7 +110,12 @@ public abstract class GWindow extends GComponent
 		getStyle().setSecondaryLook(ShapeMaker.createRectangleFrom(innerArea, innerAreaBorders));
 
 		getStyle().setLocation(window.getLocation());
-		
+
+		/*
+		 *  The scaling feature is disabled here too.
+		 *  Anyway, if you enable it again, it has no real effect because it is disabled everywhere internally for GWindows.
+		 *  It will only influence the mouse dragging negatively for windows so it's best to leave it turned off.
+		 */
 		getStyle().setScalableForViewport(false);
 	}
 
