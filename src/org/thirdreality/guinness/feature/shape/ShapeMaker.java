@@ -5,7 +5,7 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 
-import org.thirdreality.guinness.gui.component.style.property.GBorder;
+import org.thirdreality.guinness.gui.component.style.property.GBorderProperty;
 
 public class ShapeMaker
 {
@@ -43,7 +43,7 @@ public class ShapeMaker
 		return fed;
 	}
 	
-	private static Polygon getLowerLeftRadius(GBorder borderProperties, Rectangle rect)
+	private static Polygon getLowerLeftRadius(GBorderProperty borderProperties, Rectangle rect)
 	{
 		int borderRadiusLLPx = borderProperties.getLowerLeftBorderRadiusPx() == null ? borderProperties.getBorderRadiusPx() : borderProperties.getLowerLeftBorderRadiusPx();
 		Polygon borderRadiusLL = createCircle(borderRadiusLLPx, 1/4f, 1f);
@@ -55,7 +55,7 @@ public class ShapeMaker
 		return borderRadiusLL;
 	}
 	
-	private static Polygon getLowerRightRadius(GBorder borderProperties, Rectangle rect)
+	private static Polygon getLowerRightRadius(GBorderProperty borderProperties, Rectangle rect)
 	{
 		int borderRadiusLRPx = borderProperties.getLowerRightBorderRadiusPx() == null ? borderProperties.getBorderRadiusPx() : borderProperties.getLowerRightBorderRadiusPx();
 		Polygon borderRadiusLR = createCircle(borderRadiusLRPx, 1/4f, 1f);
@@ -65,7 +65,7 @@ public class ShapeMaker
 		return borderRadiusLR;
 	}
 	
-	private static Polygon getUpperLeftRadius(GBorder borderProperties)
+	private static Polygon getUpperLeftRadius(GBorderProperty borderProperties)
 	{
 		int borderRadiusTLPx = borderProperties.getUpperLeftBorderRadiusPx() == null ? borderProperties.getBorderRadiusPx() : borderProperties.getUpperLeftBorderRadiusPx();
 		Polygon borderRadiusTL = createCircle(borderRadiusTLPx, 1/4f, 1f);
@@ -75,7 +75,7 @@ public class ShapeMaker
 		return borderRadiusTL;
 	}
 	
-	private static Polygon getUpperRightRadius(GBorder borderProperties, Rectangle rect)
+	private static Polygon getUpperRightRadius(GBorderProperty borderProperties, Rectangle rect)
 	{		
 		int borderRadiusTRPx = borderProperties.getUpperRightBorderRadiusPx() == null ? borderProperties.getBorderRadiusPx() : borderProperties.getUpperRightBorderRadiusPx();
 		Polygon borderRadiusTR = createCircle(borderRadiusTRPx, 1/4f, 1f);
@@ -87,7 +87,7 @@ public class ShapeMaker
 		return borderRadiusTR;
 	}
 	
-	public static Polygon createRectangleFrom(Rectangle rect, GBorder borderProperties)
+	public static Polygon createRectangleFrom(Rectangle rect, GBorderProperty borderProperties)
 	{
 		Polygon roundedRectangle = new Polygon();
 		

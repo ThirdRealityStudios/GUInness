@@ -23,9 +23,11 @@ import org.thirdreality.guinness.gui.component.selection.list.GSelectionOption;
 import org.thirdreality.guinness.gui.component.standard.GButton;
 import org.thirdreality.guinness.gui.component.standard.GDescription;
 import org.thirdreality.guinness.gui.component.standard.GPolyButton;
-import org.thirdreality.guinness.gui.component.style.property.GBorder;
+import org.thirdreality.guinness.gui.component.style.property.GBorderProperty;
+import org.thirdreality.guinness.gui.component.style.property.GPaddingProperty;
 import org.thirdreality.guinness.gui.design.Classic;
 import org.thirdreality.guinness.gui.design.Design;
+import org.thirdreality.guinness.gui.design.DesignColor;
 import org.thirdreality.guinness.gui.font.Font;
 import org.thirdreality.guinness.gui.layer.GLayer;
 
@@ -140,7 +142,7 @@ public class Main
 	{
 		Rectangle windowRepresentation = new Rectangle(new Point(0, 50), new Dimension(600, 400));
 		
-		GBorder borderProperties = new GBorder(10, 5);
+		GBorderProperty borderProperties = new GBorderProperty(10, 5);
 		
 		// Tell the Viewport it is simulated (in a simulated display environment) by passing 'null' to its constructor.
 		viewportGWindow0 = new Viewport(null);
@@ -321,7 +323,13 @@ public class Main
 	{
 		biggerFont.setFontColor(Color.RED);
 
-		design = new Classic(Color.BLACK, Color.LIGHT_GRAY, Color.DARK_GRAY, Color.GRAY, Color.BLACK, 5, 1);
+		DesignColor designColor = new DesignColor(Color.BLACK, Color.LIGHT_GRAY, Color.DARK_GRAY, Color.GRAY, Color.BLACK);
+
+		GBorderProperty borderProperty = new GBorderProperty(0, 1);
+		
+		GPaddingProperty paddingProperty = new GPaddingProperty(5);
+
+		design = new Classic(designColor, borderProperty, paddingProperty);
 
 		display = new Display();
 
@@ -374,7 +382,7 @@ public class Main
 		layer2 = new GLayer(2, true);
 		layer3 = new GLayer(4, true);
 		layer4 = new GLayer(5, true);
-		
+
 		setupDisplayLayers();
 
 		display.getViewport().addLayer(layer0);
@@ -382,9 +390,8 @@ public class Main
 		display.getViewport().addLayer(layer2);
 		display.getViewport().addLayer(layer3);
 		display.getViewport().addLayer(layer4);
-		
-		window0.setViewport(viewportGWindow0);
-		
+
 		viewportGWindow0.addLayer(layer0);
+		window0.setViewport(viewportGWindow0);
 	}
 }

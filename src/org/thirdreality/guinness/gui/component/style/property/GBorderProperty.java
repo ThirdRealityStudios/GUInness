@@ -2,7 +2,7 @@ package org.thirdreality.guinness.gui.component.style.property;
 
 // Mainly a container to indicate all different kinds of border properties in pixels (px)
 // and to improve the readibility of the GStyle class.
-public class GBorder
+public class GBorderProperty
 {
 	// For specific component types, such as GRectangle, you can define the thickness of the border.
 	private int borderThicknessPx = 0;
@@ -25,14 +25,14 @@ public class GBorder
 	 */
 	private Integer borderRadiusPxLT, borderRadiusPxRT, borderRadiusPxBL, borderRadiusPxBR;
 
-	public GBorder(){}
+	public GBorderProperty(){}
 
-	public GBorder(int borderRadiusPx)
+	public GBorderProperty(int borderRadiusPx)
 	{
 		this.borderRadiusPx = borderRadiusPx;
 	}
 	
-	public GBorder(int borderRadiusPx, int borderThicknessPx)
+	public GBorderProperty(int borderRadiusPx, int borderThicknessPx)
 	{
 		this(borderRadiusPx);
 		
@@ -100,9 +100,9 @@ public class GBorder
 	}
 	
 	// Creates a copy of these border properties.
-	public GBorder copy()
+	public GBorderProperty copy()
 	{
-		GBorder border = new GBorder(getBorderRadiusPx(), getBorderThicknessPx());
+		GBorderProperty border = new GBorderProperty(getBorderRadiusPx(), getBorderThicknessPx());
 		
 		border.setLowerLeftBorderRadiusPx(getLowerLeftBorderRadiusPx());
 		border.setLowerRightBorderRadiusPx(getLowerRightBorderRadiusPx());

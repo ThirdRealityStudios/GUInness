@@ -16,7 +16,7 @@ import org.thirdreality.guinness.gui.component.GComponent;
 import org.thirdreality.guinness.gui.component.GLogic;
 import org.thirdreality.guinness.gui.component.placeholder.window.GWindowButton;
 import org.thirdreality.guinness.gui.component.style.GStyle;
-import org.thirdreality.guinness.gui.component.style.property.GBorder;
+import org.thirdreality.guinness.gui.component.style.property.GBorderProperty;
 import org.thirdreality.guinness.gui.font.Font;
 
 public abstract class GWindow extends GComponent
@@ -45,7 +45,7 @@ public abstract class GWindow extends GComponent
 	// The Viewport is 100% compatible to the Viewport which is also applied to a Display (JFrame).
 	private Viewport viewport;
 
-	public GWindow(String title, Font titleFont, Rectangle window, GBorder borderProperties, ArrayList<GComponent> components)
+	public GWindow(String title, Font titleFont, Rectangle window, GBorderProperty borderProperties, ArrayList<GComponent> components)
 	{
 		super("window");
 		
@@ -56,7 +56,7 @@ public abstract class GWindow extends GComponent
 		initFrameStyle(title, window, borderProperties);
 	}
 
-	private void initFrameStyle(String title, Rectangle window, GBorder borderProperties)
+	private void initFrameStyle(String title, Rectangle window, GBorderProperty borderProperties)
 	{
 		// Here, the buttons are created, e.g. exit and minimize buttons for the window.
 		createWindowButtons(window, borderProperties);
@@ -68,7 +68,7 @@ public abstract class GWindow extends GComponent
 		setTitle(title);
 	}
 
-	private void initStyle(Rectangle window, GBorder borderProperties)
+	private void initStyle(Rectangle window, GBorderProperty borderProperties)
 	{
 		setStyle(new GStyle()
 		{
@@ -105,7 +105,7 @@ public abstract class GWindow extends GComponent
 
 		Rectangle innerArea = new Rectangle(movedInnerArea, sizeInnerArea);
 
-		GBorder innerAreaBorders = new GBorder(0);
+		GBorderProperty innerAreaBorders = new GBorderProperty(0);
 
 		getStyle().setSecondaryLook(ShapeMaker.createRectangleFrom(innerArea, innerAreaBorders));
 
@@ -136,7 +136,7 @@ public abstract class GWindow extends GComponent
 	}
 	
 	// This is the part where the window gets initialized with its button areas, such as exit buttons etc.
-	private void createWindowButtons(Rectangle window, GBorder borderProperties)
+	private void createWindowButtons(Rectangle window, GBorderProperty borderProperties)
 	{
 		Dimension buttonSize = new Dimension(44, 20);
 
@@ -144,7 +144,7 @@ public abstract class GWindow extends GComponent
 
 		Rectangle exitButtonRect = new Rectangle(exitLocation, buttonSize);
 
-		GBorder exitBorderStyle = new GBorder(borderProperties.getBorderRadiusPx());
+		GBorderProperty exitBorderStyle = new GBorderProperty(borderProperties.getBorderRadiusPx());
 
 		exitBorderStyle.setUpperLeftBorderRadiusPx(0);
 		exitBorderStyle.setLowerLeftBorderRadiusPx(0);
@@ -167,7 +167,7 @@ public abstract class GWindow extends GComponent
 
 		Rectangle minimizeButtonRect = new Rectangle(minimizeLocation, buttonSize);
 
-		GBorder minimizeBorderStyle = new GBorder(borderProperties.getBorderRadiusPx());
+		GBorderProperty minimizeBorderStyle = new GBorderProperty(borderProperties.getBorderRadiusPx());
 
 		minimizeBorderStyle.setUpperLeftBorderRadiusPx(0);
 		minimizeBorderStyle.setLowerRightBorderRadiusPx(0);
@@ -251,7 +251,7 @@ public abstract class GWindow extends GComponent
 	}
 	
 	public void setViewport(Viewport viewport)
-	{		
+	{
 		this.viewport = viewport;
 		
 		// Sets the position of the rendered content (so it fits the measurements of the window content).

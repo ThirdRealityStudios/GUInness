@@ -67,9 +67,9 @@ I could have used available game engines from the web but my plan was it to buil
 so that's the challenge for me.
 
 
-# Stats / Nice To Know (as of 10/13/2020)
-- total lines of code: 4281 (counted them with "[cloc](https://github.com/AlDanial/cloc)")
-- code size: 169.1 kB
+# Stats / Nice To Know (as of 10/21/2020)
+- total lines of code: 4518 (counted them with "[cloc](https://github.com/AlDanial/cloc)")
+- code size: 178,7 kB
 
 
 # Already having used GUInness?

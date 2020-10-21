@@ -1,104 +1,62 @@
 package org.thirdreality.guinness.gui.design;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.Rectangle;
 import java.io.Serializable;
 
 import org.thirdreality.guinness.gui.component.GComponent;
+import org.thirdreality.guinness.gui.component.style.property.GBorderProperty;
+import org.thirdreality.guinness.gui.component.style.property.GPaddingProperty;
 import org.thirdreality.guinness.gui.font.FontLoader;
 
 public abstract class Design implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
-	private Color borderColor, backgroundColor, activeColor, hoverColor, fontColor;
+	private DesignColor designColor;
 	
-	private int innerThickness, borderThickness;
+	private GBorderProperty borderProperty;
+	
+	private GPaddingProperty paddingProperty;
 	
 	private FontLoader fL = new FontLoader();
 	
-	public Design(Color borderColor, Color backgroundColor, Color activeColor, Color hoverColor, Color fontColor, int innerThickness, int borderThickness)
+	public Design(DesignColor designColor, GBorderProperty borderProperties, GPaddingProperty paddingProperty)
 	{
-		this.borderColor = borderColor;
-		this.backgroundColor = backgroundColor;
-		this.activeColor = activeColor;
-		this.hoverColor = hoverColor;
-		this.fontColor = fontColor;
-		this.innerThickness = innerThickness;
-		this.borderThickness = borderThickness;
+		this.designColor = designColor;
+		this.borderProperty = borderProperties;
+		this.paddingProperty = paddingProperty;
 	}
 
-	public int getInnerThickness()
+	public DesignColor getDesignColor()
 	{
-		return innerThickness;
+		return designColor;
 	}
 
-	public void setInnerThickness(int pInnerThickness)
+	public void setDesignColor(DesignColor designColor)
 	{
-		innerThickness = pInnerThickness;
+		this.designColor = designColor;
 	}
 
-	public int getBorderThickness()
+	public GBorderProperty getBorderProperty()
 	{
-		return borderThickness;
+		return borderProperty;
 	}
 
-	public void setBorderThickness(int pBorderThickness)
+	public void setBorderProperty(GBorderProperty borderProperty)
 	{
-		borderThickness = pBorderThickness;
+		this.borderProperty = borderProperty;
 	}
 
-	public Color getBorderColor()
+	public GPaddingProperty getPaddingProperty()
 	{
-		return borderColor;
+		return paddingProperty;
 	}
 
-	public void setBorderColor(Color pBorderColor)
+	public void setPaddingProperty(GPaddingProperty paddingProperty)
 	{
-		borderColor = pBorderColor;
-	}
-
-	public Color getBackgroundColor()
-	{
-		return backgroundColor;
-	}
-
-	public void setBackgroundColor(Color pBackground)
-	{
-		backgroundColor = pBackground;
-	}
-
-	public Color getFontColor()
-	{
-		return fontColor;
-	}
-
-	public void setFontColor(Color pFontColor)
-	{
-		fontColor = pFontColor;
-	}
-	
-	public Color getActiveColor()
-	{
-		return activeColor;
-	}
-
-	public void setActiveColor(Color pActiveColor)
-	{
-		activeColor = pActiveColor;
-	}
-	
-	public Color getHoverColor()
-	{
-		return hoverColor;
-	}
-
-	public void setHoverColor(Color pHoverColor)
-	{
-		hoverColor = pHoverColor;
+		this.paddingProperty = paddingProperty;
 	}
 
 	public FontLoader getFontLoader()
@@ -107,8 +65,6 @@ public abstract class Design implements Serializable
 	}
 	
 	public abstract void drawContext(Graphics g, GComponent c, Point origin, Point offset, float scale);
-	
-	abstract void drawGeneralField(Graphics g, GComponent c);
 	
 	public abstract Polygon generateDefaultShape(GComponent c);
 	

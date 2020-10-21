@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 import org.thirdreality.guinness.IssueTracker;
 import org.thirdreality.guinness.Meta;
-import org.thirdreality.guinness.gui.component.style.property.GBorder;
+import org.thirdreality.guinness.gui.component.style.property.GBorderProperty;
 import org.thirdreality.guinness.gui.design.Design;
 import org.thirdreality.guinness.gui.font.Font;
 
@@ -67,7 +67,7 @@ public abstract class GStyle implements Serializable
 	
 	// If supported by the component, its borders can be modified by the properties stored in GBorder:
 	// e.g. the border thickness and border radiuses in pixels.
-	private GBorder border;
+	private GBorderProperty border;
 
 	protected Point location;
 
@@ -87,7 +87,7 @@ public abstract class GStyle implements Serializable
 		
 		textTransition = new Point();
 		location = new Point();
-		border = new GBorder();
+		border = new GBorderProperty();
 	}
 
 	// Creates a GStyle from another GStyle without modifying its values.
@@ -223,12 +223,12 @@ public abstract class GStyle implements Serializable
 		this.imgBuffered = imgBuffered;
 	}
 	
-	public GBorder getBorderProperties()
+	public GBorderProperty getBorderProperties()
 	{
 		return border;
 	}
 	
-	public void setBorderProperties(GBorder borderProperties)
+	public void setBorderProperties(GBorderProperty borderProperties)
 	{
 		border = borderProperties;
 	}

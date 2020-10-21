@@ -72,7 +72,7 @@ public abstract class GComponent implements Serializable
 		// When created apply the default design first.
 		this.getStyle().setDesign(Sample.classic);
  
-		getStyle().setPrimaryColor(getStyle().getDesign().getBackgroundColor());
+		getStyle().setPrimaryColor(getStyle().getDesign().getDesignColor().getBackgroundColor());
 	}
 	
 	public GComponent(String type, Point location, Polygon look, int length, String val, Font font)

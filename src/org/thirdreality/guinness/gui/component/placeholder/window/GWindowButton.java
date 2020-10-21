@@ -8,7 +8,7 @@ import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.guinness.gui.component.GComponent;
 import org.thirdreality.guinness.gui.component.decoration.GImage;
-import org.thirdreality.guinness.gui.component.style.property.GBorder;
+import org.thirdreality.guinness.gui.component.style.property.GBorderProperty;
 
 public abstract class GWindowButton extends GComponent
 {
@@ -18,7 +18,7 @@ public abstract class GWindowButton extends GComponent
 	
 	private Color defaultColor, clickColor, hoverColor;
 
-	public GWindowButton(Rectangle rect, Color background, float opacity, GBorder borderProperties, GImage icon)
+	public GWindowButton(Rectangle rect, Color background, float opacity, GBorderProperty borderProperties, GImage icon)
 	{
 		super("window_button");
 

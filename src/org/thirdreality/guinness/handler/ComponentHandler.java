@@ -4,8 +4,9 @@ import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.thirdreality.guinness.exec.LoopedThread;
 import org.thirdreality.guinness.exec.ThreadManager;
 import org.thirdreality.guinness.feature.GIPoint;
@@ -30,7 +31,9 @@ public class ComponentHandler
 	private LoopedThread handler = null;
 
 	private Display display;
- 
+
+	private CopyOnWriteArrayList<Viewport> simulatedViewports;
+
 	private ThreadManager hoverTManager, clickTManager;	
 
 	// If there was a text-field selected, it will be stored here for a time.
@@ -53,6 +56,8 @@ public class ComponentHandler
 	{
 		this.display = display;
 
+		this.simulatedViewports = new CopyOnWriteArrayList<Viewport>();
+
 		final int maximumThreads = 2;
 
 		this.hoverTManager = new ThreadManager(maximumThreads);
@@ -65,23 +70,26 @@ public class ComponentHandler
 			@Override
 			public void loop()
 			{
-				updateChangedLayers();
+				updateChangedLayers(display.getViewport());
 				
 				triggerComponent();
 			}
 		};
 	}
-	
-	public void updateChangedLayers()
+
+	// Updates selected / marked changes if there are any.
+	// This ensures, all added layers are also displayed later.
+	// This is in the end a safe method, meaning it checks whether 'target' is 'null'.
+	public void updateChangedLayers(Viewport target)
 	{
-		Viewport viewport = display.getViewport();
-		
-		if(viewport != null)
+		if(display.hasViewport())
 		{
-			if(display.getViewport().getLayerModifications() > 0)
+			Viewport viewport = display.getViewport();
+
+			if(viewport.getLayerModifications() > 0)
 			{
-				display.getViewport().applyChanges();
-				display.getViewport().outputAllComponents();
+				viewport.updateComponentBuffer();
+				viewport.outputComponentBuffer();
 			}
 		}
 	}
@@ -140,10 +148,8 @@ public class ComponentHandler
 
 		Timer.pauseMillisecond(execute.getLogic().getDelayMs());
 	}
-	
+
 	private Point initialLoc = null;
-	
-	private GIPoint pxCorrection = new GIPoint();
 
 	// Is responsible for firing the implemented functions by the component.
 	private void triggerGeneralLogic(GComponent focused, boolean clicking, Point mouseLocation, int keyStroke)
@@ -328,7 +334,6 @@ public class ComponentHandler
 			if(!clicking)
 			{
 				this.initialLoc = null;
-				this.pxCorrection = new GIPoint();
 			}
 		}
 	}
@@ -342,7 +347,7 @@ public class ComponentHandler
 		{		
 			case "button":
 			{
-				lastlyFocused.getStyle().setPrimaryColor(lastlyFocused.getStyle().getDesign().getBackgroundColor());
+				lastlyFocused.getStyle().setPrimaryColor(lastlyFocused.getStyle().getDesign().getDesignColor().getBackgroundColor());
 
 				break;
 			}
@@ -401,19 +406,19 @@ public class ComponentHandler
 				{
 					// The next two booleans prevent the redraw algorithm to run again if there was
 					// no change in color..
-					boolean activeColorIsSame = focused.getStyle().getPrimaryColor().equals(focused.getStyle().getDesign().getActiveColor());
-					boolean hoverColorIsSame = focused.getStyle().getPrimaryColor().equals(focused.getStyle().getDesign().getHoverColor());
+					boolean activeColorIsSame = focused.getStyle().getPrimaryColor().equals(focused.getStyle().getDesign().getDesignColor().getActiveColor());
+					boolean hoverColorIsSame = focused.getStyle().getPrimaryColor().equals(focused.getStyle().getDesign().getDesignColor().getHoverColor());
 					
 					if(clicking)
 					{
 						if(!activeColorIsSame)
 						{
-							focused.getStyle().setPrimaryColor(focused.getStyle().getDesign().getActiveColor());
+							focused.getStyle().setPrimaryColor(focused.getStyle().getDesign().getDesignColor().getActiveColor());
 						}
 					}
 					else if(!hoverColorIsSame)
 					{
-						focused.getStyle().setPrimaryColor(focused.getStyle().getDesign().getHoverColor());
+						focused.getStyle().setPrimaryColor(focused.getStyle().getDesign().getDesignColor().getHoverColor());
 
 						// When hovering (once!) over a button the cursor is changed.
 						display.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -435,7 +440,15 @@ public class ComponentHandler
 				case "window":
 				{
 					GWindow window = (GWindow) focused;
-
+					
+					// Will update the window content every time the user focuses the window.
+					// This will also reduce the CPU usage because it is event driven then.
+					// Anyway, this might be changed in future so the window content is always changed.
+					if(window.hasViewport())
+					{
+						updateChangedLayers(window.getViewport());
+					}
+					
 					triggerWindowButtonColor(window.getExitButton(), mouseLocation, clicking);
 					triggerWindowButtonColor(window.getMinimizeButton(), mouseLocation, clicking);
 

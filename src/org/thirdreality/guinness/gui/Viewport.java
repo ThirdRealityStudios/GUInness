@@ -37,12 +37,14 @@ public class Viewport extends JPanel
 
 	private float scale = 1f;
 	
+	public int key = 0;
+	
 	// This will tell you whether this Viewport is used in a GWindow context (simulated) or in a Display context (real).
 	// The Viewport will know it is simulated by just passing 'null' to the constructor when creating it.
 	// In this case, the event handling is fully taken over by the "real Viewport" which makes use of its EventHandler yet.
 	// That means on the other hand, an EventHandler can only be used with Displays, not with GWindows !
 	private boolean isSimulated = false;
-
+	
 	/* The origin can be set in order to apply an additional offset to the Viewport.
 	 * The origin is a special implementation in order to enable component content in GWindows.
 	 * Imagine, you have a GWindow but how should the main renderer know that there is an offset for a Viewport?
@@ -75,7 +77,6 @@ public class Viewport extends JPanel
 	public void paintComponent(Graphics g)
 	{
 		drawBackground(g);
-
 		drawComponents(g);
 
 		repaint();
@@ -89,15 +90,20 @@ public class Viewport extends JPanel
 		g.setColor(Color.BLUE);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 	}
-	
+
 	// Draws all components from the output list 'compOutput'.
 	// When adding new layers, they are not yet added to the output directly.
 	// First, it is being waited until all (new and old) components have been read (again (for old components yet stored)).
 	// Only then the components are directly outputed by just changing the reference.
-	private void drawComponents(Graphics g)
+	public void drawComponents(Graphics g)
+	{		
+		drawComponentsByArray(g, compOutput);
+	}
+
+	public void drawComponentsByArray(Graphics g, GComponent[] components)
 	{
 		// Render all GUInness components.
-		for(GComponent edC : compOutput)
+		for(GComponent edC : components)
 		{
 			if(edC.getStyle().isVisible() && edC.isEnabled())
 			{
@@ -122,13 +128,13 @@ public class Viewport extends JPanel
 
 	// Outputs all components of the buffer immediately to the output, 
 	// so all changes will be visible then first.
-	public void outputAllComponents()
+	public void outputComponentBuffer()
 	{
 		compOutput = compBuffer.toArray(compOutput);
 	}
 
 	// Adds all components of a layer to the internal component buffer (which is used for drawing only).
-	private void apply(GLayer target)
+	private void addLayerToComponentBuffer(GLayer target)
 	{
 		// Add every component of the current layer.
 		for(GComponent comp : target.getComponentBuffer())
@@ -139,7 +145,7 @@ public class Viewport extends JPanel
 
 	// If a layer was changed, you can call this method to apply all changes.
 	// Is very inefficient if it's called frequently.
-	public synchronized void applyChanges()
+	public synchronized void updateComponentBuffer()
 	{
 		erase(); // If buggy, re-instantiate
 
@@ -151,12 +157,12 @@ public class Viewport extends JPanel
 			{
 				for(GLayer layer : layers)
 				{
-					apply(layer);
+					addLayerToComponentBuffer(layer);
 				}
 			}
 			else
 			{
-				apply(layers.get(0));
+				addLayerToComponentBuffer(layers.get(0));
 			}
 		}
 		
@@ -177,7 +183,7 @@ public class Viewport extends JPanel
 		return false;
 	}
 
-	// The priority of a layer has to be at least zero or greater.
+	// The priority of a layer has to be at least zero or greater and mustn't not appear more than twice in the same Viewport.
 	private boolean isValidPriority(GLayer layer)
 	{
 		return layer.getPriority() >= 0 && !isDoublePriority(layer);
@@ -190,6 +196,12 @@ public class Viewport extends JPanel
 			layers.add(layer);
 			
 			layerModifications++;
+			
+			if(isSimulated())
+			{
+				updateComponentBuffer();
+				outputComponentBuffer();
+			}
 		}
 		else
 		{
@@ -287,5 +299,15 @@ public class Viewport extends JPanel
 	public void setOrigin(Point origin)
 	{
 		this.origin = origin;
+	}
+	
+	public int sizeOfComponentBuffer()
+	{
+		return compBuffer.size();
+	}
+	
+	public int sizeOfComponentOutput()
+	{
+		return compBuffer.size();
 	}
 }
