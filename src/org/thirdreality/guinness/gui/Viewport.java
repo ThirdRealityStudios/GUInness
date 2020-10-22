@@ -1,9 +1,11 @@
 package org.thirdreality.guinness.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.JPanel;
@@ -55,6 +57,16 @@ public class Viewport extends JPanel
 	 * Anyway, the origin is at the position of the GWindow content frame when it is used for "simulated" GUI environments..
 	 */
 	private Point origin = new Point();
+	
+	// You can define with this variable a so called "clipping area".
+	// This will prevent components beyond these borders from being rendered and recognized.
+	// It might help you to save performance but on the other hand it also serves a GWindow to avoid overlapping by the just simulated components.
+	// The clipping area must be regarded absolute, meaning it really clips off components no matter what scale or offset they have in the end.
+	// Also the clipping area always begins at (0|0) at the upper-left corner of the Display or GWindow.
+	private Dimension clippingArea;
+
+	// This is used for pure evaluation whether a component is still inside the clipping area or not.
+	private Rectangle clippingRectangle;
 
 	public Viewport(EventHandler eventHandler)
 	{
@@ -69,8 +81,10 @@ public class Viewport extends JPanel
 		compOutput = new GComponent[0];
 		
 		layers = new CopyOnWriteArrayList<GLayer>();
+		
+		updateClippingRectangle(new Dimension());
 	}
-	
+
 	// The most important method for displaying all components and graphics.
 	// This is the main (recursive) loop for rendering.
 	@Override
@@ -81,7 +95,7 @@ public class Viewport extends JPanel
 
 		repaint();
 	}
-	
+
 	// In the beginning this will just draw a background.
 	// In the sample program, a GImage is used as a background.
 	// This is why you can't see the applied background color below in the code because it is overwritten by the GImage.
@@ -105,7 +119,7 @@ public class Viewport extends JPanel
 		// Render all GUInness components.
 		for(GComponent edC : components)
 		{
-			if(edC.getStyle().isVisible() && edC.isEnabled())
+			if(edC.getStyle().isVisible() && edC.isEnabled() && isContained(edC))
 			{
 				edC.getStyle().getDesign().drawContext(g, edC, getOrigin(), getOffset(), getScale());
 			}
@@ -116,7 +130,7 @@ public class Viewport extends JPanel
 	private void addMouseDetection()
 	{
 		addMouseListener(eventHandler.getMouseAdapter());
-		
+
 		addMouseMotionListener(eventHandler.getMouseAdapter());
 	}
 
@@ -165,7 +179,7 @@ public class Viewport extends JPanel
 				addLayerToComponentBuffer(layers.get(0));
 			}
 		}
-		
+
 		layerModifications = 0;
 	}
 	
@@ -273,41 +287,83 @@ public class Viewport extends JPanel
 	{
 		this.scale = scale;
 	}
-	
+
 	// Use this method to retrieve a copy of a polygon which fits the scale and offset given by the Viewport.
 	public Polygon getPolygonRelativeToViewport(Polygon p)
 	{
 		return ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(p, new GIPoint(p.getBounds().getLocation()).add(getOffset()).toPoint()), getScale());
 	}
-	
+
 	// Use this method to retrieve a location which considers the scale and offset given by this Viewport.
 	public Point getLocationRelativeToViewport(Point location)
 	{
 		return new Point((int) ((location.x + offset.x) * scale), (int) ((location.y + offset.y) * scale));
 	}
-	
+
 	public boolean isSimulated()
 	{
 		return eventHandler == null;
 	}
-	
+
 	public Point getOrigin()
 	{
 		return origin;
 	}
-	
+
 	public void setOrigin(Point origin)
 	{
 		this.origin = origin;
 	}
-	
+
 	public int sizeOfComponentBuffer()
 	{
 		return compBuffer.size();
 	}
-	
+
 	public int sizeOfComponentOutput()
 	{
 		return compBuffer.size();
+	}
+
+	public Dimension getClippingArea()
+	{
+		return clippingArea;
+	}
+
+	public void setClippingArea(Dimension clippingArea)
+	{
+		this.clippingArea = clippingArea;
+
+		createClippingRectangle();
+	}
+
+	private void createClippingRectangle()
+	{
+		clippingRectangle = new Rectangle(getOrigin(), getClippingArea());
+	}
+
+	private void updateClippingRectangle(Dimension clippingArea)
+	{
+		setClippingArea(clippingArea);
+
+		clippingRectangle.setSize(clippingArea);
+		clippingRectangle.setLocation(getOrigin());
+	}
+
+	// Tells you whether a component can be rendered or recognized by IO, depending on an area which defines this (see 'clippingArea' and 'clippingRectangle' on top).
+	public boolean isContained(GComponent component)
+	{
+		if(isSimulated())
+		{
+			clippingRectangle.setLocation(getOrigin());
+
+			Rectangle componentShape = new Rectangle(new GIPoint(getOrigin()).add(getOffset()).toPoint(), component.getStyle().getPrimaryLook().getBounds().getSize());
+
+			boolean isContained = clippingRectangle.contains(componentShape);
+
+			return isContained;
+		}
+		
+		return true;
 	}
 }

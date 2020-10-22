@@ -56,13 +56,39 @@ public class Display extends JFrame
 		
 		int size = getComponentCount();
 		
-		// Make sure the first component which is by default already added is not removed.
+		// Make sure the first component (assumed another JPanel by default, but NOT a viewport) is not removed from the Display (JFrame).
 		if(size > 1)
 		{
 			remove(size - 1);
 		}
 		
 		add(viewport);
+		
+		System.out.println("> " + getSize());
+		
+		viewport.setClippingArea(getSize());
+	}
+	
+	@Override
+	public void setSize(Dimension size)
+	{
+		super.setSize(size);
+		
+		if(hasViewport())
+		{
+			viewport.setClippingArea(size);
+		}
+	}
+	
+	@Override
+	public void setSize(int width, int height)
+	{
+		super.setSize(width, height);
+		
+		if(hasViewport())
+		{
+			viewport.setClippingArea(new Dimension(width, height));
+		}
 	}
 	
 	public boolean hasViewport()

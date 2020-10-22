@@ -253,9 +253,9 @@ public abstract class GWindow extends GComponent
 	public void setViewport(Viewport viewport)
 	{
 		this.viewport = viewport;
-		
-		// Sets the position of the rendered content (so it fits the measurements of the window content).
-		viewport.setOrigin(getStyle().getSecondaryLook().getBounds().getLocation());
+
+		// This will tell the window not to display / render components which are beyond the given measurements (a.k.a clipping area).
+		viewport.setClippingArea(new Dimension(getStyle().getSecondaryLook().getBounds().getSize()));
 	}
 	
 	public boolean hasViewport()

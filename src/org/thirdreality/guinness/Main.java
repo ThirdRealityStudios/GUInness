@@ -368,6 +368,20 @@ public class Main
 
 		layer4.add(window1);
 	}
+	
+	public void setupGWindow0()
+	{
+		GLayer layer5 = new GLayer(0, true);
+		
+		Image imgMountain = ImageToolkit.loadImage(Path.ROOT_FOLDER + File.separator + "media" + File.separator + "samples" + File.separator + "MountainLake.jpg");
+		
+		GImage img0 = new GImage(new Point(), new Dimension(100, 365), imgMountain);
+		
+		layer5.add(img0);
+		
+		viewportGWindow0.addLayer(layer5);
+		window0.setViewport(viewportGWindow0);
+	}
 
 	public void run()
 	{
@@ -391,7 +405,6 @@ public class Main
 		display.getViewport().addLayer(layer3);
 		display.getViewport().addLayer(layer4);
 
-		viewportGWindow0.addLayer(layer0);
-		window0.setViewport(viewportGWindow0);
+		setupGWindow0();
 	}
 }

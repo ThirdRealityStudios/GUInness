@@ -6,7 +6,6 @@ import java.awt.Point;
 import java.awt.Polygon;
 
 import org.thirdreality.guinness.Meta;
-import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.guinness.gui.component.GComponent;
 
@@ -16,21 +15,25 @@ public class GImage extends GComponent
 	
 	public GImage(Point location, Image content)
 	{
-		super("image", location, null, 0, null, null);
+		super("image");
+
+		getStyle().setLocation(location);
 
 		int width = content.getWidth(null);
 		int height = content.getHeight(null);
-		
+
 		Polygon rectangle = ShapeMaker.createRectangle(location.x, location.y, width, height);
 		getStyle().setPrimaryLook(rectangle);
-		
+
 		getStyle().setImage(content);
 	}
 
 	public GImage(Point location, float scale, Image content)
 	{
-		super("image", location, null, 0, null, null);
-
+		super("image");
+		
+		getStyle().setLocation(location);
+		
 		int scaledWidth = (int) (scale * content.getWidth(null));
 		int scaledHeight = (int) (scale * content.getHeight(null));
 		
@@ -42,10 +45,11 @@ public class GImage extends GComponent
 
 	public GImage(Point location, Dimension size, Image content)
 	{
-		super("image", location, null, 0, null, null);
+		super("image");
 		
-		Polygon rectangle = ShapeMaker.createRectangle(location.x, location.y, size.width, size.height);
-		getStyle().setPrimaryLook(rectangle);
+		getStyle().setLocation(location);
+		
+		getStyle().setPrimaryLook(ShapeMaker.createRectangle(location.x, location.y, size.width, size.height));
 		
 		getStyle().setImage(content);
 	}
