@@ -54,7 +54,7 @@ public class Main
 	
 	private GWindow window0, window1;
 
-	private GLayer layer0, layer1, layer2, layer3, layer4;
+	private GLayer layer0, layer1, layer2_shared, layer3, layer4;
 
 	private Design design;
 	
@@ -209,7 +209,7 @@ public class Main
 			@Override
 			public void onClick()
 			{
-				layer2.setEnabled(isChecked());
+				layer2_shared.setEnabled(isChecked());
 			}
 
 			@Override
@@ -354,15 +354,15 @@ public class Main
 		layer1.add(moveButton);
 		layer1.add(checkbox1);
 
-		layer2.add(description);
-		layer2.add(exit);
+		layer2_shared.add(description);
+		layer2_shared.add(exit);
 
-		layer2.add(input3);
-		layer2.add(input2);
-		layer2.add(input1);
+		layer2_shared.add(input3);
+		layer2_shared.add(input2);
+		layer2_shared.add(input1);
 
-		layer2.add(gSB);
-		layer2.add(rect);
+		layer2_shared.add(gSB);
+		layer2_shared.add(rect);
 
 		layer3.add(window0);
 
@@ -380,7 +380,12 @@ public class Main
 		layer5.add(img0);
 		
 		viewportGWindow0.addLayer(layer5);
+		
+		viewportGWindow0.addLayer(layer2_shared);
+		
 		window0.setViewport(viewportGWindow0);
+		
+		
 	}
 
 	public void run()
@@ -393,7 +398,7 @@ public class Main
 
 		layer0 = new GLayer(0, true);
 		layer1 = new GLayer(1, true);
-		layer2 = new GLayer(2, true);
+		layer2_shared = new GLayer(2, true);
 		layer3 = new GLayer(4, true);
 		layer4 = new GLayer(5, true);
 
@@ -401,7 +406,7 @@ public class Main
 
 		display.getViewport().addLayer(layer0);
 		display.getViewport().addLayer(layer1);
-		display.getViewport().addLayer(layer2);
+		display.getViewport().addLayer(layer2_shared);
 		display.getViewport().addLayer(layer3);
 		display.getViewport().addLayer(layer4);
 

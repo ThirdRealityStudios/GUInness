@@ -356,10 +356,12 @@ public class Viewport extends JPanel
 		if(isSimulated())
 		{
 			clippingRectangle.setLocation(getOrigin());
+			
+			Rectangle componentBounds = component.getStyle().getPrimaryLook().getBounds();
 
-			Rectangle componentShape = new Rectangle(new GIPoint(getOrigin()).add(getOffset()).toPoint(), component.getStyle().getPrimaryLook().getBounds().getSize());
+			Rectangle componentBoundsRelative = new Rectangle(new GIPoint(getOrigin()).add(getOffset()).add(componentBounds.getLocation()).toPoint(), componentBounds.getSize());
 
-			boolean isContained = clippingRectangle.contains(componentShape);
+			boolean isContained = clippingRectangle.contains(componentBoundsRelative);
 
 			return isContained;
 		}
