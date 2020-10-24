@@ -19,6 +19,7 @@ import org.thirdreality.guinness.gui.component.placeholder.GWindow;
 import org.thirdreality.guinness.gui.component.placeholder.window.GWindowButton;
 import org.thirdreality.guinness.gui.component.selection.GCheckbox;
 import org.thirdreality.guinness.gui.component.selection.list.GSelectionBox;
+import org.thirdreality.guinness.handler.componenthandler.ComponentSession;
 
 public class ComponentHandler
 {
@@ -35,22 +36,12 @@ public class ComponentHandler
 	private CopyOnWriteArrayList<Viewport> simulatedViewports;
 
 	private ThreadManager hoverTManager, clickTManager;	
-
-	// If there was a text-field selected, it will be stored here for a time.
-	private GComponent textfield;
-
-	// Tells whether a component was clicked before.
-	private GComponent clickedYet = null;
-
-	// Tells by using 'clickedYet' whether the checked component was double clicked.
-	private boolean doubleClicked = false;
-
-	// This is the lastly focused component from the previous cycle always.
-	private GComponent lastlyFocused;
-
-	private boolean doubleHovered;
-
-	private GComponent hoveredYet;
+	
+	// This stores all sessions of necessary components which have their own component handling but want it being managed through one "main thread", meaning this class.
+	// Using sessions can save here the use of too many threads because one thread takes over multiple component sessions.
+	// Notice: The "main session" is always accessible through the index 0 (zero).
+	// 		   It is responsible for treating all general components of the type GComponent within the main Viewport.
+	private ArrayList<ComponentSession> sessions;
 
 	public ComponentHandler(Display display)
 	{
@@ -75,6 +66,13 @@ public class ComponentHandler
 				triggerComponent();
 			}
 		};
+		
+		sessions = new ArrayList<ComponentSession>();
+		
+		// Creates the first component session at index 0 (zero).
+		// It will be responsible for treating all general components of the type "GComponent".
+		// All following sessions after this will be responsible for other purposes, e.g. for treating components within a GWindow in a different Viewport.
+		sessions.add(new ComponentSession());
 	}
 
 	// Updates selected / marked changes if there are any.
@@ -153,7 +151,9 @@ public class ComponentHandler
 
 	// Is responsible for firing the implemented functions by the component.
 	private void triggerGeneralLogic(GComponent focused, boolean clicking, Point mouseLocation, int keyStroke)
-	{		
+	{
+		ComponentSession session = sessions.get(0);
+		
 		if(clicking)
 		{
 			// relates to text-fields only.
@@ -162,14 +162,14 @@ public class ComponentHandler
 
 				if(canTextfieldBeFocussed)
 				{
-					textfield = focused;
+					session.setFocusedTextfield(focused);
 				}
 
-				boolean shouldDefocusIt = focused != textfield;
+				boolean shouldDefocusIt = focused != session.getFocusedTextfield();
 
 				if(shouldDefocusIt)
 				{
-					textfield = null;
+					session.setFocusedTextfield(null);
 				}
 			}
 		}
@@ -178,13 +178,13 @@ public class ComponentHandler
 		// text it contains gets changed.
 		// If there is no key delivered (KeyEvent.VK_UNDEFING), this part is ignored
 		// for faster execution.
-		if(textfield != null && !(keyStroke == KeyEvent.VK_UNDEFINED) && focused != null && focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnClick())
+		if(session.getFocusedTextfield() != null && !(keyStroke == KeyEvent.VK_UNDEFINED) && focused != null && focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnClick())
 		{
 			boolean isDeviceControlCode = display.getEventHandler().getKeyAdapter().isDeviceControlCode(keyStroke);
 
-			if(isDeviceControlCode && !textfield.isCursorAtEnd())
+			if(isDeviceControlCode && !session.getFocusedTextfield().isCursorAtEnd())
 			{
-				textfield.write((char) keyStroke);
+				session.getFocusedTextfield().write((char) keyStroke);
 			}
 			else
 			{
@@ -192,9 +192,9 @@ public class ComponentHandler
 				{
 					case KeyEvent.VK_BACK_SPACE:
 					{
-						if(!textfield.isCursorAtBeginning())
+						if(!session.getFocusedTextfield().isCursorAtBeginning())
 						{
-							textfield.eraseLastChar();
+							session.getFocusedTextfield().eraseLastChar();
 						}
 
 						break;
@@ -268,7 +268,7 @@ public class ComponentHandler
 					}
 				}
 
-				boolean isDoubleClickingWanted = !doubleClicked || focused.getLogic().isDoubleClickingAllowed();
+				boolean isDoubleClickingWanted = !session.isFocusedComponentDoubleClicked() || focused.getLogic().isDoubleClickingAllowed();
 
 				// Make sure the user cannot double click the same component multiple times if it is unwanted.
 				if(isDoubleClickingWanted)
@@ -340,6 +340,10 @@ public class ComponentHandler
 
 	private void resetLastFocus()
 	{
+		ComponentSession session = sessions.get(0);
+		
+		GComponent lastlyFocused = session.getLastlyFocusedComponent();
+		
 		// When hovering over something else the cursor is set to default.
 		display.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
@@ -396,6 +400,10 @@ public class ComponentHandler
 
 	private void triggerAnimation(GComponent focused, boolean clicking, Point mouseLocation)
 	{
+		ComponentSession session = sessions.get(0);
+		
+		GComponent lastlyFocused = session.getLastlyFocusedComponent();
+		
 		boolean sameComponentFocused = lastlyFocused != focused && lastlyFocused != null;
 		
 		if(focused != null)
@@ -428,7 +436,7 @@ public class ComponentHandler
 				}
 				case "textfield":
 				{
-					if(!doubleHovered)
+					if(!session.isFocusedComponentDoubleHovered())
 					{
 						// When hovering over a text-field the cursor is changed.
 						display.setCursor(new Cursor(Cursor.TEXT_CURSOR));
@@ -476,40 +484,46 @@ public class ComponentHandler
 
 	private void preEvaluateEvents(GComponent focused)
 	{
-		if(hoveredYet == focused)
+		ComponentSession session = sessions.get(0);
+		
+		if(session.getYetHoveredComponent() == focused)
 		{
-			this.doubleHovered = true;
+			session.setFocusedComponentDoubleHovered(true);
 		}
 		else
 		{
-			this.doubleHovered = false;
+			session.setFocusedComponentDoubleHovered(false);
 		}
 		
-		if(clickedYet == focused)
+		if(session.getYetClickedComponent() == focused)
 		{
-			this.doubleClicked = true;
+			session.setFocusedComponentDoubleClicked(true);
 		}
 	}
 
 	private void postEvaluateEvents(boolean clicking, GComponent focused)
 	{
+		ComponentSession session = sessions.get(0);
+		
 		if(clicking)
 		{
-			clickedYet = focused;
+			session.setYetClickedComponent(focused);
 		}
 		else
 		{
-			clickedYet = null;
-			doubleClicked = false;
+			session.setYetClickedComponent(null);
+			session.setFocusedComponentDoubleClicked(false);
 		}
 
-		hoveredYet = focused;
+		session.setYetHoveredComponent(focused);
 	}
 
 	// This will trigger the component where the user has performed an action at.
 	// Anyway, keep in mind that a component can only be triggered if it is also enabled (see 'isEnabled()' at GComponent).
 	private void triggerComponent()
 	{
+		ComponentSession session = sessions.get(0);
+		
 		GComponent focused = display.getEventHandler().getMouseAdapter().getFocusedComponent();
 
 		Point mouseLocation = display.getEventHandler().getMouseAdapter().getCursorLocation();
@@ -522,7 +536,7 @@ public class ComponentHandler
 		// In this case, the focus would get lost if you wouldn't consider this event here.
 		if(windowWasMoved)
 		{
-			focused = lastlyFocused;
+			focused = session.getLastlyFocusedComponent();
 		}
 
 		/*
@@ -560,6 +574,6 @@ public class ComponentHandler
 
 		postEvaluateEvents(clicking, focused);
 
-		lastlyFocused = focused;
+		session.setLastlyFocusedComponent(focused);
 	}
 }
