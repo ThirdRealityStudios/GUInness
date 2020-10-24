@@ -63,7 +63,7 @@ public class ComponentHandler
 			{
 				updateChangedLayers(display.getViewport());
 				
-				triggerComponent();
+				triggerComponent(display.getViewport());
 			}
 		};
 		
@@ -517,12 +517,48 @@ public class ComponentHandler
 
 		session.setYetHoveredComponent(focused);
 	}
+	
+	// Looks up the session which matches the corresponding Viewport.
+	private ComponentSession loadSession(Viewport context)
+	{
+		for(ComponentSession session : sessions)
+		{
+			if(session.getTrackedViewport() == context)
+			{
+				return session;
+			}
+		}
+		
+		// If no matching session to the given Viewport was found, it returns no session.
+		return null;
+	}
 
 	// This will trigger the component where the user has performed an action at.
 	// Anyway, keep in mind that a component can only be triggered if it is also enabled (see 'isEnabled()' at GComponent).
-	private void triggerComponent()
-	{
-		ComponentSession session = sessions.get(0);
+	private void triggerComponent(Viewport target)
+	{		
+		ComponentSession session = loadSession(target);
+		
+		boolean noSessionFound = session == null;
+		
+		if(noSessionFound)
+		{
+			// Looking whether the session belongs to a simulated Viewport.
+			// In this case, it always creates an own session.
+			if(target.isSimulated())
+			{
+				// Creates a new ComponentSession which will keep track of the components of the target Viewport.
+				session = new ComponentSession(target);
+				
+				// Adds the newly created session to the list. In the next cycle it will automatically be re-detected.
+				sessions.add(session);
+			}
+			else
+			{
+				// Uses the default session which is not related to any specific Viewport.
+				session = sessions.get(0);
+			}
+		}
 		
 		GComponent focused = display.getEventHandler().getMouseAdapter().getFocusedComponent();
 
