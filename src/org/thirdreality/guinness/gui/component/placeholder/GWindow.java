@@ -40,7 +40,7 @@ public abstract class GWindow extends GComponent
 	// To calculate it, you first you have remember the point when the window started to be re-moved,
 	// and this is where you go here... :
 	private Point movementOrigin = null;
-	
+
 	// This is the simulated viewport which you can apply per method setViewport(...).
 	// The Viewport is 100% compatible to the Viewport which is also applied to a Display (JFrame).
 	private Viewport viewport;
@@ -48,7 +48,7 @@ public abstract class GWindow extends GComponent
 	public GWindow(String title, Font titleFont, Rectangle window, GBorderProperty borderProperties, ArrayList<GComponent> components)
 	{
 		super("window");
-		
+
 		this.components = components;
 		
 		setLogic(new GLogic());
@@ -250,9 +250,9 @@ public abstract class GWindow extends GComponent
 	}
 	
 	public void setViewport(Viewport viewport)
-	{
+	{		
 		this.viewport = viewport;
-		
+
 		viewport.setOrigin(getStyle().getSecondaryLook().getBounds().getLocation());
 
 		// This will tell the window not to display / render components which are beyond the given measurements (a.k.a clipping area).

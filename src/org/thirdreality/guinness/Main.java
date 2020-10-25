@@ -30,6 +30,7 @@ import org.thirdreality.guinness.gui.design.Design;
 import org.thirdreality.guinness.gui.design.DesignColor;
 import org.thirdreality.guinness.gui.font.Font;
 import org.thirdreality.guinness.gui.layer.GLayer;
+import org.thirdreality.guinness.handler.EventHandler;
 
 public class Main
 {
@@ -145,7 +146,7 @@ public class Main
 		GBorderProperty borderProperties = new GBorderProperty(10, 5);
 		
 		// Tell the Viewport it is simulated (in a simulated display environment) by passing 'null' to its constructor.
-		viewportGWindow0 = new Viewport(null);
+		viewportGWindow0 = new Viewport(display.getEventHandler(), true);
 		
 		window0 = new GWindow("Sample window", smallerFont, windowRepresentation, borderProperties, null)
 		{
@@ -332,7 +333,7 @@ public class Main
 
 		display = new Display();
 
-		viewport = new Viewport(display.getEventHandler());
+		viewport = new Viewport(display.getEventHandler(), false);
 		viewport.setOffset(new Point(0, 75));
 		viewport.setScale(1f);
 
@@ -371,20 +372,17 @@ public class Main
 	public void setupGWindow0()
 	{
 		GLayer layer5 = new GLayer(0, true);
-		
+
 		Image imgMountain = ImageToolkit.loadImage(Path.ROOT_FOLDER + File.separator + "media" + File.separator + "samples" + File.separator + "MountainLake.jpg");
-		
+
 		GImage img0 = new GImage(new Point(), new Dimension(100, 365), imgMountain);
-		
+
 		layer5.add(img0);
-		
+
 		viewportGWindow0.addLayer(layer5);
-		
 		viewportGWindow0.addLayer(layer2_shared);
-		
+
 		window0.setViewport(viewportGWindow0);
-		
-		
 	}
 
 	public void run()

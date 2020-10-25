@@ -517,7 +517,7 @@ public class ComponentHandler
 
 		session.setYetHoveredComponent(focused);
 	}
-	
+
 	// Looks up the session which matches the corresponding Viewport.
 	private ComponentSession loadSession(Viewport context)
 	{
@@ -528,7 +528,7 @@ public class ComponentHandler
 				return session;
 			}
 		}
-		
+
 		// If no matching session to the given Viewport was found, it returns no session.
 		return null;
 	}
@@ -538,9 +538,9 @@ public class ComponentHandler
 	private void triggerComponent(Viewport target)
 	{
 		ComponentSession session = loadSession(target);
-		
+
 		boolean noSessionFound = session == null;
-		
+
 		if(noSessionFound)
 		{
 			// Looking whether the session belongs to a simulated Viewport.
@@ -549,7 +549,7 @@ public class ComponentHandler
 			{
 				// Creates a new ComponentSession which will keep track of the components of the target Viewport.
 				session = new ComponentSession(target);
-				
+
 				// Adds the newly created session to the list. In the next cycle it will automatically be re-detected.
 				sessions.add(session);
 			}
@@ -559,7 +559,7 @@ public class ComponentHandler
 				session = sessions.get(0);
 			}
 		}
-		
+
 		GComponent focused = display.getEventHandler().getMouseAdapter().getFocusedComponent(target);
 
 		Point mouseLocation = display.getEventHandler().getMouseAdapter().getCursorLocation();
@@ -611,17 +611,17 @@ public class ComponentHandler
 		postEvaluateEvents(clicking, focused);
 
 		session.setLastlyFocusedComponent(focused);
-		
+
 		// The session is actually closed from this point. No further changes are applied anymore..
 		// From this point it will only check whether there are other components (subroutines) which have to be run,
 		// e.g. handling the Viewport of a GWindow (simulated Viewport / component environment).
-		
+
 		boolean windowFocused = focused != null && focused.getType().contentEquals("window");
-		
+
 		if(windowFocused)
 		{
 			GWindow window = (GWindow) focused;
-			
+
 			if(window.hasViewport())
 			{
 				// Evaluate all components within the GWindow..
@@ -630,7 +630,10 @@ public class ComponentHandler
 				
 				for(GComponent component : windowViewport.getComponentOutput())
 				{
-					//triggerComponent(windowViewport);
+					if(false)
+					{
+						triggerComponent(windowViewport);
+					}
 				}
 			}
 		}

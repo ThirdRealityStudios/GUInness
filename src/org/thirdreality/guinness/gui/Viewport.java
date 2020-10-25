@@ -45,7 +45,7 @@ public class Viewport extends JPanel
 	// The Viewport will know it is simulated by just passing 'null' to the constructor when creating it.
 	// In this case, the event handling is fully taken over by the "real Viewport" which makes use of its EventHandler yet.
 	// That means on the other hand, an EventHandler can only be used with Displays, not with GWindows !
-	private boolean isSimulated = false;
+	private final boolean isSimulated;
 	
 	/* The origin can be set in order to apply an additional offset to the Viewport.
 	 * The origin is a special implementation in order to enable component content in GWindows.
@@ -68,20 +68,19 @@ public class Viewport extends JPanel
 	// This is used for pure evaluation whether a component is still inside the clipping area or not.
 	private Rectangle clippingRectangle;
 
-	public Viewport(EventHandler eventHandler)
+	public Viewport(EventHandler eventHandler, boolean isSimulated)
 	{
 		this.eventHandler = eventHandler;
-		
-		if(!isSimulated())
-		{
-			addMouseDetection();
-		}
-		
+
+		this.isSimulated = isSimulated;
+
+		addMouseDetection();
+
 		compBuffer = new CopyOnWriteArrayList<GComponent>();
 		compOutput = new GComponent[0];
-		
+
 		layers = new CopyOnWriteArrayList<GLayer>();
-		
+
 		updateClippingRectangle(new Dimension());
 	}
 
@@ -110,12 +109,12 @@ public class Viewport extends JPanel
 	// First, it is being waited until all (new and old) components have been read (again (for old components yet stored)).
 	// Only then the components are directly outputed by just changing the reference.
 	public void drawComponents(Graphics g)
-	{		
+	{
 		drawComponentsByArray(g, compOutput);
 	}
 
 	public void drawComponentsByArray(Graphics g, GComponent[] components)
-	{
+	{		
 		// Render all GUInness components.
 		for(GComponent edC : components)
 		{
@@ -208,14 +207,11 @@ public class Viewport extends JPanel
 		if(isValidPriority(layer))
 		{
 			layers.add(layer);
-			
+
 			layerModifications++;
-			
-			if(isSimulated())
-			{
-				updateComponentBuffer();
-				outputComponentBuffer();
-			}
+
+			updateComponentBuffer();
+			outputComponentBuffer();
 		}
 		else
 		{
@@ -232,13 +228,15 @@ public class Viewport extends JPanel
 		for (GLayer current : layers)
 		{
 			if(current.getUUID().toString().equals(uuid))
+			{
 				break;
+			}
 
 			index++;
 		}
 
 		layers.remove(index);
-		
+
 		layerModifications++;
 	}
 
@@ -302,7 +300,7 @@ public class Viewport extends JPanel
 
 	public boolean isSimulated()
 	{
-		return eventHandler == null;
+		return isSimulated;
 	}
 
 	public Point getOrigin()
@@ -324,7 +322,7 @@ public class Viewport extends JPanel
 	{
 		return compOutput.length;
 	}
-	
+
 	public GComponent[] getComponentOutput()
 	{
 		return compOutput;
@@ -361,7 +359,7 @@ public class Viewport extends JPanel
 		if(isSimulated())
 		{
 			clippingRectangle.setLocation(getOrigin());
-
+			
 			Rectangle componentBounds = component.getStyle().getPrimaryLook().getBounds();
 
 			Rectangle componentBoundsRelative = new Rectangle(new GIPoint(getOrigin()).add(getOffset()).add(componentBounds.getLocation()).toPoint(), componentBounds.getSize());

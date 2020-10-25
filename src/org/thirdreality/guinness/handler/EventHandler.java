@@ -22,9 +22,13 @@ public class EventHandler
 	public EventHandler(Display display)
 	{
 		if (display != null)
+		{
 			this.display = display;
+		}
 		else
+		{
 			throw new NullPointerException("Passed Display is null!");
+		}
 
 		// Initialize the MouseAdapter with the Display context.
 		// The Display context is needed for calculating front-end-window-related mouse data.
