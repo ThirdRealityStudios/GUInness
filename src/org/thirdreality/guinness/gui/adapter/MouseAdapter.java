@@ -7,9 +7,11 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
 import org.thirdreality.guinness.exec.LoopedThread;
+import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.feature.Timer;
 import org.thirdreality.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.guinness.gui.Display;
+import org.thirdreality.guinness.gui.Viewport;
 import org.thirdreality.guinness.gui.component.GComponent;
 import org.thirdreality.guinness.gui.layer.GLayer;
 
@@ -181,7 +183,7 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	// Tests if the cursor is on the position of a component.
 	// Meaning: Tests whether the mouse cursor (relative to the Display) is inside the given component.
 	// Returns 'false' if target is 'null'.
-	public boolean isFocusing(GComponent target)
+	public boolean isFocusing(Viewport source, GComponent target)
 	{
 		// If there is no component given,
 		// this method assumes no component was found,
@@ -191,12 +193,12 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 			return false;
 		}
 		
-		boolean isViewportAvailable = context.getViewport() != null;
+		boolean isViewportAvailable = source != null;
 		
 		// Loads the viewports offset if a Viewport is actually given by the Display yet.
-		Point viewportOffset = isViewportAvailable ? context.getViewport().getOffset() : new Point();
+		Point viewportOffset = isViewportAvailable ? source.getOffset() : new Point();
 		
-		float scale = isViewportAvailable && target.getStyle().isScalableForViewport() ? context.getViewport().getScale() : 1f;
+		float scale = isViewportAvailable && target.getStyle().isScalableForViewport() ? source.getScale() : 1f;
 		
 		/*
 		 *  This is just the relative component position in the JPanel (Viewport) which also regards the offset.
@@ -208,31 +210,31 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 		
 		Point absoluteComponentLocation = target.getStyle().getPrimaryLook().getBounds().getLocation();
 		
-		Point relativeComponentLocation = new Point(absoluteComponentLocation.x + viewportOffset.x, absoluteComponentLocation.y + viewportOffset.y);		
+		Point relativeComponentLocation = new GIPoint(absoluteComponentLocation).add(viewportOffset).add(source.getOrigin()).toPoint();		
 		
 		return ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(target.getStyle().getPrimaryLook(), target.getStyle().isMovableForViewport() ? relativeComponentLocation : absoluteComponentLocation), scale).contains(getCursorLocation());
 	}
 	
 	// Tests if the user is clicking a component.
-	public boolean isClicking(GComponent edT)
+	public boolean isClicking(Viewport source, GComponent component)
 	{
-		return isFocusing(edT) && isClicking();
+		return isFocusing(source, component) && isClicking();
 	}
 	
 	// Returns the first component which is focused by the cursor.
 	// Makes the UI more efficient by breaking at the first component already.
 	// Returns null if there is no such component.
-	public GComponent getFocusedComponent()
+	public GComponent getFocusedComponent(Viewport source)
 	{
 		GComponent firstMatch = null;
 		
-		if(context.getViewport() != null)
+		if(source != null)
 		{
-			for(GLayer layer : context.getViewport().getLayers())
+			for(GLayer layer : source.getLayers())
 			{
 				for(GComponent selected : layer.getComponentBuffer())
 				{
-					boolean insideComponent = isFocusing(selected);
+					boolean insideComponent = isFocusing(source, selected);
 					
 					// Returns the first component which is focused by the mouse cursor.
 					if(insideComponent)
@@ -255,13 +257,15 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	
 	// Checks whether the cursor is over any GUInness component.
 	// Should be avoided if used too often because of performance reasons.
-	public boolean isFocusingAny(ArrayList<String> exceptionalTypes)
+	public boolean isFocusingAny(Viewport source, ArrayList<String> exceptionalTypes)
 	{
-		boolean assigned = getFocusedComponent() != null;
+		GComponent focused = getFocusedComponent(source);
+		
+		boolean assigned = focused != null;
 		
 		for(String type : exceptionalTypes)
 		{
-			if(assigned && (getFocusedComponent().getType() == type))
+			if(assigned && (focused.getType().contentEquals(type)))
 			{
 				return false;
 			}

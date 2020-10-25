@@ -167,8 +167,7 @@ public class Main
 			@Override
 			public void onClick()
 			{
-				viewport.setScale(1);
-				System.out.println("Reduced scale to 1.00!");
+				
 			}
 			
 			@Override

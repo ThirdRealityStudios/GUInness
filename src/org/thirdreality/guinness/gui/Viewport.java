@@ -322,7 +322,12 @@ public class Viewport extends JPanel
 
 	public int sizeOfComponentOutput()
 	{
-		return compBuffer.size();
+		return compOutput.length;
+	}
+	
+	public GComponent[] getComponentOutput()
+	{
+		return compOutput;
 	}
 
 	public Dimension getClippingArea()

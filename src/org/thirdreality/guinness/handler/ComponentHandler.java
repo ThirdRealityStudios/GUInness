@@ -212,7 +212,7 @@ public class ComponentHandler
 			}
 
 			boolean isClickingAllowed = clicking && focused.getLogic().isInteractionAllowed() && focused.getLogic().isActingOnClick();
-			
+
 			if(isClickingAllowed) // ask whether it should run the onClick() method depending on whether it is wanted to interact or click on it.
 			{
 				// Interactions which do not regard whether it is double clicked
@@ -225,25 +225,25 @@ public class ComponentHandler
 						/*
 						 * The GWindow currently only supports offsets yet delivered by the corresponding Viewport.
 						 */
-						
+
 						GIPoint offset = window.getStyle().isMovableForViewport() ? new GIPoint(display.getViewport().getOffset()) : new GIPoint();
-						
+
 						Polygon outerArea = window.getStyle().getPrimaryLook();
 
-						outerArea = ShapeTransform.movePolygonTo(outerArea, offset.add(outerArea.getBounds().getLocation()).toPoint());
+						outerArea = ShapeTransform.movePolygonTo(outerArea, offset.copy().add(outerArea.getBounds().getLocation()).toPoint());
 
 						Polygon innerArea = window.getStyle().getSecondaryLook();
-						
-						innerArea = ShapeTransform.movePolygonTo(innerArea, offset.add(innerArea.getBounds().getLocation()).toPoint());
-						
+
+						innerArea = ShapeTransform.movePolygonTo(innerArea, offset.copy().add(innerArea.getBounds().getLocation()).toPoint());
+
 						Polygon exitButtonArea = window.getExitButton().getStyle().getPrimaryLook();
-						
-						exitButtonArea = ShapeTransform.movePolygonTo(exitButtonArea, offset.add(exitButtonArea.getBounds().getLocation()).toPoint());
-						
+
+						exitButtonArea = ShapeTransform.movePolygonTo(exitButtonArea, offset.copy().add(exitButtonArea.getBounds().getLocation()).toPoint());
+
 						Polygon minimizeButtonArea = window.getMinimizeButton().getStyle().getPrimaryLook();
-						
-						minimizeButtonArea = ShapeTransform.movePolygonTo(minimizeButtonArea, offset.add(minimizeButtonArea.getBounds().getLocation()).toPoint());
-						
+
+						minimizeButtonArea = ShapeTransform.movePolygonTo(minimizeButtonArea, offset.copy().add(minimizeButtonArea.getBounds().getLocation()).toPoint());
+
 						boolean focusedWindowBorderFirstTime = this.initialLoc == null && clicking && !innerArea.contains(mouseLocation) && !exitButtonArea.contains(mouseLocation) && !minimizeButtonArea.contains(mouseLocation);					
 
 						if(focusedWindowBorderFirstTime)
@@ -536,7 +536,7 @@ public class ComponentHandler
 	// This will trigger the component where the user has performed an action at.
 	// Anyway, keep in mind that a component can only be triggered if it is also enabled (see 'isEnabled()' at GComponent).
 	private void triggerComponent(Viewport target)
-	{		
+	{
 		ComponentSession session = loadSession(target);
 		
 		boolean noSessionFound = session == null;
@@ -560,7 +560,7 @@ public class ComponentHandler
 			}
 		}
 		
-		GComponent focused = display.getEventHandler().getMouseAdapter().getFocusedComponent();
+		GComponent focused = display.getEventHandler().getMouseAdapter().getFocusedComponent(target);
 
 		Point mouseLocation = display.getEventHandler().getMouseAdapter().getCursorLocation();
 
@@ -611,5 +611,28 @@ public class ComponentHandler
 		postEvaluateEvents(clicking, focused);
 
 		session.setLastlyFocusedComponent(focused);
+		
+		// The session is actually closed from this point. No further changes are applied anymore..
+		// From this point it will only check whether there are other components (subroutines) which have to be run,
+		// e.g. handling the Viewport of a GWindow (simulated Viewport / component environment).
+		
+		boolean windowFocused = focused != null && focused.getType().contentEquals("window");
+		
+		if(windowFocused)
+		{
+			GWindow window = (GWindow) focused;
+			
+			if(window.hasViewport())
+			{
+				// Evaluate all components within the GWindow..
+				
+				Viewport windowViewport = window.getViewport();
+				
+				for(GComponent component : windowViewport.getComponentOutput())
+				{
+					//triggerComponent(windowViewport);
+				}
+			}
+		}
 	}
 }

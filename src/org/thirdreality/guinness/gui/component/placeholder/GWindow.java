@@ -234,7 +234,6 @@ public abstract class GWindow extends GComponent
 		return titleAreaHeightPx;
 	}
 
-	
 	public Point getMovementOrigin()
 	{
 		return movementOrigin;
@@ -253,6 +252,8 @@ public abstract class GWindow extends GComponent
 	public void setViewport(Viewport viewport)
 	{
 		this.viewport = viewport;
+		
+		viewport.setOrigin(getStyle().getSecondaryLook().getBounds().getLocation());
 
 		// This will tell the window not to display / render components which are beyond the given measurements (a.k.a clipping area).
 		viewport.setClippingArea(new Dimension(getStyle().getSecondaryLook().getBounds().getSize()));
