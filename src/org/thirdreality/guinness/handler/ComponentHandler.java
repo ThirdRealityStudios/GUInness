@@ -611,23 +611,37 @@ public class ComponentHandler
 		postEvaluateEvents(clicking, focused);
 
 		session.setLastlyFocusedComponent(focused);
+		
+		// Evaluates a possible GWindow and tells you about it.
+		boolean wasWindowEvaluated = evaluateWindowComponents(focused);
 
+		// Skip the next instructions.
+		if(wasWindowEvaluated)
+		{
+			return;
+		}
+	}
+	
+	// Evaluates all components in a GWindow if the focused component is one.
+	// Also returns whether a GWindow was evaluated or not in order to know if the primary instructions have to be skipped (which would only evaluate the main Viewport).
+	private boolean evaluateWindowComponents(GComponent possibleWindow)
+	{
 		// The session is actually closed from this point. No further changes are applied anymore..
 		// From this point it will only check whether there are other components (subroutines) which have to be run,
 		// e.g. handling the Viewport of a GWindow (simulated Viewport / component environment).
 
-		boolean windowFocused = focused != null && focused.getType().contentEquals("window");
+		boolean windowFocused = possibleWindow != null && possibleWindow.getType().contentEquals("window");
 
 		if(windowFocused)
 		{
-			GWindow window = (GWindow) focused;
+			GWindow window = (GWindow) possibleWindow;
 
 			if(window.hasViewport())
 			{
 				// Evaluate all components within the GWindow..
 
 				Viewport windowViewport = window.getViewport();
-
+				
 				for(GComponent component : windowViewport.getComponentOutput())
 				{
 					if(windowViewport.isContained(component))
@@ -636,6 +650,10 @@ public class ComponentHandler
 					}
 				}
 			}
+
+			return true;
 		}
+
+		return false;
 	}
 }

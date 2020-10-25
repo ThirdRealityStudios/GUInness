@@ -10,12 +10,12 @@ import org.thirdreality.guinness.gui.component.placeholder.GWindow;
 
 public class SimulatedWindowDrawAdapter
 {
-	// This saves the offset of the viewport which is used by the display.
-	private Point displayViewpointOffset;
+	// This saves the Displays Viewport and uses its offset for the re-calculation of the origin.
+	private Viewport displayViewport;
 	
-	public SimulatedWindowDrawAdapter(Point displayViewportOffset)
+	public SimulatedWindowDrawAdapter(Viewport displayViewport)
 	{
-		this.displayViewpointOffset = displayViewportOffset;
+		this.displayViewport = displayViewport;
 	}
 	
 	// Draws the content for windows (for type GWindow).
@@ -27,23 +27,27 @@ public class SimulatedWindowDrawAdapter
 			drawSimulatedViewport(g, (GWindow) c);
 		}
 	}
+	
+	// Updates the origin of the simulated Viewport.
+	// The re-calculated origin is then used to render the Viewport and to recognize the interaction (via ComponentHandler) with all components correctly.
+	private void updateOriginOfSimulatedViewport(Viewport displayViewport, GWindow target)
+	{
+		// Tells the renderer (Viewport) afterwards to render its components at the given location (origin).
+		// In this case, it is the upper-left corner of the inner frame of the window.
+		Point originRecalculated = new GIPoint(target.getStyle().getSecondaryLook().getBounds().getLocation()).add(displayViewport.getOffset()).toPoint();
+		
+		target.getViewport().setOrigin(originRecalculated);
+	}
 
 	private void drawSimulatedViewport(Graphics context, GWindow target)
 	{
 		if(target.hasViewport())
 		{
-			// Save the prior origin and offset.
-			Point priorOrigin = target.getViewport().getOrigin();
-
-			// Tell the renderer (Viewport) to render its components at the given location (origin).
-			// In this case, it is the upper-left corner of the inner frame of the window.
-			target.getViewport().setOrigin(new GIPoint(target.getStyle().getSecondaryLook().getBounds().getLocation()).add(displayViewpointOffset).toPoint());
+			// Update the origin of the simulated Viewport to render all components correctly.
+			updateOriginOfSimulatedViewport(displayViewport, target);
 
 			// Now render here all components of the Viewport at the given origin (location),
 			renderEachComponent(context, target.getViewport());
-
-			// Reset the origin in order not to influence further drawings of other components different than GWindow.
-			target.getViewport().setOrigin(priorOrigin);
 		}
 	}
 

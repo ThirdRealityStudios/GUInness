@@ -364,9 +364,8 @@ public class Main
 		layer2_shared.add(gSB);
 		layer2_shared.add(rect);
 
-		layer3.add(window0);
-
-		layer4.add(window1);
+		//layer3.add(window1);
+		layer4.add(window0);
 	}
 	
 	public void setupGWindow0()

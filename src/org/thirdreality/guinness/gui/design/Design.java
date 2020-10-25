@@ -5,6 +5,8 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.io.Serializable;
 
+import org.thirdreality.guinness.gui.Display;
+import org.thirdreality.guinness.gui.Viewport;
 import org.thirdreality.guinness.gui.component.GComponent;
 import org.thirdreality.guinness.gui.component.style.property.GBorderProperty;
 import org.thirdreality.guinness.gui.component.style.property.GPaddingProperty;
@@ -64,7 +66,7 @@ public abstract class Design implements Serializable
 		return fL;
 	}
 	
-	public abstract void drawContext(Graphics g, GComponent c, Point origin, Point offset, float scale);
+	public abstract void drawContext(Graphics g, Viewport displayViewport, GComponent c, Point origin, Point offset, float scale);
 	
 	public abstract Polygon generateDefaultShape(GComponent c);
 	

@@ -7,6 +7,8 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import org.thirdreality.guinness.Meta;
 import org.thirdreality.guinness.feature.shape.ShapeMaker;
+import org.thirdreality.guinness.gui.Display;
+import org.thirdreality.guinness.gui.Viewport;
 import org.thirdreality.guinness.gui.component.GComponent;
 import org.thirdreality.guinness.gui.component.style.property.GBorderProperty;
 import org.thirdreality.guinness.gui.component.style.property.GPaddingProperty;
@@ -34,11 +36,11 @@ public class Classic extends Design
 		displayDrawAdapter = new DisplayDrawAdapter(this);
 	}
 	
-	public void drawContext(Graphics g, GComponent c, Point origin, Point offset, float scale)
+	public void drawContext(Graphics g, Viewport displayViewport, GComponent c, Point origin, Point offset, float scale)
 	{
-		if(windowDrawAdapter == null)
+		if(windowDrawAdapter == null && displayViewport != null)
 		{
-			windowDrawAdapter = new SimulatedWindowDrawAdapter(offset);
+			windowDrawAdapter = new SimulatedWindowDrawAdapter(displayViewport);
 		}
 		
 		displayDrawAdapter.drawContext(g, c, origin, offset, scale);

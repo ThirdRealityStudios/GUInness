@@ -116,11 +116,11 @@ public class Viewport extends JPanel
 	public void drawComponentsByArray(Graphics g, GComponent[] components)
 	{		
 		// Render all GUInness components.
-		for(GComponent edC : components)
+		for(GComponent component : components)
 		{
-			if(edC.getStyle().isVisible() && edC.isEnabled() && isContained(edC))
+			if(component.getStyle().isVisible() && component.isEnabled() && isContained(component))
 			{
-				edC.getStyle().getDesign().drawContext(g, edC, getOrigin(), getOffset(), getScale());
+				component.getStyle().getDesign().drawContext(g, this, component, getOrigin(), getOffset(), getScale());
 			}
 		}
 	}
