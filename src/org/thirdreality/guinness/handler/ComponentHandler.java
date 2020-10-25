@@ -625,12 +625,12 @@ public class ComponentHandler
 			if(window.hasViewport())
 			{
 				// Evaluate all components within the GWindow..
-				
+
 				Viewport windowViewport = window.getViewport();
-				
+
 				for(GComponent component : windowViewport.getComponentOutput())
 				{
-					if(false)
+					if(windowViewport.isContained(component))
 					{
 						triggerComponent(windowViewport);
 					}

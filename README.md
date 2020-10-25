@@ -68,8 +68,8 @@ so that's the challenge for me.
 
 
 # Stats / Nice To Know (as of 10/21/2020)
-- total lines of code: 4518 (counted them with "[cloc](https://github.com/AlDanial/cloc)")
-- code size: 178,7 kB
+- total lines of code: 4718 (counted them with "[cloc](https://github.com/AlDanial/cloc)")
+- code size: 190 kB
 
 
 # Already having used GUInness?

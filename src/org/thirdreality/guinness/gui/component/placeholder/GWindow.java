@@ -250,7 +250,7 @@ public abstract class GWindow extends GComponent
 	}
 	
 	public void setViewport(Viewport viewport)
-	{		
+	{
 		this.viewport = viewport;
 
 		viewport.setOrigin(getStyle().getSecondaryLook().getBounds().getLocation());
