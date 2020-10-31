@@ -150,10 +150,8 @@ public class ComponentHandler
 	private Point initialLoc = null;
 
 	// Is responsible for firing the implemented functions by the component.
-	private void triggerGeneralLogic(GComponent focused, boolean clicking, Point mouseLocation, int keyStroke)
+	private void triggerGeneralLogic(ComponentSession session, Viewport source, GComponent focused, boolean clicking, Point mouseLocation, int keyStroke)
 	{
-		ComponentSession session = sessions.get(0);
-		
 		if(clicking)
 		{
 			// relates to text-fields only.
@@ -226,7 +224,7 @@ public class ComponentHandler
 						 * The GWindow currently only supports offsets yet delivered by the corresponding Viewport.
 						 */
 
-						GIPoint offset = window.getStyle().isMovableForViewport() ? new GIPoint(display.getViewport().getOffset()) : new GIPoint();
+						GIPoint offset = window.getStyle().isMovableForViewport() ? new GIPoint(source.getOffset()) : new GIPoint();
 
 						Polygon outerArea = window.getStyle().getPrimaryLook();
 
@@ -257,7 +255,7 @@ public class ComponentHandler
 						{
 							GIPoint cursorDiff = new GIPoint(mouseLocation).sub(initialLoc);
 
-							GIPoint moved = new GIPoint(window.getStyle().getLocation()).add(cursorDiff);//.div(display.getViewport().getScale(), window.getStyle().isScalableForViewport());
+							GIPoint moved = new GIPoint(window.getStyle().getLocation()).add(cursorDiff);//.div(target.getScale(), window.getStyle().isScalableForViewport());
 
 							window.getStyle().setLocation(moved.toPoint());
 
@@ -295,20 +293,20 @@ public class ComponentHandler
 
 							for(int i = 0; i < shapeTable.size(); i++)
 							{
-								Point offset = display.getViewport() != null ? display.getViewport().getOffset() : new Point();
+								Point offset = source != null ? source.getOffset() : new Point();
+								
+								Point viewportRelative = new GIPoint(offset).add(source.getOrigin()).toPoint();
 								
 								Polygon rect0 = shapeTable.get(i)[0];
 								Polygon rect2 = shapeTable.get(i)[2];
 								
-								Point pos0 = new Point(rect0.getBounds().getLocation());
-								pos0.translate(offset.x, offset.y);
+								Point pos0 = new GIPoint(rect0.getBounds().getLocation()).add(viewportRelative).toPoint();
 
-								Point pos2 = new Point(rect2.getBounds().getLocation());
-								pos2.translate(offset.x, offset.y);
+								Point pos2 = new GIPoint(rect2.getBounds().getLocation()).add(viewportRelative).toPoint();
 								
-								boolean isViewportAvailable = display.getViewport() != null;
+								boolean isViewportAvailable = source != null;
 								
-								float scale = isViewportAvailable && focused.getStyle().isScalableForViewport() ? display.getViewport().getScale() : 1f;
+								float scale = isViewportAvailable && focused.getStyle().isScalableForViewport() ? source.getScale() : 1f;
 
 								// Creates two moved and scaled copies (by the global offset and scale factor).
 								Polygon transformed0 = ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(rect0, pos0), scale);
@@ -338,12 +336,10 @@ public class ComponentHandler
 		}
 	}
 
-	private void resetLastFocus()
+	private void resetLastFocus(ComponentSession session)
 	{
-		ComponentSession session = sessions.get(0);
-		
 		GComponent lastlyFocused = session.getLastlyFocusedComponent();
-		
+
 		// When hovering over something else the cursor is set to default.
 		display.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
@@ -373,12 +369,15 @@ public class ComponentHandler
 		}
 	}
 
-	private void triggerWindowButtonColor(GWindowButton windowButton, Point mouseLocation, boolean clicking)
+	private void triggerWindowButtonColor(Viewport source, GWindowButton windowButton, Point mouseLocation, boolean clicking)
 	{
 		boolean activeColorIsSame = windowButton.getStyle().getPrimaryColor().equals(windowButton.getClickColor());
 		boolean hoverColorIsSame = windowButton.getStyle().getPrimaryColor().equals(windowButton.getHoverColor());
 
-		if(display.getViewport().getPolygonRelativeToViewport(windowButton.getStyle().getPrimaryLook()).contains(mouseLocation))
+		Point windowButtonLocation = new GIPoint(windowButton.getStyle().getLocation()).add(source.getOrigin()).add(source.getOffset()).toPoint();
+		
+		// Asking for
+		if(ShapeTransform.movePolygonTo(windowButton.getStyle().getPrimaryLook(), windowButtonLocation).contains(mouseLocation))
 		{
 			if(clicking)
 			{
@@ -398,10 +397,8 @@ public class ComponentHandler
 		}
 	}
 
-	private void triggerAnimation(GComponent focused, boolean clicking, Point mouseLocation)
+	private void triggerAnimation(ComponentSession session, Viewport source, GComponent focused, boolean clicking, Point mouseLocation)
 	{
-		ComponentSession session = sessions.get(0);
-		
 		GComponent lastlyFocused = session.getLastlyFocusedComponent();
 		
 		boolean sameComponentFocused = lastlyFocused != focused && lastlyFocused != null;
@@ -457,8 +454,8 @@ public class ComponentHandler
 						updateChangedLayers(window.getViewport());
 					}
 					
-					triggerWindowButtonColor(window.getExitButton(), mouseLocation, clicking);
-					triggerWindowButtonColor(window.getMinimizeButton(), mouseLocation, clicking);
+					triggerWindowButtonColor(source, window.getExitButton(), mouseLocation, clicking);
+					triggerWindowButtonColor(source, window.getMinimizeButton(), mouseLocation, clicking);
 
 					break;
 				}
@@ -468,7 +465,7 @@ public class ComponentHandler
 					// Make sure the 'default' branch is executed only once.
 					if(sameComponentFocused)
 					{
-						resetLastFocus();
+						resetLastFocus(session);
 					}
 				}
 			}
@@ -477,15 +474,13 @@ public class ComponentHandler
 		{
 			if(lastlyFocused != null)
 			{
-				resetLastFocus();
+				resetLastFocus(session);
 			}
 		}
 	}
 
-	private void preEvaluateEvents(GComponent focused)
+	private void preEvaluateEvents(ComponentSession session, GComponent focused)
 	{
-		ComponentSession session = sessions.get(0);
-		
 		if(session.getYetHoveredComponent() == focused)
 		{
 			session.setFocusedComponentDoubleHovered(true);
@@ -501,10 +496,8 @@ public class ComponentHandler
 		}
 	}
 
-	private void postEvaluateEvents(boolean clicking, GComponent focused)
+	private void postEvaluateEvents(ComponentSession session, boolean clicking, GComponent focused)
 	{
-		ComponentSession session = sessions.get(0);
-		
 		if(clicking)
 		{
 			session.setYetClickedComponent(focused);
@@ -582,10 +575,10 @@ public class ComponentHandler
 		 */
 		if(focused != null && !focused.isEnabled())
 		{
-			preEvaluateEvents(focused);
+			preEvaluateEvents(session, focused);
 
 			// Pretend there was no component detected.
-			postEvaluateEvents(false, null);
+			postEvaluateEvents(session, false, null);
 
 			// The remaining part of the code is not executed.
 			return;
@@ -593,7 +586,7 @@ public class ComponentHandler
 
 		// If the execution goes until here, it will be triggered in the next steps.
 
-		preEvaluateEvents(focused);
+		preEvaluateEvents(session, focused);
 
 		boolean clicking = display.getEventHandler().getMouseAdapter().isClicking();
 
@@ -605,26 +598,19 @@ public class ComponentHandler
 		// reference) the KeyAdapter is always initialized and available.
 		int keyStroke = display.getEventHandler().getKeyAdapter().getActiveKey();
 
-		triggerGeneralLogic(focused, clicking, mouseLocation, keyStroke);
-		triggerAnimation(focused, clicking, mouseLocation);
+		triggerGeneralLogic(session, target, focused, clicking, mouseLocation, keyStroke);
+		triggerAnimation(session, target, focused, clicking, mouseLocation);
 
-		postEvaluateEvents(clicking, focused);
+		postEvaluateEvents(session, clicking, focused);
 
 		session.setLastlyFocusedComponent(focused);
-		
-		// Evaluates a possible GWindow and tells you about it.
-		boolean wasWindowEvaluated = evaluateWindowComponents(focused);
 
-		// Skip the next instructions.
-		if(wasWindowEvaluated)
-		{
-			return;
-		}
+		// Evaluates a possible GWindow.
+		evaluateWindowComponents(focused);
 	}
 	
-	// Evaluates all components in a GWindow if the focused component is one.
-	// Also returns whether a GWindow was evaluated or not in order to know if the primary instructions have to be skipped (which would only evaluate the main Viewport).
-	private boolean evaluateWindowComponents(GComponent possibleWindow)
+	// Evaluates all components in a GWindow if the given component is one.
+	private void evaluateWindowComponents(GComponent possibleWindow)
 	{
 		// The session is actually closed from this point. No further changes are applied anymore..
 		// From this point it will only check whether there are other components (subroutines) which have to be run,
@@ -641,7 +627,7 @@ public class ComponentHandler
 				// Evaluate all components within the GWindow..
 
 				Viewport windowViewport = window.getViewport();
-				
+
 				for(GComponent component : windowViewport.getComponentOutput())
 				{
 					if(windowViewport.isContained(component))
@@ -650,10 +636,6 @@ public class ComponentHandler
 					}
 				}
 			}
-
-			return true;
 		}
-
-		return false;
 	}
 }

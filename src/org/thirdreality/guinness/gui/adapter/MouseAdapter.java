@@ -242,7 +242,12 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 						// Make sure, if the component is ignored / unfocusable it is not recognized by its click or hover behavior.
 						if(selected.getLogic().isFocusable())
 						{
-							firstMatch = selected;
+							boolean focusingWindowContent = source.isSimulated() && selected != null;
+							
+							//if(!focusingWindowContent)
+							{
+								firstMatch = selected;
+							}
 						}
 						
 						break;
@@ -250,6 +255,7 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 				}
 			}
 		}
+		
 		
 		// Returns the first component which is focused by the mouse cursor.
 		return firstMatch;

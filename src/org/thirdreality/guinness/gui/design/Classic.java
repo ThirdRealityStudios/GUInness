@@ -7,7 +7,6 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import org.thirdreality.guinness.Meta;
 import org.thirdreality.guinness.feature.shape.ShapeMaker;
-import org.thirdreality.guinness.gui.Display;
 import org.thirdreality.guinness.gui.Viewport;
 import org.thirdreality.guinness.gui.component.GComponent;
 import org.thirdreality.guinness.gui.component.style.property.GBorderProperty;

@@ -27,6 +27,18 @@ public class Display extends JFrame
 
 		eH.start();
 	}
+	
+	public Display(Dimension size)
+	{
+		this();
+		
+		setSize(size);
+	}
+	
+	public Display(int width, int height)
+	{
+		this(new Dimension(width, height));
+	}
 
 	public void center()
 	{

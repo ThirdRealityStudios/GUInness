@@ -331,7 +331,7 @@ public class Main
 
 		design = new Classic(designColor, borderProperty, paddingProperty);
 
-		display = new Display();
+		display = new Display(1440, 1080);
 
 		viewport = new Viewport(display.getEventHandler(), false);
 		viewport.setOffset(new Point(0, 75));
@@ -387,8 +387,7 @@ public class Main
 	public void run()
 	{
 		display.setAlwaysOnTop(true);
-
-		display.setSize(800, 600);
+		
 		display.center();
 		display.setVisible(true);
 
