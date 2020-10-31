@@ -1,4 +1,4 @@
-**A simple API to make 2D game (engine) development easier and GUIs more customizable with Java☕️**
+**A simple API to make 2D game (engine) development easier and GUIs more customizable with pure Java☕️**
 
 
 If you want to test this API first, you can just download the binaries ("bin"-folder) and run the Main.class file.
