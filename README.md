@@ -15,7 +15,7 @@ Currently, the focus of the development goes on solidity and stability before an
 - for development of simple 2D games
 - for fast creation of GUI environments
 - for highly modifiable GUIs
-- as a lightweight alternative to the Swing library
+- as a lightweight alternative to the native Java GUI libraries
 
 
 # General Features
