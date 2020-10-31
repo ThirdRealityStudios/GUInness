@@ -17,6 +17,7 @@ import org.thirdreality.guinness.gui.component.decoration.GImage;
 import org.thirdreality.guinness.gui.component.decoration.GRectangle;
 import org.thirdreality.guinness.gui.component.input.GTextfield;
 import org.thirdreality.guinness.gui.component.placeholder.GWindow;
+import org.thirdreality.guinness.gui.component.placeholder.GWindowManager;
 import org.thirdreality.guinness.gui.component.selection.GCheckbox;
 import org.thirdreality.guinness.gui.component.selection.list.GSelectionBox;
 import org.thirdreality.guinness.gui.component.selection.list.GSelectionOption;
@@ -364,8 +365,13 @@ public class Main
 		layer2_shared.add(gSB);
 		layer2_shared.add(rect);
 
+		GWindowManager windowManager = new GWindowManager();
+		
+		windowManager.addWindow(window0);
+		//windowManager.addWindow(window1);
+		
 		//layer3.add(window1);
-		layer4.add(window0);
+		//layer4.add(window0);
 	}
 	
 	public void setupGWindow0()
@@ -380,6 +386,7 @@ public class Main
 
 		viewportGWindow0.addLayer(layer5);
 		viewportGWindow0.addLayer(layer2_shared);
+		viewportGWindow0.addLayer(layer1);
 
 		window0.setViewport(viewportGWindow0);
 	}

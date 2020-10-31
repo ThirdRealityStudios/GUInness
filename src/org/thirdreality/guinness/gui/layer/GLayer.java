@@ -14,9 +14,7 @@ import org.thirdreality.guinness.gui.design.Sample;
 public class GLayer implements Comparable<GLayer>, Serializable
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
-	
-	private UUID id;
-	
+
 	// Determine whether the layer should be enabled or not.
 	// If it's disabled, it is not just invisible but also you cannot interact with it anymore (including all components of course).
 	private boolean enabled = true;
@@ -54,8 +52,6 @@ public class GLayer implements Comparable<GLayer>, Serializable
 	// Used to initialize the base values in the constructor.
 	private void init(int priority, boolean visible)
 	{
-		id = UUID.randomUUID();
-
 		compBuffer = new CopyOnWriteArrayList<GComponent>();
 
 		this.priority = priority;
@@ -169,11 +165,6 @@ public class GLayer implements Comparable<GLayer>, Serializable
 		this.visible = visible;
 		
 		setAllComponentsVisible(visible);
-	}
-
-	public UUID getUUID()
-	{
-		return id;
 	}
 	
 	protected void setSize(Dimension size)

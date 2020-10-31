@@ -67,6 +67,9 @@ public class Viewport extends JPanel
 
 	// This is used for pure evaluation whether a component is still inside the clipping area or not.
 	private Rectangle clippingRectangle;
+	
+	// Saves the highest priority of all layers recognized in this Viewport.
+	private int priorityHighest;
 
 	public Viewport(EventHandler eventHandler, boolean isSimulated)
 	{
@@ -204,6 +207,10 @@ public class Viewport extends JPanel
 	{
 		if(isValidPriority(layer))
 		{
+			// This line is responsible for keeping the highest priority of all registered GLayers up-to-date.
+			// Do not replace this line with the method "updateHighestLayerPriority()" as it occupies a lot more CPU usage.
+			priorityHighest = Math.max(priorityHighest, layer.getPriority());
+
 			layers.add(layer);
 
 			layerModifications++;
@@ -217,15 +224,13 @@ public class Viewport extends JPanel
 		}
 	}
 
-	public void removeLayer(String uuid)
+	public void removeLayer(GLayer toRemove)
 	{
-		erase();
-
 		int index = 0;
 
-		for (GLayer current : layers)
+		for(GLayer current : layers)
 		{
-			if(current.getUUID().toString().equals(uuid))
+			if(current.hashCode() == toRemove.hashCode())
 			{
 				break;
 			}
@@ -234,8 +239,25 @@ public class Viewport extends JPanel
 		}
 
 		layers.remove(index);
+		
+		updateHighestLayerPriority();
 
 		layerModifications++;
+		
+		updateComponentBuffer();
+		outputComponentBuffer();
+	}
+	
+	private void updateHighestLayerPriority()
+	{
+		int priorityMax = 0;
+		
+		for(GLayer layer : layers)
+		{
+			priorityMax = Math.max(priorityMax, layer.getPriority());
+		}
+		
+		this.priorityHighest = priorityMax;
 	}
 
 	public CopyOnWriteArrayList<GLayer> getLayers()
@@ -368,5 +390,11 @@ public class Viewport extends JPanel
 		}
 
 		return true;
+	}
+	
+	// Returns the highest recognized priority of a layer in this Viewport.
+	public int getLayerHighestPriority()
+	{
+		return priorityHighest;
 	}
 }
