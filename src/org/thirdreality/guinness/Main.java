@@ -366,7 +366,7 @@ public class Main
 		layer2_shared.add(rect);
 
 		GWindowManager windowManager = new GWindowManager();
-		
+
 		windowManager.addWindow(window0);
 		//windowManager.addWindow(window1);
 		

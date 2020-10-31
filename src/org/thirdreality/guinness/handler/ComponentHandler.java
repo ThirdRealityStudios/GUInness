@@ -513,7 +513,8 @@ public class ComponentHandler
 
 	// Looks up the session which matches the corresponding Viewport.
 	private ComponentSession loadSession(Viewport context)
-	{
+	{		
+		// Looking here for an existing component session.
 		for(ComponentSession session : sessions)
 		{
 			if(session.getTrackedViewport() == context)
@@ -521,9 +522,29 @@ public class ComponentHandler
 				return session;
 			}
 		}
+		
+		// If execution goes until here, no corresponding session was found above.
+		
+		ComponentSession newlyCreatedSession = null;
+		
+		// Now it will look whether the Viewport is simulated.
+		// In this case, the Viewport receives its own session, as multiple GWindows should have their own component handling independent of the Displays Viewport.
+		if(context.isSimulated())
+		{
+			// Creates a new ComponentSession which will keep track of the components of the target Viewport.
+			newlyCreatedSession = new ComponentSession(context);
 
-		// If no matching session to the given Viewport was found, it returns no session.
-		return null;
+			// Adds the newly created session to the list. In the next cycle it will automatically be detected.
+			sessions.add(newlyCreatedSession);
+		}
+		else
+		{
+			// Uses the default session which belongs to the Displays Viewport.
+			// It will also be used in the next cycle.
+			newlyCreatedSession = sessions.get(0);
+		}
+		
+		return newlyCreatedSession;
 	}
 
 	// This will trigger the component where the user has performed an action at.
@@ -531,27 +552,6 @@ public class ComponentHandler
 	private void triggerComponent(Viewport target)
 	{
 		ComponentSession session = loadSession(target);
-
-		boolean noSessionFound = session == null;
-
-		if(noSessionFound)
-		{
-			// Looking whether the session belongs to a simulated Viewport.
-			// In this case, it always creates an own session.
-			if(target.isSimulated())
-			{
-				// Creates a new ComponentSession which will keep track of the components of the target Viewport.
-				session = new ComponentSession(target);
-
-				// Adds the newly created session to the list. In the next cycle it will automatically be re-detected.
-				sessions.add(session);
-			}
-			else
-			{
-				// Uses the default session which is not related to any specific Viewport.
-				session = sessions.get(0);
-			}
-		}
 
 		GComponent focused = display.getEventHandler().getMouseAdapter().getFocusedComponent(target);
 
