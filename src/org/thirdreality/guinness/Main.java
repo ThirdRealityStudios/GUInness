@@ -331,7 +331,7 @@ public class Main
 
 		design = new Classic(designColor, borderProperty, paddingProperty);
 
-		display = new Display(1440, 1080);
+		display = new Display(1280, 640);
 
 		viewport = new Viewport(display.getEventHandler(), false);
 		viewport.setOffset(new Point(0, 75));

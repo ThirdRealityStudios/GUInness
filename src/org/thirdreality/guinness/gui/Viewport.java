@@ -95,12 +95,10 @@ public class Viewport extends JPanel
 		repaint();
 	}
 
-	// In the beginning this will just draw a background.
-	// In the sample program, a GImage is used as a background.
-	// This is why you can't see the applied background color below in the code because it is overwritten by the GImage.
+	// In the beginning this will just draw a background color which will erase the content of the last draw cycle.
 	private void drawBackground(Graphics g)
 	{
-		g.setColor(Color.BLUE);
+		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 	}
 

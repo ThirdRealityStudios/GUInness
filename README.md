@@ -8,7 +8,7 @@ Currently, the focus of the development goes on solidity and stability before an
 
 
 # First Impression
-![Application sample](https://i.ibb.co/qdhZN4J/preview.png)
+![Application sample](https://i.ibb.co/pfdXF2L/Preview.png)
 
 
 # Uses of GUInness
@@ -31,14 +31,17 @@ Currently, the focus of the development goes on solidity and stability before an
 
 
 # Featured Components (ready-to-use)
-- text descriptions
+- descriptions
 - buttons (rectangle button / default)
 - polygon buttons (a special and dynamic shape button)
 - text-fields
 - check-boxes
 - selection-boxes (using radio buttons)
-- images / pictures
-- rectangles
+- images
+- rectangles (border thickness, radius etc.)
+- simulated windows for implementing multiple Viewports within one display**¹**
+
+**¹**useful for making menus, grouping components etc. (see picture above)
 
 
 # Planed Features
@@ -47,11 +50,8 @@ Currently, the focus of the development goes on solidity and stability before an
 - add simple background sound tracks
 - add video components
 - add ability for LOD levels depending on the current Viewport scale**¹**
-- add windows (frames) for use within the Viewport**²**
 
 **¹**especially for creating maps, games or browser-related content
-
-**²**useful for making menus, grouping components or similar stuff
 
 
 # Documentation
