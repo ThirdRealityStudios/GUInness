@@ -45,10 +45,16 @@ public abstract class GWindow extends GComponent
 	// The Viewport is 100% compatible to the Viewport which is also applied to a Display (JFrame).
 	private Viewport viewport;
 
+	// GWindows are prioritized, meaning the priority decides whether a window is on top of another (priority must greater) and the same principle goes for the other way around.
+	// Also, this variable is protected because it should only be used by the GWindowManager.
+	// The GWindowManager takes care of assigning a correct priority which also does not exist twice.
+	// The value -1 just means it wasn't assigned yet during runtime (for better error tracking and status checking if necessary).
+	protected int priority = -1;
+
 	public GWindow(String title, Font titleFont, Rectangle window, GBorderProperty borderProperties, ArrayList<GComponent> components)
 	{
 		super("window");
-
+		
 		this.components = components;
 		
 		setLogic(new GLogic());
@@ -262,5 +268,16 @@ public abstract class GWindow extends GComponent
 	public boolean hasViewport()
 	{
 		return viewport != null;
+	}
+	
+	public int getPriority()
+	{
+		return priority;
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj.hashCode() == this.hashCode();
 	}
 }

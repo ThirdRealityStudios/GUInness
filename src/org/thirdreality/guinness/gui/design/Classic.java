@@ -42,7 +42,7 @@ public class Classic extends Design
 			windowDrawAdapter = new SimulatedWindowDrawAdapter(displayViewport);
 		}
 		
-		displayDrawAdapter.drawContext(g, c, origin, offset, scale);
+		displayDrawAdapter.drawContext(g, displayViewport, c, origin, offset, scale);
 		
 		// Draws the content for windows (GWindows)
 		windowDrawAdapter.drawSimulatedContext(g, c);

@@ -142,7 +142,7 @@ public class Main
 	
 	private void initComponents()
 	{
-		Rectangle windowRepresentation = new Rectangle(new Point(0, 50), new Dimension(600, 400));
+		Rectangle windowRepresentation = new Rectangle(new Point(400, 0), new Dimension(600, 400));
 		
 		GBorderProperty borderProperties = new GBorderProperty(10, 5);
 		
@@ -257,7 +257,7 @@ public class Main
 		};
 
 		increaseScale.getLogic().setDoubleClickingAllowed(true);
-		
+
 		// These both settings are especially interesting for creating zoom-maps, browser-related content or similar stuff.
 		// It prevents the "increase scale button" (+) to be changed by the Viewport when scrolling or zooming in/out (as an example).
 		{
@@ -365,13 +365,28 @@ public class Main
 		layer2_shared.add(gSB);
 		layer2_shared.add(rect);
 
-		GWindowManager windowManager = new GWindowManager();
 
-		windowManager.addWindow(window0);
-		//windowManager.addWindow(window1);
+		display.getViewport().getWindowManager().addWindow(window1);
+		display.getViewport().getWindowManager().addWindow(window0);
 		
-		//layer3.add(window1);
-		//layer4.add(window0);
+		//System.out.println("> " + window0.getPriority());
+		
+		/*
+		System.out.println("size> " + display.getViewport().getWindowManager().getWindows().size());
+		System.out.println("min used priority> " + ((GLayer) display.getViewport().getWindowManager().getWindows().get(0)).getPriority() + " | hash: " + ((GLayer) display.getViewport().getWindowManager().getWindows().get(0)).hashCode());
+		System.out.println("max used priority> " + ((GLayer) display.getViewport().getWindowManager().getWindows().get(display.getViewport().getWindowManager().getWindows().size()-1)).getPriority() + " | hash: " + ((GLayer) display.getViewport().getWindowManager().getWindows().get(display.getViewport().getWindowManager().getWindows().size()-1)).hashCode());
+		windowManager.addWindow(window1);
+		*/
+		
+		//display.getViewport().getWindowManager().removeWindow(window0);
+		/*
+		System.out.println();
+		System.out.println("size> " + display.getViewport().getWindowManager().getWindows().size());
+		System.out.println("min used priority> " + ((GLayer) display.getViewport().getWindowManager().getWindows().get(0)).getPriority() + " | hash: " + ((GLayer) display.getViewport().getWindowManager().getWindows().get(0)).hashCode());
+		
+		display.getViewport().getWindowManager().addWindow(window0);
+		*/
+		
 	}
 	
 	public void setupGWindow0()
@@ -394,15 +409,15 @@ public class Main
 	public void run()
 	{
 		display.setAlwaysOnTop(true);
-		
+
 		display.center();
 		display.setVisible(true);
 
-		layer0 = new GLayer(0, true);
-		layer1 = new GLayer(1, true);
-		layer2_shared = new GLayer(2, true);
-		layer3 = new GLayer(4, true);
-		layer4 = new GLayer(5, true);
+		layer0 = new GLayer(10, true);
+		layer1 = new GLayer(11, true);
+		layer2_shared = new GLayer(12, true);
+		layer3 = new GLayer(13, true);
+		layer4 = new GLayer(14, true);
 
 		setupDisplayLayers();
 

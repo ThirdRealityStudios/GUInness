@@ -1,6 +1,7 @@
 package org.thirdreality.guinness.gui.adapter;
 
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -188,18 +189,11 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 		// If there is no component given,
 		// this method assumes no component was found,
 		// so the cursor is not over a component.
-		if(target == null)
+		if(target == null || source == null || (target != null && !target.getLogic().isInteractionAllowed()))
 		{
 			return false;
 		}
-		
-		boolean isViewportAvailable = source != null;
-		
-		// Loads the viewports offset if a Viewport is actually given by the Display yet.
-		Point viewportOffset = isViewportAvailable ? source.getOffset() : new Point();
-		
-		float scale = isViewportAvailable && target.getStyle().isScalableForViewport() ? source.getScale() : 1f;
-		
+
 		/*
 		 *  This is just the relative component position in the JPanel (Viewport) which also regards the offset.
 		 * 	Thus, this has a large effect on the component detection in the ComponentHander.
@@ -208,11 +202,45 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 		 *  there would be a difference between the real components position and what is displayed graphically with a transition on screen.
 		 */
 		
-		Point absoluteComponentLocation = target.getStyle().getPrimaryLook().getBounds().getLocation();
+		GIPoint originAppliedLoc = new GIPoint(target.getStyle().getPrimaryLook().getBounds().getLocation()).add(source.getOrigin());
+
+		Polygon originApplied = ShapeTransform.movePolygonTo(target.getStyle().getPrimaryLook(), originAppliedLoc.toPoint());
 		
-		Point relativeComponentLocation = new GIPoint(absoluteComponentLocation).add(viewportOffset).add(source.getOrigin()).toPoint();		
-		
-		return ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(target.getStyle().getPrimaryLook(), target.getStyle().isMovableForViewport() ? relativeComponentLocation : absoluteComponentLocation), scale).contains(getCursorLocation());
+		if(source.isSimulated())
+		{
+			return originApplied.contains(getCursorLocation());
+		}
+		else
+		{
+			if(target.getStyle().isMovableForViewport())
+			{				
+				Polygon offsetApplied = ShapeTransform.movePolygonTo(originApplied, originAppliedLoc.add(source.getOffset()).toPoint());
+				
+				if(target.getStyle().isScalableForViewport())
+				{
+					Polygon scaleApplied = ShapeTransform.scalePolygon(offsetApplied, source.getScale());
+					
+					return scaleApplied.contains(getCursorLocation());
+				}
+				else
+				{
+					return offsetApplied.contains(getCursorLocation());
+				}
+			}
+			else
+			{
+				if(target.getStyle().isScalableForViewport())
+				{
+					Polygon scaleApplied = ShapeTransform.scalePolygon(originApplied, source.getScale());
+					
+					return scaleApplied.contains(getCursorLocation());
+				}
+				else
+				{
+					return originApplied.contains(getCursorLocation());
+				}
+			}
+		}
 	}
 	
 	// Tests if the user is clicking a component.
@@ -230,9 +258,7 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 		
 		if(source != null)
 		{
-			for(GLayer layer : source.getLayers())
-			{
-				for(GComponent selected : layer.getComponentBuffer())
+				for(GComponent selected : source.getComponentOutput())
 				{
 					boolean insideComponent = isFocusing(source, selected);
 					
@@ -242,17 +268,12 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 						// Make sure, if the component is ignored / unfocusable it is not recognized by its click or hover behavior.
 						if(selected.getLogic().isFocusable())
 						{
-							boolean focusingWindowContent = source.isSimulated() && selected != null;
-							
-							//if(!focusingWindowContent)
-							{
-								firstMatch = selected;
-							}
+							firstMatch = selected;
 						}
 						
 						break;
 					}
-				}
+			
 			}
 		}
 		

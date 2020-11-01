@@ -80,14 +80,12 @@ public class ComponentHandler
 	// This is in the end a safe method, meaning it checks whether 'target' is 'null'.
 	public void updateChangedLayers(Viewport target)
 	{
-		if(display.hasViewport())
+		if(target != null)
 		{
-			Viewport viewport = display.getViewport();
-
-			if(viewport.getLayerModifications() > 0)
+			if(target.getLayerModifications() > 0)
 			{
-				viewport.updateComponentBuffer();
-				viewport.outputComponentBuffer();
+				target.updateComponentBuffer();
+				target.outputComponentBuffer();
 			}
 		}
 	}
@@ -358,7 +356,7 @@ public class ComponentHandler
 
 				window.getExitButton().getStyle().setPrimaryColor(window.getExitButton().getDefaultColor());
 				window.getMinimizeButton().getStyle().setPrimaryColor(window.getMinimizeButton().getDefaultColor());
-				
+
 				break;
 			}
 
@@ -554,7 +552,7 @@ public class ComponentHandler
 		ComponentSession session = loadSession(target);
 
 		GComponent focused = display.getEventHandler().getMouseAdapter().getFocusedComponent(target);
-
+		
 		Point mouseLocation = display.getEventHandler().getMouseAdapter().getCursorLocation();
 
 		boolean windowWasMoved = initialLoc != null;
@@ -569,7 +567,7 @@ public class ComponentHandler
 		}
 
 		/*
-		 *  WARNING! The code below must be executed only under certain circumstances ! ! !
+		 *  WARNING! The codtriggerComponente below must be executed only under certain circumstances ! ! !
 		 *  
 		 *  Make sure the UI is only treated / handled when the component is also enabled if you create your own component type (modification).
 		 */

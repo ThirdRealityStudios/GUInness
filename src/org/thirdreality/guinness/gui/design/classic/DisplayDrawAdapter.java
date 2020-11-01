@@ -3,7 +3,6 @@ package org.thirdreality.guinness.gui.design.classic;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
@@ -15,8 +14,8 @@ import org.thirdreality.guinness.feature.GIDimension;
 import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.guinness.feature.shape.ShapeTransform;
+import org.thirdreality.guinness.gui.Viewport;
 import org.thirdreality.guinness.gui.component.GComponent;
-import org.thirdreality.guinness.gui.component.decoration.GPath;
 import org.thirdreality.guinness.gui.component.decoration.GRectangle;
 import org.thirdreality.guinness.gui.component.placeholder.GWindow;
 import org.thirdreality.guinness.gui.component.selection.GCheckbox;
@@ -28,6 +27,8 @@ import org.thirdreality.guinness.gui.font.Font;
 public class DisplayDrawAdapter
 {
 	private Point offset;
+	
+	private Point origin;
 
 	private float scale;
 
@@ -39,10 +40,14 @@ public class DisplayDrawAdapter
 	}
 
 	// Every design has its own draw method in order to know how to draw each component.
-	// This is a "pre-method".
-	public void drawContext(Graphics g, GComponent c, Point origin, Point offset, float scale)
+	// This is a "pre-defined method".
+	// Also note! The Viewport given here is only used in order to check things like, whether the context is drawn in a GWindow etc.
+	// Simulated viewports are hereby very restricted, especially if it's about the ability of whether a component is movable or not.
+	// The draw adapter doesn't care then because this feature is only supported within the Displays Viewport.
+	public void drawContext(Graphics g, Viewport target, GComponent c, Point origin, Point offset, float scale)
 	{
-		this.offset = new GIPoint(offset).add(origin).toPoint();
+		this.offset = offset;
+		this.origin = origin;
 		this.scale = scale;
 
 		// For the case there is an image supplied to the GComponent object,
@@ -81,8 +86,7 @@ public class DisplayDrawAdapter
 
 			case "textfield":
 			{
-					
-				drawTextfield(g, c);
+				drawTextfield(g, target, c);
 
 				break;
 			}
@@ -114,7 +118,7 @@ public class DisplayDrawAdapter
 
 				getDesign().getDesignColor().setBorderColor(c.getStyle().getPrimaryColor().darker().darker());
 
-				drawGeneralField(g, c);
+				drawGeneralField(g, target, c);
 
 				getDesign().getDesignColor().setBorderColor(temp);
 
@@ -149,12 +153,11 @@ public class DisplayDrawAdapter
 			// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
 			float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
 			
-			int x = (int) ((c.getStyle().isMovableForViewport() ? rectangle.getBounds().x + getOffset().x : rectangle.getBounds().x) * scale);
-			int y = (int) ((c.getStyle().isMovableForViewport() ? rectangle.getBounds().y + getOffset().y : rectangle.getBounds().y) * scale);
+			Point rectLoc = new GIPoint(rectangle.getBounds().getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(scale).toPoint();
 
 			if(rectangle.getBounds() != null)
 			{
-				g.fillPolygon(ShapeTransform.movePolygonTo(ShapeTransform.scalePolygon(rectangle, scale), x, y));
+				g.fillPolygon(ShapeTransform.movePolygonTo(ShapeTransform.scalePolygon(rectangle, scale), rectLoc));
 			}
 		}
 		// If it's not a GRectangle just draw the shape if there is one. Anyway, you can do less things here..
@@ -167,12 +170,11 @@ public class DisplayDrawAdapter
 			// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
 			float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
 			
-			int x = (int) ((c.getStyle().isMovableForViewport() ? shape.x + getOffset().x : shape.x) * scale);
-			int y = (int) ((c.getStyle().isMovableForViewport() ? shape.y + getOffset().y : shape.y) * scale);
+			Point rectLoc = new GIPoint(shape.getBounds().getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(scale).toPoint();
 			
 			if(shape != null)
 			{
-				g.fillRect(x, y, (int) (shape.width * scale), (int) (shape.height * scale));
+				g.fillRect(rectLoc.x, rectLoc.y, (int) (shape.width * scale), (int) (shape.height * scale));
 			}
 		}
 	}
@@ -182,7 +184,7 @@ public class DisplayDrawAdapter
 		// Represents simply the outer bounds of the component.
 		Rectangle bounds = c.getStyle().getPrimaryLook().getBounds();
 		
-		Point descLoc = new GIPoint(bounds.getLocation()).add(getDesign().getPaddingProperty().getInnerThickness()).add(getDesign().getBorderProperty().getBorderThicknessPx()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
+		Point descLoc = new GIPoint(bounds.getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).add(getDesign().getPaddingProperty().getInnerThickness()).add(getDesign().getBorderProperty().getBorderThicknessPx()).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
 		
 		Font original = c.getStyle().getFont();
 		Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
@@ -198,16 +200,18 @@ public class DisplayDrawAdapter
 		// Uses the correct scale depending on whether Viewport scaling is generally wanted by the component.
 		float scale = c.getStyle().isScalableForViewport() ? this.scale : 1f;
 		
-		int x = (int) ((bounds.getLocation().x + (c.getStyle().isMovableForViewport() ? getOffset().x : 0)) * scale);
-		int y = (int) ((bounds.getLocation().y + (c.getStyle().isMovableForViewport() ? getOffset().y : 0)) * scale);
-		
-		g.drawImage(c.getStyle().getImage(), x, y, (int) (bounds.width * scale), (int) (bounds.height * scale), null);
+		Point imgLoc = new GIPoint(bounds.getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(scale).toPoint();
+
+		g.drawImage(c.getStyle().getImage(), imgLoc.x, imgLoc.y, (int) (bounds.width * scale), (int) (bounds.height * scale), null);
 	}
 	
 	// Needs to be updated with offset and scale ability from the Viewports settings.
+	// Not working currently! Will be replaced soon by another better method which will just draw or fill polygons with multiple overlappings, intersections or joins.
 	@Deprecated
 	private void drawPath(Graphics g, GComponent c)
 	{
+		// Dead code
+		/*
 		GPath path = (GPath) c;
 
 		Graphics2D g2d = (Graphics2D) g;
@@ -222,20 +226,18 @@ public class DisplayDrawAdapter
 		{
 			g2d.draw(path.getPath());
 		}
+		*/
 	}
 	
-	private void drawTextfield(Graphics g, GComponent c)
+	private void drawTextfield(Graphics g, Viewport target, GComponent c)
 	{
-		drawGeneralField(g, c);
+		drawGeneralField(g, target, c);
 	}
 	
 	private void drawCheckbox(Graphics g, GComponent c)
 	{
 		GCheckbox checkbox = (GCheckbox) c;
-		
-		boolean isScalable = c.getStyle().isScalableForViewport();
-		boolean isMovable = c.getStyle().isMovableForViewport();
-		
+
 		// Represents simply the outer bounds of the component.
 		Rectangle bounds = c.getStyle().getPrimaryLook().getBounds();
 		
@@ -243,16 +245,16 @@ public class DisplayDrawAdapter
 		Dimension outerSize = new Dimension(bounds.width, bounds.width);
 		Dimension innerSize = new Dimension(outerSize.width - getDesign().getPaddingProperty().getInnerThickness(), outerSize.width - getDesign().getPaddingProperty().getInnerThickness());
 		
-		Point locOuter = new GIPoint(bounds.getLocation()).add(getOffset(), isMovable).toPoint();
+		Point locOuter = new GIPoint(bounds.getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).toPoint();
 		Point locInner = new GIPoint(locOuter).add(getDesign().getBorderProperty().getBorderThicknessPx()).toPoint();
 		
 		
 		
-		Point locOuterScaled = new GIPoint(locOuter).mul(getScale(), isScalable).toPoint();
-		Point locInnerScaled = new GIPoint(locInner).mul(getScale(), isScalable).toPoint();
+		Point locOuterScaled = new GIPoint(locOuter).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
+		Point locInnerScaled = new GIPoint(locInner).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
 
-		Dimension outerSizeScaled = new GIDimension(outerSize).mul(getScale(), isScalable);
-		Dimension innerSizeScaled = new GIDimension(innerSize).mul(getScale(), isScalable);
+		Dimension outerSizeScaled = new GIDimension(outerSize).mul(getScale(), c.getStyle().isScalableForViewport());
+		Dimension innerSizeScaled = new GIDimension(innerSize).mul(getScale(), c.getStyle().isScalableForViewport());
 
 		g.setColor(getDesign().getDesignColor().getBorderColor());
 
@@ -276,17 +278,15 @@ public class DisplayDrawAdapter
 				sizePx *= getScale();
 			}
 			
-			Point imgLoc = new GIPoint(locInner).add(getDesign().getBorderProperty().getBorderThicknessPx()).mul(getScale(), isScalable).toPoint();
+			Point imgLoc = new GIPoint(locInner).add(getDesign().getBorderProperty().getBorderThicknessPx()).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
 			
 			g.drawImage(checkSymbol, imgLoc.x, imgLoc.y, sizePx, sizePx, null);
 		}
 	}
 	
+	// Work on this (text displaying)!
 	private void drawSelectionBox(Graphics g, GComponent c)
-	{
-		boolean isScalable = c.getStyle().isScalableForViewport();
-		boolean isMovable = c.getStyle().isMovableForViewport();
-		
+	{		
 		GSelectionBox selectionBox = (GSelectionBox) c;
 
 		drawRectangle(g, selectionBox);
@@ -297,17 +297,15 @@ public class DisplayDrawAdapter
 		for(int i = 0; i < shapeTable.size(); i++)
 		{
 			GSelectionOption option = selectionBox.getOptions().get(i);
-			
+
 			Polygon optionShape = new Polygon(shapeTable.get(i)[0].xpoints, shapeTable.get(i)[0].ypoints, shapeTable.get(i)[0].npoints);
 			Polygon titleShape = new Polygon(shapeTable.get(i)[2].xpoints, shapeTable.get(i)[2].ypoints, shapeTable.get(i)[2].npoints);
-			
-			if(isMovable)
-			{
-				optionShape.translate(getOffset().x, getOffset().y);
-				titleShape.translate(getOffset().x, getOffset().y);
-			}
-			
-			if(isScalable)
+
+			// Move the options to the Viewport relative position.
+			optionShape = ShapeTransform.movePolygonTo(optionShape, new GIPoint(optionShape.getBounds().getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).toPoint());
+			titleShape = ShapeTransform.movePolygonTo(titleShape, new GIPoint(titleShape.getBounds().getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).toPoint());
+
+			if(c.getStyle().isScalableForViewport())
 			{
 				optionShape = ShapeTransform.scalePolygon(optionShape, getScale());
 				titleShape = ShapeTransform.scalePolygon(titleShape, getScale());
@@ -321,7 +319,7 @@ public class DisplayDrawAdapter
 			{
 				g.drawImage(selectionBox.getIcons()[0], optionShape.getBounds().x, optionShape.getBounds().y, optionShape.getBounds().width, optionShape.getBounds().height, null);
 			}
-			
+
 			// Every option can have a background color..
 			Color optionColor = option.getStyle().getPrimaryColor();
 
@@ -344,18 +342,17 @@ public class DisplayDrawAdapter
 	
 	protected void drawPolyButton(Graphics g, GComponent c)
 	{
-		// Represents simply the outer bounds of the component.
-		Rectangle bounds = c.getStyle().getPrimaryLook().getBounds();
-
 		Polygon look = c.getStyle().getPrimaryLook();
+		
+		// Represents simply the outer bounds of the component.
+		Rectangle bounds = look.getBounds();
 
 		g.setColor(c.getStyle().getPrimaryColor());
 
-		int xButton = (int) (look.getBounds().x + (c.getStyle().isMovableForViewport() ? getOffset().x : 0));
-		int yButton = (int) (look.getBounds().y + (c.getStyle().isMovableForViewport() ? getOffset().y : 0));
+		Point buttonLoc = new GIPoint(bounds.getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).toPoint();
 
 		// Here it is only working with a copy in order not to modify the original object (polygon and Polybutton).
-		Polygon transformedCopy = ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(look, xButton, yButton), scale);
+		Polygon transformedCopy = ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(look, buttonLoc), scale);
 		g.fillPolygon(transformedCopy);
 
 		// If text should be displayed in the center of the component.
@@ -381,19 +378,23 @@ public class DisplayDrawAdapter
 		}
 	}
 
-	protected void drawGeneralField(Graphics g, GComponent c)
-	{		
+	protected void drawGeneralField(Graphics g, Viewport target, GComponent c)
+	{
 		Polygon background = c.getStyle().getPrimaryLook();
-
-		Point backgroundLoc = new GIPoint(background.getBounds().getLocation()).add(getOffset(), c.getStyle().isMovableForViewport()).toPoint();
+		
+		Point backgroundLoc = new GIPoint(background.getBounds().getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).toPoint();
 
 		background = ShapeTransform.movePolygonTo(background, backgroundLoc);
-		background = ShapeTransform.scalePolygon(background, c.getStyle().isScalableForViewport() ? getScale() : 1f);
+
+		if(c.getStyle().isScalableForViewport())
+		{
+			background = ShapeTransform.scalePolygon(background, getScale());
+		}
 
 		g.setColor(getDesign().getDesignColor().getBorderColor());
 		g.fillPolygon(background);
 
-		
+
 
 		Dimension frontDimension = new GIDimension(c.getStyle().getLength() * c.getStyle().getFont().getFontSize(), c.getStyle().getFont().getFontSize()).add(2*getDesign().getPaddingProperty().getInnerThickness());
 
@@ -406,7 +407,7 @@ public class DisplayDrawAdapter
 		g.setColor(c.getStyle().getPrimaryColor());
 		g.fillPolygon(front);
 
-		
+
 
 		Point text = new GIPoint(backgroundLoc).add(getDesign().getBorderProperty().getBorderThicknessPx()).add(getDesign().getPaddingProperty().getInnerThickness()).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
 
@@ -497,6 +498,11 @@ public class DisplayDrawAdapter
 	public void setDesign(Design design)
 	{
 		this.design = design;
+	}
+	
+	public Point getOrigin()
+	{
+		return origin;
 	}
 
 	public Point getOffset()

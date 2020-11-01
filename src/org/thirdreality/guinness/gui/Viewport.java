@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.guinness.gui.component.GComponent;
+import org.thirdreality.guinness.gui.component.placeholder.GWindow;
+import org.thirdreality.guinness.gui.component.placeholder.GWindowManager;
 import org.thirdreality.guinness.gui.layer.GLayer;
 import org.thirdreality.guinness.handler.EventHandler;
 
@@ -70,6 +72,8 @@ public class Viewport extends JPanel
 	
 	// Saves the highest priority of all layers recognized in this Viewport.
 	private int priorityHighest;
+	
+	private GWindowManager windowManager;
 
 	public Viewport(EventHandler eventHandler, boolean isSimulated)
 	{
@@ -85,6 +89,14 @@ public class Viewport extends JPanel
 		layers = new CopyOnWriteArrayList<GLayer>();
 
 		updateClippingRectangle(new Dimension());
+		
+		// Makes sure, it is being checked whether a window manager can be used at all.
+		// A window manager cannot be used for example, when you use a Viewport for a GWindow (because it is simulated then).
+		// More precisely, simulated Viewports do not support multiple GWindows within each other which is why there is such a restriction.
+		if(!isSimulated())
+		{
+			windowManager = new GWindowManager(this);
+		}
 	}
 
 	// The most important method for displaying all components and graphics.
@@ -115,10 +127,12 @@ public class Viewport extends JPanel
 	}
 
 	public void drawComponentsByArray(Graphics g, GComponent[] components)
-	{		
+	{
 		// Render all GUInness components.
-		for(GComponent component : components)
+		for(int i = components.length - 1; i >= 0; i--)
 		{
+			GComponent component = components[i];
+			
 			if(component.getStyle().isVisible() && component.isEnabled() && isContained(component))
 			{
 				component.getStyle().getDesign().drawContext(g, this, component, getOrigin(), getOffset(), getScale());
@@ -161,7 +175,7 @@ public class Viewport extends JPanel
 	// Is very inefficient if it's called frequently.
 	public synchronized void updateComponentBuffer()
 	{
-		erase(); // If buggy, re-instantiate
+		erase(); // If buggy, re-instantiate the list.
 
 		Collections.sort(layers);
 
@@ -224,7 +238,7 @@ public class Viewport extends JPanel
 		}
 	}
 
-	public void removeLayer(GLayer toRemove)
+	public GLayer removeLayer(GLayer toRemove)
 	{
 		int index = 0;
 
@@ -238,7 +252,7 @@ public class Viewport extends JPanel
 			index++;
 		}
 
-		layers.remove(index);
+		GLayer removed = layers.remove(index);
 		
 		updateHighestLayerPriority();
 
@@ -246,6 +260,8 @@ public class Viewport extends JPanel
 		
 		updateComponentBuffer();
 		outputComponentBuffer();
+		
+		return removed;
 	}
 	
 	private void updateHighestLayerPriority()
@@ -287,7 +303,7 @@ public class Viewport extends JPanel
 	// This method is definitely recommended when you need high precision,
 	// though its frequent execution could cause a worse impact on the performance (remind floating point calculations and object creation).
 	public Point.Float getRelativeOffset()
-	{		
+	{
 		return new Point.Float(getScale() * getOffset().x, getScale() * getOffset().y);
 	}
 
@@ -391,10 +407,18 @@ public class Viewport extends JPanel
 
 		return true;
 	}
-	
+
 	// Returns the highest recognized priority of a layer in this Viewport.
 	public int getLayerHighestPriority()
 	{
 		return priorityHighest;
+	}
+
+	// Returns the window manager responsible for this Viewport.
+	// There is no window manager returned when this Viewport is simulated (see initialization in constructor).
+	// This should ensure that you do not even try to work with GWindows within GWindows because this feature is not supported currently.
+	public GWindowManager getWindowManager()
+	{
+		return windowManager;
 	}
 }

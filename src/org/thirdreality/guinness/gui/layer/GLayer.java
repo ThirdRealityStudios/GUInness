@@ -128,6 +128,11 @@ public class GLayer implements Comparable<GLayer>, Serializable
 			throw new IllegalArgumentException("Tried to add a component to the position of another component (intersection).\nMore details:\n" + comp);
 		}
 	}
+	
+	public boolean remove(GComponent comp)
+	{
+		return compBuffer.remove(comp);
+	}
 
 	public int getPriority()
 	{
@@ -136,6 +141,11 @@ public class GLayer implements Comparable<GLayer>, Serializable
 
 	public void setPriority(int priority)
 	{
+		if(compBuffer.size() > 0 && compBuffer.get(0) != null && compBuffer.get(0).getType().contentEquals("window"))
+		{
+			System.out.println("Changed priority of window layer! " + getPriority() + " -> " + priority);
+		}
+		
 		this.priority = priority;
 	}
 	
@@ -185,11 +195,9 @@ public class GLayer implements Comparable<GLayer>, Serializable
 	}
 
 	@Override
-	public int compareTo(GLayer o)
+	public int compareTo(GLayer layer)
 	{
-		GLayer comp = (GLayer) o;
-
-		return this.getPriority() - comp.getPriority();
+		return layer.getPriority() - this.getPriority();
 	}
 
 	public Design getDesign()
