@@ -186,20 +186,20 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 	// Returns 'false' if target is 'null'.
 	public boolean isFocusing(Viewport source, GComponent target)
 	{
-		// If there is no component given,
+		// If there is no component given or interaction is forbidden,
 		// this method assumes no component was found,
-		// so the cursor is not over a component.
+		// pretending the cursor is not over a component.
 		if(target == null || source == null || (target != null && !target.getLogic().isInteractionAllowed()))
 		{
 			return false;
 		}
 
 		/*
-		 *  This is just the relative component position in the JPanel (Viewport) which also regards the offset.
-		 * 	Thus, this has a large effect on the component detection in the ComponentHander.
-		 * 
-		 * 	If you wouldn't regard / include the offset,
-		 *  there would be a difference between the real components position and what is displayed graphically with a transition on screen.
+		 *  Below there are variables and control statements which calculate the correct position of a component,
+		 *  regarding the offset and scale as well as origin location of the given Viewport.
+		 *
+		 * 	If you wouldn't regard these aspects / values,
+		 *  there would be a huge difference between the real components position and what is displayed on screen.
 		 */
 		
 		GIPoint originAppliedLoc = new GIPoint(target.getStyle().getPrimaryLook().getBounds().getLocation()).add(source.getOrigin());
