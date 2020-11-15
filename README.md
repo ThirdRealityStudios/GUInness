@@ -1,10 +1,10 @@
-**A simple API to make 2D game (engine) development easier and GUIs more customizable with pure Java☕️**
+**A lightweight API to make the development of 2D game engines and GUIs easier, using Swing* **
+
+* a porting to OpenGL is might be considered.
 
 
-If you want to test this API first, you can just download the binaries ("bin"-folder) and run the Main.class file.
-It will give you a look through all the features which are available currently.
-Don't get too frustrated by the old graphics as you can actually overwrite the whole design easily.
-Currently, the focus of the development goes on solidity and stability before anything else.
+If you want to test this API first, you can just download the binaries ("bin"-folder) and run the Main.class file in package "org.thirdreality.guinness.sample".
+It will give you a rough look through all the features which are available currently.
 
 
 # First Impression
@@ -67,9 +67,9 @@ I could have used available game engines from the web but my plan was it to buil
 so that's the challenge for me.
 
 
-# Stats / Nice To Know (as of 11/1/2020)
-- total lines of code: 4875 (counted them with "[cloc](https://github.com/AlDanial/cloc)")
-- code size: 201.4 kB
+# Stats / Nice To Know (as of 11/15/2020)
+- total lines of code: 4848 (counted them with "[cloc](https://github.com/AlDanial/cloc)")
+- code size: 200.5 kB
 
 
 # Already having used GUInness?

@@ -401,7 +401,7 @@ public class Viewport extends JPanel
 			Rectangle componentBounds = component.getStyle().getPrimaryLook().getBounds();
 
 			Rectangle componentBoundsRelative = new Rectangle(new GIPoint(getOrigin()).add(getOffset()).add(componentBounds.getLocation()).toPoint(), componentBounds.getSize());
-			
+
 			isContained &= clippingRectangle.contains(componentBoundsRelative);
 			
 			return isContained;
