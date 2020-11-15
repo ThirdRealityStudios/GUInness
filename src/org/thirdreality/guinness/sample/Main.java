@@ -1,4 +1,4 @@
-package org.thirdreality.guinness;
+package org.thirdreality.guinness.sample;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -289,7 +289,7 @@ public class Main
 
 		input3 = new GTextfield(new Point(20, 450), "ALEMAN", 10, smallerFont);
 
-		Image i = ImageToolkit.loadImage(Path.ROOT_FOLDER + File.separator + "media" + File.separator + "samples" + File.separator + "MountainLake.jpg");
+		Image i = ImageToolkit.loadImage(Path.ROOT_FOLDER + File.separator + "sample" + File.separator + "media" + File.separator + "MountainLake.jpg");
 
 		img0 = new GImage(new Point(0, 0), 600, false , i);
 		img0.getLogic().setActionOnHover(false);
@@ -349,7 +349,7 @@ public class Main
 	{
 		GLayer layer5 = new GLayer(0, true);
 
-		Image imgMountain = ImageToolkit.loadImage(Path.ROOT_FOLDER + File.separator + "media" + File.separator + "samples" + File.separator + "MountainLake.jpg");
+		Image imgMountain = ImageToolkit.loadImage(Path.ROOT_FOLDER + File.separator + "sample" + File.separator + "media" + File.separator + "MountainLake.jpg");
 
 		GImage img0 = new GImage(new Point(), new Dimension(100, 365), imgMountain);
 
