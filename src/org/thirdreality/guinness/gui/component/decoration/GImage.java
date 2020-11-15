@@ -69,10 +69,4 @@ public class GImage extends GComponent
 		
 		getStyle().setImage(content);
 	}
-
-	@Override
-	public void setValue(String val)
-	{
-		// Does nothing..
-	}
 }

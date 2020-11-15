@@ -8,6 +8,7 @@ import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.guinness.gui.component.GComponent;
 import org.thirdreality.guinness.gui.component.decoration.GImage;
+import org.thirdreality.guinness.gui.component.optional.GValueManager;
 import org.thirdreality.guinness.gui.component.style.property.GBorderProperty;
 
 public class GWindowButton extends GComponent
@@ -58,7 +59,4 @@ public class GWindowButton extends GComponent
 	{
 		return hoverColor;
 	}
-
-	@Override
-	public void setValue(String val){}
 }

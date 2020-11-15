@@ -54,8 +54,6 @@ public abstract class GStyle implements Serializable
 	// The translated text is then not recognized later as a component itself.
 	// Translating your text is because of that just for pure decoration purposes.
 	private Point textTransition;
-
-	private int length = 0;
 	
 	private Font font;
 	
@@ -102,7 +100,6 @@ public abstract class GStyle implements Serializable
 		setDesign(style.getDesign());
 		setFont(style.getFont());
 		setImage(style.getImage());
-		setLength(style.getLength());
 		setLocation(style.getLocation());
 		setOpacity(style.getOpacity());
 		setPaddingBottom(style.getPaddingBottom());
@@ -153,16 +150,6 @@ public abstract class GStyle implements Serializable
 	public void setVisible(boolean visible)
 	{
 		this.visible = visible;
-	}
-
-	public int getLength()
-	{
-		return length;
-	}
-
-	public void setLength(int length)
-	{
-		this.length = length;
 	}
 
 	public Font getFont()

@@ -13,7 +13,7 @@ public class GRectangle extends GComponent
 	
 	public GRectangle(int x, int y, Dimension size, Color color, float opacity)
 	{
-		super("rectangle", ShapeMaker.createRectangle(x, y, size.width, size.height), 0, null, null);
+		super("rectangle", ShapeMaker.createRectangle(x, y, size.width, size.height), null);
 		
 		if(opacity != 0)
 		{
@@ -30,11 +30,5 @@ public class GRectangle extends GComponent
 		{
 			getStyle().setPrimaryColor(null);
 		}
-	}
-
-	@Override
-	public void setValue(String val)
-	{
-		// Does nothing..
 	}
 }

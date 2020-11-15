@@ -4,6 +4,7 @@ import java.awt.Point;
 
 import org.thirdreality.guinness.Meta;
 import org.thirdreality.guinness.gui.component.GComponent;
+import org.thirdreality.guinness.gui.component.optional.GValueManager;
 import org.thirdreality.guinness.gui.font.Font;
 
 public class GDescription extends GComponent
@@ -12,12 +13,31 @@ public class GDescription extends GComponent
 	
 	private boolean interaction = true;
 	
+	private GValueManager valueManager;
+	
 	public GDescription(Point location, String title, Font font)
 	{
 		super("description");
 		
+		valueManager = new GValueManager()
+		{
+			@Override
+			public void setValue(String value)
+			{
+				if(value == null)
+				{
+					return;
+				}
+
+				this.value = value;
+				
+				updateDefaultShape();
+			}
+		};
+		
 		setTitle(title);
-		getStyle().setLength(title.length());
+		
+		getValueManager().setMaxLength(title.length());
 		
 		getStyle().setFont(font);
 		
@@ -25,41 +45,24 @@ public class GDescription extends GComponent
 		
 		getStyle().setLocation(location);
 	}
+	
+	private GValueManager getValueManager()
+	{
+		return valueManager;
+	}
 
 	public String getTitle()
 	{
-		return getValue();
+		return getValueManager().getValue();
 	}
 
 	public void setTitle(String title)
 	{
-		setValue(title);
-	}
-
-	public void onClick()
-	{
-		// Does nothing.
-	}
-
-	public void onHover()
-	{
-		// Does nothing.
+		getValueManager().setValue(title);
 	}
 
 	public boolean isInteractionEnabled()
 	{
 		return interaction;
-	}
-
-	public void setValue(String title)
-	{
-		if(title == null)
-		{
-			return;
-		}
-
-		this.value = title;
-		
-		updateDefaultShape();
 	}
 }

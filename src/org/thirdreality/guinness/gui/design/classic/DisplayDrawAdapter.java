@@ -17,10 +17,14 @@ import org.thirdreality.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.guinness.gui.Viewport;
 import org.thirdreality.guinness.gui.component.GComponent;
 import org.thirdreality.guinness.gui.component.decoration.GRectangle;
+import org.thirdreality.guinness.gui.component.input.GTextfield;
 import org.thirdreality.guinness.gui.component.placeholder.GWindow;
 import org.thirdreality.guinness.gui.component.selection.GCheckbox;
 import org.thirdreality.guinness.gui.component.selection.list.GSelectionBox;
 import org.thirdreality.guinness.gui.component.selection.list.GSelectionOption;
+import org.thirdreality.guinness.gui.component.standard.GButton;
+import org.thirdreality.guinness.gui.component.standard.GDescription;
+import org.thirdreality.guinness.gui.component.standard.GPolyButton;
 import org.thirdreality.guinness.gui.design.Design;
 import org.thirdreality.guinness.gui.font.Font;
 
@@ -86,7 +90,7 @@ public class DisplayDrawAdapter
 
 			case "textfield":
 			{
-				drawTextfield(g, target, c);
+				drawTextfield(g, c);
 
 				break;
 			}
@@ -114,13 +118,7 @@ public class DisplayDrawAdapter
 
 			case "button":
 			{
-				Color temp = getDesign().getDesignColor().getBorderColor();
-
-				getDesign().getDesignColor().setBorderColor(c.getStyle().getPrimaryColor().darker().darker());
-
-				drawGeneralField(g, target, c);
-
-				getDesign().getDesignColor().setBorderColor(temp);
+				drawButton(g, c);
 
 				break;
 			}
@@ -132,7 +130,7 @@ public class DisplayDrawAdapter
 
 			default:
 			{
-				// drawGeneralField(g, c, true);
+				
 			}
 		}
 	}
@@ -181,15 +179,17 @@ public class DisplayDrawAdapter
 
 	private void drawDescription(Graphics g, GComponent c)
 	{
+		GDescription description = (GDescription) c;
+		
 		// Represents simply the outer bounds of the component.
-		Rectangle bounds = c.getStyle().getPrimaryLook().getBounds();
+		Rectangle bounds = description.getStyle().getPrimaryLook().getBounds();
 		
-		Point descLoc = new GIPoint(bounds.getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).add(getDesign().getPaddingProperty().getInnerThickness()).add(getDesign().getBorderProperty().getBorderThicknessPx()).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
+		Point descLoc = new GIPoint(bounds.getLocation()).add(getOrigin()).add(getOffset(), description.getStyle().isMovableForViewport()).add(getDesign().getPaddingProperty().getInnerThickness()).add(getDesign().getBorderProperty().getBorderThicknessPx()).mul(getScale(), description.getStyle().isScalableForViewport()).toPoint();
 		
-		Font original = c.getStyle().getFont();
+		Font original = description.getStyle().getFont();
 		Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
 		
-		DrawToolkit.drawString(g, c.getValue(), descLoc, scaledFont);
+		DrawToolkit.drawString(g, description.getTitle(), descLoc, scaledFont);
 	}
 
 	private void drawImage(Graphics g, GComponent c)
@@ -227,11 +227,6 @@ public class DisplayDrawAdapter
 			g2d.draw(path.getPath());
 		}
 		*/
-	}
-	
-	private void drawTextfield(Graphics g, Viewport target, GComponent c)
-	{
-		drawGeneralField(g, target, c);
 	}
 	
 	private void drawCheckbox(Graphics g, GComponent c)
@@ -342,43 +337,69 @@ public class DisplayDrawAdapter
 	
 	protected void drawPolyButton(Graphics g, GComponent c)
 	{
-		Polygon look = c.getStyle().getPrimaryLook();
+		GPolyButton polyButton = (GPolyButton) c;
+		
+		Polygon look = polyButton.getStyle().getPrimaryLook();
 		
 		// Represents simply the outer bounds of the component.
 		Rectangle bounds = look.getBounds();
 
-		g.setColor(c.getStyle().getPrimaryColor());
+		g.setColor(polyButton.getStyle().getPrimaryColor());
 
-		Point buttonLoc = new GIPoint(bounds.getLocation()).add(getOrigin()).add(getOffset(), c.getStyle().isMovableForViewport()).toPoint();
+		Point buttonLoc = new GIPoint(bounds.getLocation()).add(getOrigin()).add(getOffset(), polyButton.getStyle().isMovableForViewport()).toPoint();
 
-		// Here it is only working with a copy in order not to modify the original object (polygon and Polybutton).
+		// Here it is only working with a copy in order not to modify the original object (polygon).
 		Polygon transformedCopy = ShapeTransform.scalePolygon(ShapeTransform.movePolygonTo(look, buttonLoc), scale);
 		g.fillPolygon(transformedCopy);
 
 		// If text should be displayed in the center of the component.
-		if(c.getStyle().getTextAlign() == 1)
+		if(polyButton.getStyle().getTextAlign() == 1)
 		{
-			int textLength = c.getStyle().getFont().getFontSize() * c.getValue().length();
+			int textLength = polyButton.getStyle().getFont().getFontSize() * polyButton.getTitle().length();
 
 			int centerX = bounds.getLocation().x + bounds.width / 2 - textLength / 2;
-			int centerY = bounds.getLocation().y + bounds.height / 2 - c.getStyle().getFont().getFontSize() / 2;
+			int centerY = bounds.getLocation().y + bounds.height / 2 - polyButton.getStyle().getFont().getFontSize() / 2;
 
-			Point loc = new GIPoint(centerX, centerY).add(c.getStyle().getTextTransition()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
+			Point loc = new GIPoint(centerX, centerY).add(polyButton.getStyle().getTextTransition()).add(getOffset(), polyButton.getStyle().isMovableForViewport()).mul(getScale(), polyButton.getStyle().isScalableForViewport()).toPoint();
 			
-			Font original = c.getStyle().getFont();
+			Font original = polyButton.getStyle().getFont();
 			Font scaledFont = new Font(original.getName(), original.getFile().getAbsolutePath(), (int) (original.getFontSize() * scale));
-			
-			DrawToolkit.drawString(g, c.getValue(), loc, scaledFont);
+
+			DrawToolkit.drawString(g, polyButton.getTitle(), loc, scaledFont);
 		}
 		else // If text should be displayed normally (upper-left corner of the component).
 		{
-			Point loc = new GIPoint(bounds.getLocation()).add(c.getStyle().getTextTransition()).add(getOffset(), c.getStyle().isMovableForViewport()).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
+			Point loc = new GIPoint(bounds.getLocation()).add(polyButton.getStyle().getTextTransition()).add(getOffset(), polyButton.getStyle().isMovableForViewport()).mul(getScale(), polyButton.getStyle().isScalableForViewport()).toPoint();
 			
-			DrawToolkit.drawString(g, c.getValue(), loc, c.getStyle().getFont());
+			DrawToolkit.drawString(g, polyButton.getTitle(), loc, polyButton.getStyle().getFont());
 		}
 	}
+	
+	protected void drawButton(Graphics g, GComponent component)
+	{		
+		GButton button = (GButton) component;
+		
+		Color temp = getDesign().getDesignColor().getBorderColor();
 
-	protected void drawGeneralField(Graphics g, Viewport target, GComponent c)
+		getDesign().getDesignColor().setBorderColor(button.getStyle().getPrimaryColor().darker().darker());
+		
+		String value = button.getTitle();
+		
+		drawGeneralField(g, button, value, value.length());
+		
+		getDesign().getDesignColor().setBorderColor(temp);
+	}
+	
+	protected void drawTextfield(Graphics g, GComponent component)
+	{
+		GTextfield textfield = (GTextfield) component;
+		
+		String value = textfield.getInputValue();
+		
+		drawGeneralField(g, textfield, value, textfield.getValueManager().getMaxLength());
+	}
+
+	protected void drawGeneralField(Graphics g, GComponent c, String value, int maxLength)
 	{
 		Polygon background = c.getStyle().getPrimaryLook();
 		
@@ -396,7 +417,7 @@ public class DisplayDrawAdapter
 
 
 
-		Dimension frontDimension = new GIDimension(c.getStyle().getLength() * c.getStyle().getFont().getFontSize(), c.getStyle().getFont().getFontSize()).add(2*getDesign().getPaddingProperty().getInnerThickness());
+		Dimension frontDimension = new GIDimension(maxLength * c.getStyle().getFont().getFontSize(), c.getStyle().getFont().getFontSize()).add(2*getDesign().getPaddingProperty().getInnerThickness());
 
 		Rectangle frontRectangle = new Rectangle(new GIPoint(backgroundLoc).add(getDesign().getBorderProperty().getBorderThicknessPx()).toPoint(), frontDimension);
 
@@ -411,7 +432,7 @@ public class DisplayDrawAdapter
 
 		Point text = new GIPoint(backgroundLoc).add(getDesign().getBorderProperty().getBorderThicknessPx()).add(getDesign().getPaddingProperty().getInnerThickness()).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
 
-		DrawToolkit.drawString(g, c.getValue(), text, c.getStyle().getFont().getScaledFont(c.getStyle().isScalableForViewport() ? getScale() : 1f));
+		DrawToolkit.drawString(g, value, text, c.getStyle().getFont().getScaledFont(c.getStyle().isScalableForViewport() ? getScale() : 1f));
 	}
 	
 	public void drawWindow(Graphics g, GComponent c)

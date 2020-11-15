@@ -2,12 +2,13 @@ package org.thirdreality.guinness.handler.componenthandler;
 
 import org.thirdreality.guinness.gui.Viewport;
 import org.thirdreality.guinness.gui.component.GComponent;
+import org.thirdreality.guinness.gui.component.input.GTextfield;
 
 // A ComponentSession is a session which keeps track of all necessary data, e.g. which was the last component which was clicked on a Display or GWindow?
 public class ComponentSession
 {
 	// If there was a text-field selected, it will be stored here for a time.
-	private GComponent textfield;
+	private GTextfield textfield;
 
 	// Tells whether a component was clicked before.
 	private GComponent clickedYet = null;
@@ -43,12 +44,12 @@ public class ComponentSession
 		return trackedViewport == checked;
 	}
 
-	public GComponent getFocusedTextfield()
+	public GTextfield getFocusedTextfield()
 	{
 		return textfield;
 	}
 
-	public void setFocusedTextfield(GComponent textfield)
+	public void setFocusedTextfield(GTextfield textfield)
 	{
 		this.textfield = textfield;
 	}

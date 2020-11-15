@@ -297,10 +297,4 @@ public class GSelectionBox extends GComponent
 			throw new IllegalArgumentException("You wanted to mark or set an option active of the specified index " + index + ".\nAnyway, this index does not exist and would exceed the real amount of available options in your GSelectionBox!");
 		}
 	}
-
-	@Override
-	public void setValue(String val)
-	{
-		
-	}
 }

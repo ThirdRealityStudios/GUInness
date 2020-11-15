@@ -14,17 +14,19 @@ import org.thirdreality.guinness.gui.component.GComponent;
 public class GCheckbox extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
+	
+	private boolean checked;
 
 	public GCheckbox(Point location, boolean checked)
 	{
-		super("checkbox", location, ShapeMaker.createRectangle(location, new Dimension(20, 20)), 0, null, null);
+		super("checkbox", location, ShapeMaker.createRectangle(location, new Dimension(20, 20)), null);
 		
 		init(checked);
 	}
 
 	public GCheckbox(Point location, boolean checked, int sizePx)
 	{
-		super("checkbox", location, ShapeMaker.createRectangle(location, new Dimension(sizePx, sizePx)), 0, null, null);
+		super("checkbox", location, ShapeMaker.createRectangle(location, new Dimension(sizePx, sizePx)), null);
 		
 		init(checked);
 	}
@@ -40,29 +42,15 @@ public class GCheckbox extends GComponent
 		
 		getStyle().setImage(getStyle().getImage().getScaledInstance(size_scaled, size_scaled, Image.SCALE_SMOOTH));
 	}
-
-	@Deprecated
-	@Override
-	// This method is used to set the value (true (!= null) or false (null)) for the check-box.
-	// rather use the method below as it saves more memory with a boolean parameter and thus is more efficient.
-	public void setValue(String val)
-	{
-		setChecked((val != null));
-	}
-	
-	public boolean isUnchecked()
-	{
-		return getValue() == null;
-	}
 	
 	public boolean isChecked()
 	{
-		return !isUnchecked();
+		return checked;
 	}
 	
-	// The 'value' attribute is changed here, meaning if 'value' is null then the checkbox is unchecked and otherwise true.
+	// Sets the check-box checked or unchecked (false).
 	public void setChecked(boolean checked)
 	{
-		value = checked ? "" : null;
+		this.checked = checked;
 	}
 }

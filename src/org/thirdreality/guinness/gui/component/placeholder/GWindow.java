@@ -192,20 +192,6 @@ public class GWindow extends GComponent
 	{
 		return title;
 	}
-
-	@Deprecated
-	public String getValue()
-	{
-		return title;
-	}
-
-	// Prefer setTitle(...) instead!
-	@Deprecated
-	@Override
-	public void setValue(String val)
-	{
-		// TODO Auto-generated method stub
-	}
 	
 	public GWindowButton getExitButton()
 	{

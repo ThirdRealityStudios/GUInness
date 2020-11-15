@@ -5,7 +5,6 @@ import java.awt.Point;
 import java.awt.Polygon;
 
 import org.thirdreality.guinness.Meta;
-import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.guinness.gui.component.GComponent;
 
@@ -18,7 +17,7 @@ public class GPath extends GComponent
 
 	public GPath(Polygon path, Color drawColor, boolean fill, Point location)
 	{
-		super("path", location, null, 0, null, null);
+		super("path", location, null, null);
 		
 		getStyle().setPrimaryLook(ShapeMaker.createRectangleFrom(path.getBounds()));
 		
@@ -46,11 +45,4 @@ public class GPath extends GComponent
 	{
 		this.fill = fill;
 	}
-
-	@Override
-	public void setValue(String val)
-	{
-		// Unused
-	}
-
 }

@@ -9,6 +9,10 @@ import org.thirdreality.guinness.Meta;
 import org.thirdreality.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.guinness.gui.Viewport;
 import org.thirdreality.guinness.gui.component.GComponent;
+import org.thirdreality.guinness.gui.component.input.GTextfield;
+import org.thirdreality.guinness.gui.component.standard.GButton;
+import org.thirdreality.guinness.gui.component.standard.GDescription;
+import org.thirdreality.guinness.gui.component.standard.GPolyButton;
 import org.thirdreality.guinness.gui.component.style.property.GBorderProperty;
 import org.thirdreality.guinness.gui.component.style.property.GPaddingProperty;
 import org.thirdreality.guinness.gui.design.classic.DisplayDrawAdapter;
@@ -51,11 +55,44 @@ public class Classic extends Design
 	// Returns a determined shape which uses the design defined in this class.
 	public Polygon generateDefaultShape(GComponent c)
 	{
+		int length = 0;
+		
+		switch(c.getType())
+		{
+			case "button":
+			{
+				length = ((GButton) c).getTitle().length();
+				
+				break;
+			}
+			
+			case "description":
+			{
+				length = ((GDescription) c).getTitle().length();
+				
+				break;
+			}
+			
+			case "textfield":
+			{
+				length = ((GTextfield) c).getValueManager().getMaxLength();
+				
+				break;
+			}
+			
+			case "polybutton":
+			{
+				length = ((GPolyButton) c).getTitle().length();
+				
+				break;
+			}
+		}
+		
 		// Calculates the correct size of the rectangle for the default button component.
-		Dimension backgroundSize = new Dimension(c.getStyle().getLength() * c.getStyle().getFont().getFontSize() + 2 * getPaddingProperty().getInnerThickness() + 2 * getBorderProperty().getBorderThicknessPx(), c.getStyle().getFont().getFontSize() + 2 * getPaddingProperty().getInnerThickness() + 2 * getBorderProperty().getBorderThicknessPx());
+		Dimension backgroundSize = new Dimension(length * c.getStyle().getFont().getFontSize() + 2 * getPaddingProperty().getInnerThickness() + 2 * getBorderProperty().getBorderThicknessPx(), c.getStyle().getFont().getFontSize() + 2 * getPaddingProperty().getInnerThickness() + 2 * getBorderProperty().getBorderThicknessPx());
 
 		Rectangle rectangle = new Rectangle(c.getStyle().getLocation(), backgroundSize);
-		
+
 		// Creates a rectangle actually.
 		Polygon polygon = ShapeMaker.createRectangleFrom(rectangle, c.getStyle().getBorderProperties());
 		

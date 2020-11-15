@@ -9,6 +9,7 @@ import org.thirdreality.guinness.Meta;
 import org.thirdreality.guinness.feature.Path;
 import org.thirdreality.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.guinness.gui.Display;
+import org.thirdreality.guinness.gui.component.optional.GActionListener;
 import org.thirdreality.guinness.gui.component.style.GStyle;
 import org.thirdreality.guinness.gui.design.Sample;
 import org.thirdreality.guinness.gui.font.Font;
@@ -36,10 +37,6 @@ public abstract class GComponent implements Serializable
 	
 	// Relates to the offset.
 	private boolean movable = true;
-
-	protected volatile String value = "";
-
-	private volatile String bufferedValue = null;
 
 	// The main reference to all major functions of this whole program.
 	private Display display;
@@ -77,7 +74,7 @@ public abstract class GComponent implements Serializable
 		getStyle().setPrimaryColor(getStyle().getDesign().getDesignColor().getBackgroundColor());
 	}
 	
-	public GComponent(String type, Point location, Polygon look, int length, String val, Font font)
+	public GComponent(String type, Point location, Polygon look, Font font)
 	{
 		this(type);
 		
@@ -87,15 +84,11 @@ public abstract class GComponent implements Serializable
 		getStyle().setLocation(location);
 		
 		getStyle().setFont(font);
-
-		// Set all important attributes below:
-		getStyle().setLength(length);
-		setValue(val);
 	}
 	
-	public GComponent(String type, Polygon look, int length, String val, Font font)
+	public GComponent(String type, Polygon look, Font font)
 	{
-		this(type, new Point(look.getBounds().getLocation()), look, length, val, font);
+		this(type, new Point(look.getBounds().getLocation()), look, font);
 	}
 	
 	public GComponent(String type, Point location, Polygon look, String val, Font font)
@@ -110,75 +103,8 @@ public abstract class GComponent implements Serializable
 		getStyle().setFont(font);
 
 		// Set all important attributes below:
-		getStyle().setLength(val.length());
-		setValue(val);
-	}
-
-	// Will write add a new char in the variable 'value' of type String.
-	// It will save the value before in the buffer.
-	public void write(char key)
-	{
-		boolean noOverflow = (getValue().length() + 1) <= getStyle().getLength();
-
-		if(noOverflow)
-		{
-			setValue(getValue() + key);
-		}
-	}
-
-	// Will do the exact opposite of the write(char key) function.
-	// It will delete the last char in the variable 'value' of type String.
-	// It will save the value before in the buffer.
-	public void eraseLastChar()
-	{
-		// Checking whether deleting one more char is still possible due to the length
-		// of 'value'.
-		if(getValue().length() > 0)
-		{
-			setBufferedValue(getBufferedValue());
-
-			char[] charValues = getValue().toCharArray();
-
-			setValue(getValue().valueOf(charValues, 0, charValues.length - 1));
-		}
-	}
-	
-	// Tells you whether the cursor of 'value' is at the beginning,
-	// meaning 'value' is empty.
-	public boolean isCursorAtBeginning()
-	{
-		return getValue().length() == 0;
-	}
-	
-	// Tells you whether the cursor of 'value' is at the end,
-	// meaning 'value' is full.
-	public boolean isCursorAtEnd()
-	{
-		return (getValue().length() + 1) > getStyle().getLength();
-	}
-
-	public synchronized void revert()
-	{
-		setValue(getBufferedValue());
-	}
-
-	public synchronized String getValue()
-	{
-		return value;
-	}
-
-	// The implementation depends on the type,
-	// e.g. a text-field is treated differently than an image.
-	public abstract void setValue(String val);
-
-	public synchronized void setBufferedValue(String value)
-	{
-		this.bufferedValue = value;
-	}
-
-	public synchronized String getBufferedValue()
-	{
-		return bufferedValue;
+		// getStyle().setLength(val.length());
+		// setValue(val);
 	}
 
 	public String getType()
@@ -193,7 +119,6 @@ public abstract class GComponent implements Serializable
 
 	public void print()
 	{
-		System.out.println();
 		System.out.println(this);
 	}
 

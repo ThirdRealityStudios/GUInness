@@ -13,10 +13,10 @@ import org.thirdreality.guinness.feature.Path;
 import org.thirdreality.guinness.feature.image.ImageToolkit;
 import org.thirdreality.guinness.gui.Display;
 import org.thirdreality.guinness.gui.Viewport;
-import org.thirdreality.guinness.gui.component.GActionListener;
 import org.thirdreality.guinness.gui.component.decoration.GImage;
 import org.thirdreality.guinness.gui.component.decoration.GRectangle;
 import org.thirdreality.guinness.gui.component.input.GTextfield;
+import org.thirdreality.guinness.gui.component.optional.GActionListener;
 import org.thirdreality.guinness.gui.component.placeholder.GWindow;
 import org.thirdreality.guinness.gui.component.selection.GCheckbox;
 import org.thirdreality.guinness.gui.component.selection.list.GSelectionBox;
@@ -31,7 +31,6 @@ import org.thirdreality.guinness.gui.design.Design;
 import org.thirdreality.guinness.gui.design.DesignColor;
 import org.thirdreality.guinness.gui.font.Font;
 import org.thirdreality.guinness.gui.layer.GLayer;
-import org.thirdreality.guinness.handler.EventHandler;
 
 public class Main
 {

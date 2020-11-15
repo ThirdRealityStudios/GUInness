@@ -1,4 +1,4 @@
-package org.thirdreality.guinness.gui.component;
+package org.thirdreality.guinness.gui.component.optional;
 
 public interface GActionListener
 {

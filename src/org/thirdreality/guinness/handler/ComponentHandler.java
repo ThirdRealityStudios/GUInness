@@ -15,6 +15,7 @@ import org.thirdreality.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.guinness.gui.Display;
 import org.thirdreality.guinness.gui.Viewport;
 import org.thirdreality.guinness.gui.component.GComponent;
+import org.thirdreality.guinness.gui.component.input.GTextfield;
 import org.thirdreality.guinness.gui.component.placeholder.GWindow;
 import org.thirdreality.guinness.gui.component.placeholder.window.GWindowButton;
 import org.thirdreality.guinness.gui.component.selection.GCheckbox;
@@ -166,7 +167,7 @@ public class ComponentHandler
 
 				if(canTextfieldBeFocussed)
 				{
-					session.setFocusedTextfield(focused);
+					session.setFocusedTextfield((GTextfield) focused);
 				}
 
 				boolean shouldDefocusIt = focused != session.getFocusedTextfield();
@@ -186,9 +187,9 @@ public class ComponentHandler
 		{
 			boolean isDeviceControlCode = display.getEventHandler().getKeyAdapter().isDeviceControlCode(keyStroke);
 
-			if(isDeviceControlCode && !session.getFocusedTextfield().isCursorAtEnd())
+			if(isDeviceControlCode && !session.getFocusedTextfield().getValueManager().isCursorAtEnd())
 			{
-				session.getFocusedTextfield().write((char) keyStroke);
+				session.getFocusedTextfield().getValueManager().write((char) keyStroke);
 			}
 			else
 			{
@@ -196,9 +197,9 @@ public class ComponentHandler
 				{
 					case KeyEvent.VK_BACK_SPACE:
 					{
-						if(!session.getFocusedTextfield().isCursorAtBeginning())
+						if(!session.getFocusedTextfield().getValueManager().isCursorAtBeginning())
 						{
-							session.getFocusedTextfield().eraseLastChar();
+							session.getFocusedTextfield().getValueManager().eraseLastChar();
 						}
 
 						break;
