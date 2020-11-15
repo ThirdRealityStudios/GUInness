@@ -389,8 +389,11 @@ public class Viewport extends JPanel
 	}
 
 	// Tells you whether a component can be rendered or recognized by IO, depending on an area which defines this (see 'clippingArea' and 'clippingRectangle' on top).
+	// Also depends on whether the component is enabled.
 	public boolean isContained(GComponent component)
 	{
+		boolean isContained = component.isEnabled();
+		
 		if(isSimulated())
 		{
 			clippingRectangle.setLocation(getOrigin());
@@ -398,13 +401,13 @@ public class Viewport extends JPanel
 			Rectangle componentBounds = component.getStyle().getPrimaryLook().getBounds();
 
 			Rectangle componentBoundsRelative = new Rectangle(new GIPoint(getOrigin()).add(getOffset()).add(componentBounds.getLocation()).toPoint(), componentBounds.getSize());
-
-			boolean isContained = clippingRectangle.contains(componentBoundsRelative) && component.isEnabled() ;
-
+			
+			isContained &= clippingRectangle.contains(componentBoundsRelative);
+			
 			return isContained;
 		}
 
-		return true;
+		return isContained;
 	}
 
 	// Returns the highest recognized priority of a layer in this Viewport.
