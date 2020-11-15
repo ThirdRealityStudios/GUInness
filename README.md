@@ -1,6 +1,7 @@
 **A lightweight API to make the development of 2D game engines and GUIs easier, using Swing¹**
 
-¹ a porting to OpenGL is might be considered.
+¹a porting to OpenGL might be considered.
+
 
 
 If you want to test this API first, you can just download the binaries ("bin"-folder) and run the Main.class file in package "org.thirdreality.guinness.sample".
