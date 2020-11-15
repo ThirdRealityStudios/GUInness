@@ -19,7 +19,7 @@ import org.thirdreality.guinness.gui.component.style.GStyle;
 import org.thirdreality.guinness.gui.component.style.property.GBorderProperty;
 import org.thirdreality.guinness.gui.font.Font;
 
-public abstract class GWindow extends GComponent
+public class GWindow extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 
@@ -156,16 +156,7 @@ public abstract class GWindow extends GComponent
 		exitBorderStyle.setLowerLeftBorderRadiusPx(0);
 		exitBorderStyle.setLowerRightBorderRadiusPx(0);
 
-		exitButton = new GWindowButton(exitButtonRect, Color.RED, 0.9f, exitBorderStyle, null)
-		{
-			private static final long serialVersionUID = Meta.serialVersionUID;
-
-			@Override
-			public void onClick()
-			{
-				System.out.println("Exit");
-			}
-		};
+		exitButton = new GWindowButton(exitButtonRect, Color.RED, 0.9f, exitBorderStyle, null);
 
 		int marginRight = 1;
 
@@ -179,16 +170,7 @@ public abstract class GWindow extends GComponent
 		minimizeBorderStyle.setLowerRightBorderRadiusPx(0);
 		minimizeBorderStyle.setUpperRightBorderRadiusPx(0);
 
-		minimizeButton = new GWindowButton(minimizeButtonRect, Color.decode("#606060"), 0.9f, minimizeBorderStyle, null)
-		{
-			private static final long serialVersionUID = Meta.serialVersionUID;
-
-			@Override
-			public void onClick()
-			{
-				System.out.println("Minimize");
-			}
-		};
+		minimizeButton = new GWindowButton(minimizeButtonRect, Color.decode("#606060"), 0.9f, minimizeBorderStyle, null);
 	}
 	
 	public Color getFrameColor()

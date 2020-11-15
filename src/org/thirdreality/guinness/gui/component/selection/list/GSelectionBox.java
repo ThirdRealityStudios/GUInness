@@ -8,11 +8,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.thirdreality.guinness.Meta;
-import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.feature.Path;
 import org.thirdreality.guinness.feature.image.ImageToolkit;
 import org.thirdreality.guinness.feature.shape.ShapeMaker;
-import org.thirdreality.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.guinness.gui.component.GComponent;
 
 public class GSelectionBox extends GComponent
@@ -299,19 +297,7 @@ public class GSelectionBox extends GComponent
 			throw new IllegalArgumentException("You wanted to mark or set an option active of the specified index " + index + ".\nAnyway, this index does not exist and would exceed the real amount of available options in your GSelectionBox!");
 		}
 	}
-	
-	@Override
-	public void onClick()
-	{
-		
-	}
-	
-	@Override
-	public void onHover()
-	{
-		
-	}
-	
+
 	@Override
 	public void setValue(String val)
 	{

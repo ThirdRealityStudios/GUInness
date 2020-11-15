@@ -20,7 +20,7 @@ public abstract class GComponent implements Serializable
 	// Determines the type of the GComponent, e.g. image, path or default.
 	// This will determine the render method later.
 	private String type;
-	
+
 	/* Determines whether the component should be enabled or not.
 	 * If it's disabled, it is not just invisible but also you cannot interact with it anymore.
 	 * If 'null', a value will be automatically assigned later.
@@ -47,6 +47,9 @@ public abstract class GComponent implements Serializable
 	private GStyle style;
 	
 	private GLogic logic;
+	
+	// This contains the onClick() and onHover() methods to be run on this component.
+	private GActionListener actions;
 
 	public GComponent(String type)
 	{
@@ -178,10 +181,6 @@ public abstract class GComponent implements Serializable
 		return bufferedValue;
 	}
 
-	public abstract void onClick();
-
-	public abstract void onHover();
-
 	public String getType()
 	{
 		return type;
@@ -245,6 +244,21 @@ public abstract class GComponent implements Serializable
 	public void setLogic(GLogic logic)
 	{
 		this.logic = logic;
+	}
+
+	public void setActionListener(GActionListener actions)
+	{
+		this.actions = actions;
+	}
+	
+	public GActionListener getActionListener()
+	{
+		return actions;
+	}
+	
+	public boolean hasActionListener()
+	{
+		return actions != null;
 	}
 
 	// Updates the shape if possible,

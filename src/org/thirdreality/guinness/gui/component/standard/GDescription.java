@@ -3,7 +3,6 @@ package org.thirdreality.guinness.gui.component.standard;
 import java.awt.Point;
 
 import org.thirdreality.guinness.Meta;
-import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.gui.component.GComponent;
 import org.thirdreality.guinness.gui.font.Font;
 

@@ -4,11 +4,10 @@ import java.awt.Point;
 import java.awt.Polygon;
 
 import org.thirdreality.guinness.Meta;
-import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.gui.component.GComponent;
 import org.thirdreality.guinness.gui.font.Font;
 
-public abstract class GPolyButton extends GComponent
+public class GPolyButton extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 	
@@ -33,10 +32,6 @@ public abstract class GPolyButton extends GComponent
 		setValue(title);
 	}
 
-	public abstract void onClick();
-
-	public abstract void onHover();
-	
 	@Override
 	public void setValue(String title)
 	{

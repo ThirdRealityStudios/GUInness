@@ -272,14 +272,14 @@ public class DisplayDrawAdapter
 			// The image is saved with square dimensions,
 			// so it doesn't matter if you take the width or height (see package core.gui.image.icon for "check_sign.png").
 			int sizePx = (int) (checkSymbol.getWidth(null));
-			
+
 			if(c.getStyle().isScalableForViewport())
 			{
 				sizePx *= getScale();
 			}
-			
+
 			Point imgLoc = new GIPoint(locInner).add(getDesign().getBorderProperty().getBorderThicknessPx()).mul(getScale(), c.getStyle().isScalableForViewport()).toPoint();
-			
+
 			g.drawImage(checkSymbol, imgLoc.x, imgLoc.y, sizePx, sizePx, null);
 		}
 	}

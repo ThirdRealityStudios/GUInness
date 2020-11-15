@@ -48,18 +48,6 @@ public class GPath extends GComponent
 	}
 
 	@Override
-	public void onClick()
-	{
-		// Not implemented for paths yet.
-	}
-
-	@Override
-	public void onHover()
-	{
-		// Not implemented for paths yet.
-	}
-
-	@Override
 	public void setValue(String val)
 	{
 		// Unused

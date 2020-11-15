@@ -71,19 +71,6 @@ public class GImage extends GComponent
 	}
 
 	@Override
-	public void onClick()
-	{
-		// Not implemented for images
-	}
-
-	@Override
-	public void onHover()
-	{
-		// Not implemented for images
-		
-	}
-
-	@Override
 	public void setValue(String val)
 	{
 		// Does nothing..

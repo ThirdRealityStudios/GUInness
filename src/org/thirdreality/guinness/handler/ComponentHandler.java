@@ -99,50 +99,58 @@ public class ComponentHandler
 
 	private void executeClick(GComponent execute)
 	{
-		if(execute.getLogic().isMultithreadingOn())
+		// Make sure, actions are only triggered when they are defined (listener is != null).
+		if(execute.hasActionListener())
 		{
-			Thread t = new Thread() // Run this task parallel so execution doesn't interfere other components or
-									// interactions with the UI.
+			if(execute.getLogic().isMultithreadingOn())
 			{
-				@Override
-				public void run()
-				{
-					execute.onClick();
-				}
-			};
+				Thread t = new Thread() // Run this task parallel so execution doesn't interfere other components or
+				{						// interactions with the UI.
+					
+					@Override
+					public void run()
+					{
+						execute.getActionListener().onClick();
+					}
+				};
 
-			clickTManager.fire(t);
-		}
-		else
-		{
-			execute.onClick();
-		}
+				clickTManager.fire(t);
+			}
+			else
+			{
+				execute.getActionListener().onClick();
+			}
 
-		Timer.pauseMillisecond(execute.getLogic().getDelayMs());
+			Timer.pauseMillisecond(execute.getLogic().getDelayMs());
+		}
 	}
 
 	private void executeHover(GComponent execute)
 	{
-		if(execute.getLogic().isMultithreadingOn())
+		// Make sure, actions are only triggered when they are defined (listener is != null).
+		if(execute.hasActionListener())
 		{
-			Thread t = new Thread() // Run this task parallel so execution doesn't interfere other components or
-									// interactions with the UI.
+			if(execute.getLogic().isMultithreadingOn())
 			{
-				@Override
-				public void run()
+				Thread t = new Thread() // Run this task parallel so execution doesn't interfere other components or
+										// interactions with the UI.
 				{
-					execute.onHover();
-				}
-			};
+					@Override
+					public void run()
+					{
+						execute.getActionListener().onHover();
+					}
+				};
 
-			hoverTManager.fire(t);
-		}
-		else
-		{
-			execute.onHover();
-		}
+				hoverTManager.fire(t);
+			}
+			else
+			{
+				execute.getActionListener().onHover();
+			}
 
-		Timer.pauseMillisecond(execute.getLogic().getDelayMs());
+			Timer.pauseMillisecond(execute.getLogic().getDelayMs());
+		}
 	}
 
 	private Point initialLoc = null;

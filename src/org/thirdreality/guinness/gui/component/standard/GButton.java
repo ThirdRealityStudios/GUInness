@@ -3,11 +3,10 @@ package org.thirdreality.guinness.gui.component.standard;
 import java.awt.Point;
 
 import org.thirdreality.guinness.Meta;
-import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.gui.component.GComponent;
 import org.thirdreality.guinness.gui.font.Font;
 
-public abstract class GButton extends GComponent
+public class GButton extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 	
@@ -36,10 +35,6 @@ public abstract class GButton extends GComponent
 	{
 		setValue(title);
 	}
-
-	public abstract void onClick();
-
-	public abstract void onHover();
 
 	@Override
 	public void setValue(String title)

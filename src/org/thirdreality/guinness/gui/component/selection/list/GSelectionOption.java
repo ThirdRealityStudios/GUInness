@@ -4,9 +4,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.io.File;
 
-import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.feature.Path;
-import org.thirdreality.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.guinness.gui.component.GLogic;
 import org.thirdreality.guinness.gui.component.style.GStyle;
 import org.thirdreality.guinness.gui.font.Font;

@@ -33,19 +33,6 @@ public class GRectangle extends GComponent
 	}
 
 	@Override
-	public void onClick()
-	{
-		// Not implemented for rectangles.
-	}
-
-	@Override
-	public void onHover()
-	{
-		// Not implemented for rectangles.
-		
-	}
-
-	@Override
 	public void setValue(String val)
 	{
 		// Does nothing..

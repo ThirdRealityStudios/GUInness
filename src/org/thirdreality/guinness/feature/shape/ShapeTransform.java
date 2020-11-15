@@ -64,17 +64,13 @@ public class ShapeTransform
 	
 	public static Polygon inverseOrderFrom(Polygon p)
 	{
-		// System.out.println("original> start(" + p.xpoints[0] + "|" + p.ypoints[0] + "), end(" + p.xpoints[p.npoints-1] + "|" + p.ypoints[p.npoints-1] + ")");
-		
 		Polygon inversed = new Polygon();
 		
 		for(int i = p.npoints-1; i >= 0; i--)
 		{
 			inversed.addPoint(p.xpoints[i], p.ypoints[i]);
 		}
-		
-		// System.out.println("inversed> start(" + inversed.xpoints[0] + "|" + inversed.ypoints[0] + "), end(" + inversed.xpoints[inversed.npoints-1] + "|" + inversed.ypoints[inversed.npoints-1] + ")");
-		
+
 		return inversed;
 	}
 	

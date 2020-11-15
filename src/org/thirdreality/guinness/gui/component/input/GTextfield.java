@@ -8,7 +8,7 @@ import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.gui.component.GComponent;
 import org.thirdreality.guinness.gui.font.Font;
 
-public abstract class GTextfield extends GComponent
+public class GTextfield extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 	
@@ -86,8 +86,6 @@ public abstract class GTextfield extends GComponent
 	{
 		return active;
 	}
-
-	public abstract void onHover();
 
 	public Color getColorClicked()
 	{

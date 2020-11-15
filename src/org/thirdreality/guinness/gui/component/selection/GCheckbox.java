@@ -6,13 +6,12 @@ import java.awt.Point;
 import java.io.File;
 
 import org.thirdreality.guinness.Meta;
-import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.feature.Path;
 import org.thirdreality.guinness.feature.image.ImageToolkit;
 import org.thirdreality.guinness.feature.shape.ShapeMaker;
 import org.thirdreality.guinness.gui.component.GComponent;
 
-public abstract class GCheckbox extends GComponent
+public class GCheckbox extends GComponent
 {
 	private static final long serialVersionUID = Meta.serialVersionUID;
 
@@ -41,12 +40,6 @@ public abstract class GCheckbox extends GComponent
 		
 		getStyle().setImage(getStyle().getImage().getScaledInstance(size_scaled, size_scaled, Image.SCALE_SMOOTH));
 	}
-	
-	@Override
-	public abstract void onClick();
-
-	@Override
-	public abstract void onHover();
 
 	@Deprecated
 	@Override

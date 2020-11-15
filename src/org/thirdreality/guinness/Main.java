@@ -13,11 +13,11 @@ import org.thirdreality.guinness.feature.Path;
 import org.thirdreality.guinness.feature.image.ImageToolkit;
 import org.thirdreality.guinness.gui.Display;
 import org.thirdreality.guinness.gui.Viewport;
+import org.thirdreality.guinness.gui.component.GActionListener;
 import org.thirdreality.guinness.gui.component.decoration.GImage;
 import org.thirdreality.guinness.gui.component.decoration.GRectangle;
 import org.thirdreality.guinness.gui.component.input.GTextfield;
 import org.thirdreality.guinness.gui.component.placeholder.GWindow;
-import org.thirdreality.guinness.gui.component.placeholder.GWindowManager;
 import org.thirdreality.guinness.gui.component.selection.GCheckbox;
 import org.thirdreality.guinness.gui.component.selection.list.GSelectionBox;
 import org.thirdreality.guinness.gui.component.selection.list.GSelectionOption;
@@ -86,12 +86,14 @@ public class Main
 		poly.addPoint(75, 125);
 		poly.addPoint(0, 125);
 		
-		GPolyButton gPolyButton = new GPolyButton(new Point(450, 370), "CLICK ME", smallerFont, poly)
+		GPolyButton gPolyButton = new GPolyButton(new Point(450, 370), "CLICK ME", smallerFont, poly);
+		
+		gPolyButton.setActionListener(new GActionListener()
 		{
 			@Override
 			public void onHover()
 			{
-				// System.out.println("Fuckin hovered a GPolyButton!");
+				
 			}
 			
 			@Override
@@ -99,7 +101,7 @@ public class Main
 			{
 				System.out.println("Clicked GPolyButton!");
 			}
-		};
+		});
 		
 		gPolyButton.getStyle().setOpacity(0.7f);
 		gPolyButton.getStyle().setTextAlign(1);
@@ -118,12 +120,14 @@ public class Main
 		poly.addPoint(125, 125);
 		poly.addPoint(0, 250);
 		
-		GPolyButton gPolyButton = new GPolyButton(new Point(250, 310), "Button", smallerFont, poly)
+		GPolyButton gPolyButton = new GPolyButton(new Point(250, 310), "Button", smallerFont, poly);
+		
+		gPolyButton.setActionListener(new GActionListener()
 		{
 			@Override
 			public void onHover()
 			{
-				// System.out.println("Fuckin hovered a GPolyButton!");
+				
 			}
 			
 			@Override
@@ -131,7 +135,7 @@ public class Main
 			{
 				System.out.println("Clicked GPolyButton!");
 			}
-		};
+		});
 		
 		gPolyButton.getStyle().setPrimaryColor(Color.RED);
 		gPolyButton.getStyle().setTextAlign(1);
@@ -149,36 +153,9 @@ public class Main
 		// Tell the Viewport it is simulated (in a simulated display environment) by passing 'null' to its constructor.
 		viewportGWindow0 = new Viewport(display.getEventHandler(), true);
 		
-		window0 = new GWindow("Sample window", smallerFont, windowRepresentation, borderProperties, null)
-		{
-			@Override
-			public void onClick()
-			{
-				System.out.println("Clicked on window!");
-			}
-			
-			@Override
-			public void onHover()
-			{
-				// TODO Auto-generated method stub
-			}
-		};
-		
-		window1 = new GWindow("..Second window..", smallerFont, windowRepresentation, borderProperties, null)
-		{
-			@Override
-			public void onClick()
-			{
-				
-			}
-			
-			@Override
-			public void onHover()
-			{
-				// TODO Auto-generated method stub
-			}
-		};
-		
+		window0 = new GWindow("Sample window", smallerFont, windowRepresentation, borderProperties, null);
+		window1 = new GWindow("..Second window..", smallerFont, windowRepresentation, borderProperties, null);
+
 		rect = new GRectangle(0, -50, new Dimension(800, 136), Color.RED, 0.5f);
 		rect.getStyle().getBorderProperties().setBorderRadiusPx(14);
 		
@@ -205,12 +182,14 @@ public class Main
 		
 		gSB = new GSelectionBox(new Point(200, 150), options);
 		
-		checkbox1 = new GCheckbox(new Point(20, 200), true, 20)
+		checkbox1 = new GCheckbox(new Point(20, 200), true, 20);
+		
+		checkbox1.setActionListener(new GActionListener()
 		{
 			@Override
 			public void onClick()
 			{
-				layer2_shared.setEnabled(isChecked());
+				layer2_shared.setEnabled(checkbox1.isChecked());
 			}
 
 			@Override
@@ -218,14 +197,16 @@ public class Main
 			{
 				
 			}
-		};
+		});
 		
-		moveButton = new GButton(new Point(150, 75), "Move Viewport right", smallerFont)
+		moveButton = new GButton(new Point(150, 75), "Move Viewport right", smallerFont);
+		
+		moveButton.setActionListener(new GActionListener()
 		{
 			@Override
 			public void onHover()
 			{
-				System.out.println("Hover babe!");
+				System.out.println("Hovered move button!");
 			}
 
 			@Override
@@ -233,7 +214,7 @@ public class Main
 			{
 				viewport.getOffset().translate(1, 0);
 			}
-		};
+		});
 
 		moveButton.getLogic().setDoubleClickingAllowed(true);
 		moveButton.getLogic().setDelayMs(50);
@@ -241,7 +222,9 @@ public class Main
 		moveButton.getLogic().setActionOnClick(true);
 		moveButton.getLogic().setMultithreading(false); // This will run parallel (with threads) which is in some cases faster (of course unnecessary if you just want to print something to the console).
 
-		increaseScale = new GButton(new Point(150, 100), "increase scale", smallerFont)
+		increaseScale = new GButton(new Point(150, 100), "increase scale", smallerFont);
+		
+		increaseScale.setActionListener(new GActionListener()
 		{
 			@Override
 			public void onHover()
@@ -254,7 +237,7 @@ public class Main
 			{
 				viewport.setScale(viewport.getScale() + 0.0001f);
 			}
-		};
+		});
 
 		increaseScale.getLogic().setDoubleClickingAllowed(true);
 
@@ -265,7 +248,9 @@ public class Main
 			increaseScale.getStyle().setScalableForViewport(false);
 		}
 		
-		exit = new GButton(new Point(20, 150), "EXIT", biggerFont)
+		exit = new GButton(new Point(20, 150), "EXIT", biggerFont);
+		
+		exit.setActionListener(new GActionListener()
 		{
 			@Override
 			public void onHover()
@@ -279,40 +264,31 @@ public class Main
 				System.out.println("[Main]: Exiting..");
 				System.exit(0);
 			}
-		};
+		});
 
 		exit.getLogic().setActionOnHover(false);
 		exit.getLogic().setActionOnClick(true);
 
-		input1 = new GTextfield(new Point(20, 300), "GERMAN", 10, smallerFont)
+		input1 = new GTextfield(new Point(20, 300), "GERMAN", 10, smallerFont);
+		
+		input1.setActionListener(new GActionListener()
 		{
+			@Override
+			public void onClick(){}
+			
 			@Override
 			public void onHover()
 			{
 				System.out.println("Hover");
 			}
-		};
+		});
 		
 		input1.getLogic().setInteractable(false);
 		input1.getLogic().setActionOnClick(false);
 
-		input2 = new GTextfield(new Point(20, 375), "DEUTSCH", 10, smallerFont)
-		{
-			@Override
-			public void onHover()
-			{
-				
-			}
-		};
+		input2 = new GTextfield(new Point(20, 375), "DEUTSCH", 10, smallerFont);
 
-		input3 = new GTextfield(new Point(20, 450), "ALEMAN", 10, smallerFont)
-		{
-			@Override
-			public void onHover()
-			{
-				
-			}
-		};
+		input3 = new GTextfield(new Point(20, 450), "ALEMAN", 10, smallerFont);
 
 		Image i = ImageToolkit.loadImage(Path.ROOT_FOLDER + File.separator + "media" + File.separator + "samples" + File.separator + "MountainLake.jpg");
 
@@ -368,25 +344,6 @@ public class Main
 
 		display.getViewport().getWindowManager().addWindow(window1);
 		display.getViewport().getWindowManager().addWindow(window0);
-		
-		//System.out.println("> " + window0.getPriority());
-		
-		/*
-		System.out.println("size> " + display.getViewport().getWindowManager().getWindows().size());
-		System.out.println("min used priority> " + ((GLayer) display.getViewport().getWindowManager().getWindows().get(0)).getPriority() + " | hash: " + ((GLayer) display.getViewport().getWindowManager().getWindows().get(0)).hashCode());
-		System.out.println("max used priority> " + ((GLayer) display.getViewport().getWindowManager().getWindows().get(display.getViewport().getWindowManager().getWindows().size()-1)).getPriority() + " | hash: " + ((GLayer) display.getViewport().getWindowManager().getWindows().get(display.getViewport().getWindowManager().getWindows().size()-1)).hashCode());
-		windowManager.addWindow(window1);
-		*/
-		
-		//display.getViewport().getWindowManager().removeWindow(window0);
-		/*
-		System.out.println();
-		System.out.println("size> " + display.getViewport().getWindowManager().getWindows().size());
-		System.out.println("min used priority> " + ((GLayer) display.getViewport().getWindowManager().getWindows().get(0)).getPriority() + " | hash: " + ((GLayer) display.getViewport().getWindowManager().getWindows().get(0)).hashCode());
-		
-		display.getViewport().getWindowManager().addWindow(window0);
-		*/
-		
 	}
 	
 	public void setupGWindow0()
