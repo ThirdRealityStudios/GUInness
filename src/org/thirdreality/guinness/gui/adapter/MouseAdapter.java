@@ -189,7 +189,7 @@ public class MouseAdapter extends LoopedThread implements MouseMotionListener, M
 		// If there is no component given or interaction is forbidden,
 		// this method assumes no component was found,
 		// pretending the cursor is not over a component.
-		if(target == null || source == null || (target != null && !target.getLogic().isInteractionAllowed()))
+		if(target == null || source == null || (target != null && !target.getLogic().isInteractionAllowed()) || !source.isContained(target))
 		{
 			return false;
 		}

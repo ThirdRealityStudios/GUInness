@@ -63,7 +63,7 @@ public class ComponentHandler
 			public void loop()
 			{
 				updateChangedLayers(display.getViewport());
-				
+
 				triggerComponent(display.getViewport());
 			}
 		};
@@ -561,7 +561,7 @@ public class ComponentHandler
 		ComponentSession session = loadSession(target);
 
 		GComponent focused = display.getEventHandler().getMouseAdapter().getFocusedComponent(target);
-		
+
 		Point mouseLocation = display.getEventHandler().getMouseAdapter().getCursorLocation();
 
 		boolean windowWasMoved = initialLoc != null;

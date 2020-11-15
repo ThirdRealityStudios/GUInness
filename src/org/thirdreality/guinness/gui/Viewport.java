@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 import org.thirdreality.guinness.feature.GIPoint;
 import org.thirdreality.guinness.feature.shape.ShapeTransform;
 import org.thirdreality.guinness.gui.component.GComponent;
-import org.thirdreality.guinness.gui.component.placeholder.GWindow;
 import org.thirdreality.guinness.gui.component.placeholder.GWindowManager;
 import org.thirdreality.guinness.gui.layer.GLayer;
 import org.thirdreality.guinness.handler.EventHandler;
@@ -133,7 +132,7 @@ public class Viewport extends JPanel
 		{
 			GComponent component = components[i];
 			
-			if(component.getStyle().isVisible() && component.isEnabled() && isContained(component))
+			if(isContained(component) && component.getStyle().isVisible())
 			{
 				component.getStyle().getDesign().drawContext(g, this, component, getOrigin(), getOffset(), getScale());
 			}
@@ -395,12 +394,12 @@ public class Viewport extends JPanel
 		if(isSimulated())
 		{
 			clippingRectangle.setLocation(getOrigin());
-			
+
 			Rectangle componentBounds = component.getStyle().getPrimaryLook().getBounds();
 
 			Rectangle componentBoundsRelative = new Rectangle(new GIPoint(getOrigin()).add(getOffset()).add(componentBounds.getLocation()).toPoint(), componentBounds.getSize());
 
-			boolean isContained = clippingRectangle.contains(componentBoundsRelative);
+			boolean isContained = clippingRectangle.contains(componentBoundsRelative) && component.isEnabled() ;
 
 			return isContained;
 		}
