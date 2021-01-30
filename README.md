@@ -1,6 +1,6 @@
 **A lightweight API to make the development of 2D game engines and GUIs easier, using Swing¹**
 
-¹a porting to OpenGL might be considered.
+¹a porting to OpenGL is currently in progress and will be available at the final release.
 
 
 
