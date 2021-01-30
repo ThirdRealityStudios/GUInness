@@ -3,7 +3,6 @@
 ¹a porting to OpenGL is currently in progress and will be available at the final release.
 
 
-
 If you want to test this API first, you can just download the binaries ("bin"-folder) and run the Main.class file in package "org.thirdreality.guinness.sample".
 It will give you a rough look through all the features which are available currently.
 
