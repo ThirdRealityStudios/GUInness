@@ -1,8 +1,8 @@
-**A lightweight API to make the development of 2D game engines and GUIs easier, using Swing¹**
+# A lightweight API to make the development of 2D game engines and GUIs easier, using Swing¹
 
-¹a **porting to OpenGL is currently in progress** and will be available at the final release.
 
-**This project is DISCONTINUED!**
+# This project is DISCONTINUED!
+**Anyway, a porting to OpenGL is currently in progress and will be available at its final release.**
 
 
 If you want to test this API first, you can just download the binaries ("bin"-folder) and run the Main.class file in package "org.thirdreality.guinness.sample".
