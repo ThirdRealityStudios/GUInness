@@ -1,7 +1,15 @@
-# This project is DISCONTINUED # **due to a porting to OpenGL which is currently in progress..**
+# This project is DISCONTINUED:
+**due to a porting to OpenGL which is currently in progress..**
+
 
 #
+#
+
+
 **A Swing-based API to enable the development of basic GUI environments and games**
+
+
+#
 
 
 # First Impression
