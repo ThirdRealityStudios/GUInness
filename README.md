@@ -1,12 +1,7 @@
-# A lightweight API to make the development of 2D game engines and GUIs easier, using Swing¹
+# This project is DISCONTINUED
+**due to a porting to OpenGL which is currently in progress.**
 
-
-# This project is DISCONTINUED!
-**Anyway, a porting to OpenGL is currently in progress and will be available at its final release.**
-
-
-If you want to test this API first, you can just download the binaries ("bin"-folder) and run the Main.class file in package "org.thirdreality.guinness.sample".
-It will give you a rough look through all the features which are available currently.
+**A Swing-based API to enable the development of basic GUI environments and games**
 
 
 # First Impression
@@ -15,7 +10,7 @@ It will give you a rough look through all the features which are available curre
 
 # Uses of GUInness
 - for development of simple 2D games
-- for fast creation of GUI environments
+- for fast creation of GUI environments (in terms of usability)
 - for highly modifiable GUIs
 - as a lightweight alternative to the native Java GUI libraries
 
@@ -54,6 +49,11 @@ It will give you a rough look through all the features which are available curre
 - add ability for LOD levels depending on the current Viewport scale**¹**
 
 **¹**especially for creating maps, games or browser-related content
+
+
+# How to run / binaries
+If you want to test this API first, you can just download the binaries ("bin"-folder) and run the Main.class file in package "org.thirdreality.guinness.sample".
+It will give you a rough look through all the features which are available currently.
 
 
 # Documentation
