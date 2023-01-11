@@ -3,9 +3,9 @@
 **A Swing-based API to enable the development of basic GUI environments and games**
 
 # Project status
-**Unfortunately I do not have enough time to continue the API due to my study**
+**Unfortunately I do not have enough time to continue the API due to my study.**
 
-**Also, originally a porting to Open GL was planned but can't be done now**
+**Also, originally a porting to Open GL was planned (for performance reasons) but can't be done now.**
 
 
 #
