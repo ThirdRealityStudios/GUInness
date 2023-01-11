@@ -1,6 +1,6 @@
 # Description
 
-**A Swing-based API to enable the development of basic GUI environments and games**
+**A Swing-based API to enable the development of basic GUI apps and games**
 
 # Project status
 **Unfortunately I do not have enough time to continue the API due to my study.**
