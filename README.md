@@ -1,9 +1,11 @@
+# Description
+
 **A Swing-based API to enable the development of basic GUI environments and games**
 
-# Discontinued project
-**Unfortunately I do not have enough time to improve the API**
+# Project status
+**Unfortunately I do not have enough time to continue the API due to my study**
 
-**Also, a porting to Open GL was planned but due to my study I have to abort this project**
+**Also, originally a porting to Open GL was planned but can't be done now**
 
 
 #
