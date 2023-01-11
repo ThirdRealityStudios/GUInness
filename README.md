@@ -1,5 +1,6 @@
-# This project is DISCONTINUED:
-**due to a porting to OpenGL which is currently in progress..**
+# Discontinued project
+**Unfortunately I do not have enough time to improve the API**
+**Also, a porting to Open GL was planned but due to my study I have to abort this project**
 
 
 #
